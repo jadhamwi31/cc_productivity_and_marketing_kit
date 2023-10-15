@@ -1,4 +1,5 @@
 import z from "zod";
+import { User } from "../models/User.model";
 
 export const SIGNUP_SCHEMA = z.object({
 	body: z.object({
@@ -7,7 +8,12 @@ export const SIGNUP_SCHEMA = z.object({
 				invalid_type_error: "Type should be string",
 				required_error: "Username is required",
 			})
-			.min(8, "Usernamme characters should be at least 8"),
+			.min(8, "Usernamme characters should be at least 8")
+			.refine(async (username) => {
+				const user = await User.findOne({ where: { username } });
+
+				return user === null;
+			}, "Username already exists"),
 		password: z
 			.string({
 				invalid_type_error: "Type should be string",
