@@ -1,0 +1,1 @@
+docker run -p 5432:5432 -d -e POSTGRES_USER=dreamteam -e POSTGRES_PASSWORD=content_creators_productivity_and_marketing_kit -e POSTGRES_DB=content_creators_productivity_and_marketing_database -v pgdata:/var/lib/postgresql/data postgres:16.0-alpine3.18
