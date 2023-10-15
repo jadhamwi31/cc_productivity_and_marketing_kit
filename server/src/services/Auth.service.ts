@@ -20,7 +20,7 @@ const login = async (username: string) => {
 
 	const token = jwt.sign(
 		{ username: user.username },
-		String(process.env.SECREY_KEY)
+		String(process.env.SECRET_KEY)
 	);
 
 	return { token, data: _.omit(user.dataValues, ["password"]) };
