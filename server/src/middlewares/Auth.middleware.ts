@@ -7,17 +7,21 @@ export const AuthMiddleware = (
 	res: Response,
 	next: NextFunction
 ) => {
-	const { jwt: jwtCookie } = req.cookies;
+	const authHeader = req.headers.authorization;
+	if (authHeader && authHeader.startsWith("Bearer ")) {
+		const token = authHeader.substring(7, authHeader.length);
+		try {
+			const payload = jwt.verify(token, String(process.env.SECRET_KEY));
 
-	try {
-		const payload = jwt.verify(jwtCookie, String(process.env.SECRET_KEY));
+			req.user = _.pick(payload, ["username"]) as {
+				username: string;
+			};
 
-		req.user = _.pick(payload, ["username"]) as {
-			username: string;
-		};
-
-		return next();
-	} catch (e) {
+			return next();
+		} catch (e) {
+			return res.status(403).send("invalid token");
+		}
+	} else {
 		return res.status(403).send("unauthorized");
 	}
 };

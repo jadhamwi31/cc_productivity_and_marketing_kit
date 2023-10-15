@@ -27,8 +27,7 @@ const loginHandler = async (
 		const { token, data } = await AuthService.login(username);
 		return res
 			.status(STATUS_CODES.OK)
-			.cookie("jwt", token)
-			.send({ status: STATUS_CODES.OK, data });
+			.send({ status: STATUS_CODES.OK, data, token });
 	} catch (e) {
 		return next(e);
 	}
