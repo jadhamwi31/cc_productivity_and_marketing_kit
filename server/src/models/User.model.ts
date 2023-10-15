@@ -6,6 +6,7 @@ import {
 	InferCreationAttributes,
 	Model,
 } from "sequelize";
+import { hashPassword } from "../utils/utils";
 
 export class User extends Model<
 	InferAttributes<User>,
@@ -41,5 +42,13 @@ User.init(
 			allowNull: false,
 		},
 	},
-	{ sequelize: Database.db, tableName: "user" }
+	{
+		sequelize: Database.db,
+		tableName: "user",
+		timestamps: false,
+	}
 );
+
+User.beforeCreate(async (user) => {
+	user.password = await hashPassword(user.password);
+});

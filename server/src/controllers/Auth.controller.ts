@@ -17,5 +17,21 @@ const signupHandler = async (
 		return next(e);
 	}
 };
+const loginHandler = async (
+	req: Request<{}, {}, { username: string }>,
+	res: Response,
+	next: NextFunction
+) => {
+	const { username } = req.body;
+	try {
+		const { token, data } = await AuthService.login(username);
+		return res
+			.status(STATUS_CODES.OK)
+			.cookie("jwt", token)
+			.send({ status: STATUS_CODES.OK, data });
+	} catch (e) {
+		return next(e);
+	}
+};
 
-export const AuthController = { signupHandler };
+export const AuthController = { signupHandler, loginHandler };

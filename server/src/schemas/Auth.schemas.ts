@@ -1,5 +1,6 @@
-import z from "zod";
+import z, { ZodError, ZodIssue } from "zod";
 import { User } from "../models/User.model";
+import { compare } from "../utils/utils";
 
 export const SIGNUP_SCHEMA = z.object({
 	body: z.object({
@@ -36,4 +37,39 @@ export const SIGNUP_SCHEMA = z.object({
 			})
 			.email("Invalid Email"),
 	}),
+});
+
+export const LOGIN_SCHEMA = z.object({
+	body: z
+		.object({
+			username: z.string({
+				invalid_type_error: "Type should be string",
+				required_error: "Username is required",
+			}),
+			password: z.string({
+				invalid_type_error: "Type should be string",
+				required_error: "Password is required",
+			}),
+		})
+		.superRefine(async ({ username, password }, ctx) => {
+			const user = await User.findOne({ where: { username } });
+			if (user === null) {
+				ctx.addIssue({
+					code: "custom",
+					path: ["username"],
+					message: "User doesn't exist",
+					fatal: true,
+				});
+			} else {
+				const passwordMatch = await compare(password, user.password);
+				if (!passwordMatch) {
+					ctx.addIssue({
+						code: "custom",
+						path: ["password"],
+						fatal: true,
+						message: "Incorrect password",
+					});
+				}
+			}
+		}),
 });
