@@ -2,8 +2,18 @@ import styled from "styled-components";
 
 const Container = styled.div`
 	position: relative;
-	height: 100%;
-	width: 100%;
+
+	display: grid;
+	place-items: center;
 `;
 
-export const S = { Container };
+const Editor = styled.div`
+	display: grid;
+	grid-template-rows: repeat(2, 1fr);
+	gap: 1em;
+
+	height: 100vh;
+	padding: 1em 0;
+`;
+
+export const S = { Container, Editor };

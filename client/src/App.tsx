@@ -1,7 +1,7 @@
-import VideoEditor from "./pages/Video/Video";
+import Video from "./pages/Video/Video";
 
 function App() {
-	return <VideoEditor />;
+	return <Video />;
 }
 
 export default App;

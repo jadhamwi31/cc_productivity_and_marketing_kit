@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 const Container = styled.div<{ $toggled: boolean }>`
-	position: absolute;
-	top: 50%;
+	position: fixed;
+	top: 25%;
 	left: 0;
-	transform: translateY(-50%);
+	transform: translateY(-25%);
 	background-color: var(--black-lighter);
 	display: flex;
 	flex-direction: column;
@@ -33,4 +33,8 @@ const ToggleContainer = styled.div`
 	flex: 1;
 `;
 
-export const S = { Container, ToggleContainer };
+const UploadHiddenInput = styled.input`
+	display: none;
+`;
+
+export const S = { Container, ToggleContainer, UploadHiddenInput };
