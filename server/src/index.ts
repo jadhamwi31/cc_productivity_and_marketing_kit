@@ -7,6 +7,7 @@ import { ErrorMiddleware } from "./middlewares/Error.middleware";
 import Database from "./models";
 import { AuthRouter } from "./routers/Auth.router";
 import { AuthMiddleware } from "./middlewares/Auth.middleware";
+import { VideosRouter } from "./routers/Videos.router";
 dotenv.config();
 
 (async function () {
@@ -17,9 +18,7 @@ dotenv.config();
 
 	app.use(express.json());
 	app.use("/auth", AuthRouter);
-	app.use("/", AuthMiddleware, (req, res) => {
-		return res.status(200).send("OK");
-	});
+	app.use("/videos", VideosRouter);
 
 	app.use(ErrorMiddleware);
 
