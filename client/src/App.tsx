@@ -1,5 +1,7 @@
+import VideoEditor from "./pages/Video/Video";
+
 function App() {
-	return <div>Senior</div>;
+	return <VideoEditor />;
 }
 
 export default App;
