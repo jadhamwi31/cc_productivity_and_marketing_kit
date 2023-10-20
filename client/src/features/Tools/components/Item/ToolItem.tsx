@@ -7,7 +7,6 @@ import { EnToolItem } from "../../ts/tools.enums";
 type Props = {
 	icon: IconDefinition;
 	name: string;
-	opened: boolean;
 	value: EnToolItem;
 	onClick?: (tool: EnToolItem) => void;
 	predicate?: (value: EnToolItem) => boolean;
@@ -16,7 +15,6 @@ type Props = {
 const ToolItem = ({
 	icon,
 	name,
-	opened,
 	value,
 	onClick,
 	predicate,
@@ -33,7 +31,7 @@ const ToolItem = ({
 		>
 			<S.Container $selected={isSelected}>
 				<FontAwesomeIcon icon={icon} />
-				{opened && <S.Name>{name}</S.Name>}
+				<S.Name>{name}</S.Name>
 			</S.Container>
 		</Button>
 	);

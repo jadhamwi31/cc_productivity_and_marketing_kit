@@ -1,21 +1,43 @@
 import {
+	faPause,
 	faPlay,
 	faScissors,
 	faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { S } from "./Tools.styled";
 import ToolItem from "./components/Item/ToolItem";
 import { useToolsStore } from "./stores/tools.store";
 import { EnToolItem } from "./ts/tools.enums";
 import { useVideoStore } from "../../stores/video.store";
+import { useVideoElement } from "../../hooks/useVideoElement";
+import { EnVideoPlayState } from "../../ts/enums/video.enums";
 
 type Props = {};
 
 const Tools = (props: Props) => {
-	const [opened, setOpened] = useState(false);
-	const toggleHandler = () => setOpened((prev) => !prev);
+	const { playState, setFullscreen } = useVideoStore();
+	const videoRef = useVideoElement();
+	const videoStateHandler = () => {
+		if (playState === EnVideoPlayState.PAUSED) {
+			videoRef?.play();
+		} else {
+			videoRef?.pause();
+		}
+	};
+
+	useEffect(() => {
+		const setter = () => {
+			if (document.fullscreenEnabled) {
+				setFullscreen(true);
+			} else {
+				setFullscreen(false);
+			}
+		};
+		document.addEventListener("fullscreenchange", setter);
+		return () => document.removeEventListener("fullscreenchange", setter);
+	}, []);
 	const { selectedItem, setSelectedItem } = useToolsStore();
 	const { setVideo } = useVideoStore();
 	const itemToggleHandler = (tool: EnToolItem) =>
@@ -30,11 +52,16 @@ const Tools = (props: Props) => {
 	};
 	const uploadRef = useRef<HTMLInputElement>(null);
 	return (
-		<S.Container $toggled={opened}>
+		<S.Container>
+			<ToolItem
+				icon={playState === EnVideoPlayState.PLAYING ? faPause : faPlay}
+				name={playState === EnVideoPlayState.PLAYING ? "Pause" : "Play"}
+				value={EnToolItem.UPLOAD}
+				onClick={videoStateHandler}
+			/>
 			<ToolItem
 				icon={faUpload}
 				name={"Upload"}
-				opened={opened}
 				value={EnToolItem.UPLOAD}
 				onClick={uploadOnClick}
 			/>
@@ -48,13 +75,9 @@ const Tools = (props: Props) => {
 				predicate={selectedPredicate}
 				icon={faScissors}
 				name={"Cut"}
-				opened={opened}
 				value={EnToolItem.CUT}
 				onClick={itemToggleHandler}
 			/>
-			<S.ToggleContainer onClick={toggleHandler}>
-				<FontAwesomeIcon icon={faPlay} rotation={opened ? 180 : undefined} />
-			</S.ToggleContainer>
 		</S.Container>
 	);
 };

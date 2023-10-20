@@ -10,15 +10,10 @@ const Container = styled.div<{ $selected: boolean }>`
 	color: ${({ $selected }) => ($selected ? "var(--blue)" : "inherit")};
 `;
 
-const NameAnimation = keyframes`
-from{opacity:0;}
-to{opacity:1;}
-`;
-
 const Name = styled.p`
 	font-size: 14px;
-	animation-name: ${NameAnimation};
-	animation-duration: 0.5s;
+	width: 100%;
+	text-align: center;
 `;
 
 export const S = { Container, Name };
