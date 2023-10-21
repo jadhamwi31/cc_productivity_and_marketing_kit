@@ -1,26 +1,31 @@
-import { useEffect, useRef } from "react";
+import { useVideoElement } from "../../../../hooks/useVideoElement";
+import { useVideoStore } from "../../../../stores/video.store";
 import { ITick, formatTime } from "./Ruler";
 import { S } from "./Ruler.styled";
-import { ThumbEmitter } from "../Thumb/Thumb";
-import { useVideoStore } from "../../../../stores/video.store";
 
 type Props = {
 	tick: ITick;
-	refAdd: (el: HTMLDivElement | null) => void;
 };
 
-const Tick = ({ tick, refAdd }: Props) => {
+const Tick = ({ tick }: Props) => {
+	const videoElement = useVideoElement();
+	const timeClickHandler = (time: number) => {
+		if (videoElement) {
+			videoElement.currentTime = time;
+		}
+	};
 	return (
 		<>
-			<S.Tick key={tick.time} ref={refAdd} id={"time" + tick.time.toString()}>
-				<S.TickLabel>{tick.label}</S.TickLabel>
+			<S.Tick key={tick.time}>
+				<S.TickLabel onClick={() => timeClickHandler(tick.time)}>
+					{tick.label}
+				</S.TickLabel>
 			</S.Tick>
 			{tick.follow !== 0 &&
 				new Array(tick.follow).fill(0).map((_, subindex) => (
 					<S.TickFollow
 						key={tick.time + subindex + 1}
-						ref={refAdd}
-						id={"time" + (tick.time + subindex + 1).toString()}
+						onClick={() => timeClickHandler(tick.time + subindex + 1)}
 					>
 						<S.TickLabel>{formatTime(tick.time + subindex + 1)}</S.TickLabel>
 					</S.TickFollow>

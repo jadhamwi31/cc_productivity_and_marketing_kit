@@ -8,9 +8,16 @@ const Container = styled.div`
 	gap: 2em;
 `;
 
-const Video = styled.video`
+const VideoWrapper = styled.div`
+	display: grid;
+	place-items: center;
+	background-color: var(--black);
 	border-radius: var(--border-radius);
+	color: var(--blue);
+`;
+
+const Video = styled.video`
 	height: 100%;
 `;
 
-export const S = { Container, Video };
+export const S = { Container, Video, VideoWrapper };

@@ -35,6 +35,8 @@ const TickLabel = styled.div`
 	transform: translateX(-50%);
 	font-size: 9px;
 	opacity: 1;
+
+	cursor: pointer;
 `;
 
 const TickFollow = styled.div`

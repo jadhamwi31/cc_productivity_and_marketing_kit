@@ -5,14 +5,14 @@ const Wrapper = styled.div`
 	width: fit-content;
 	cursor: grab;
 	padding: 0.25em;
+	opacity: 0.2;
 `;
 
 const Thumb = styled.div`
 	height: 225px;
 	width: 8px;
 	background-color: var(--blue);
-
-	z-index: 10;
+	border-radius: var(--border-radius);
 `;
 
 export const S = { Thumb, Wrapper };

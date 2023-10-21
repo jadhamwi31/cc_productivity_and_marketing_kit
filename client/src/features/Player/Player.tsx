@@ -10,10 +10,7 @@ const Player = ({ ...playerProps }: Props) => {
 	const { video, setDuration, setTime, setPlayState, playState } =
 		useVideoStore();
 	const videoRef = useRef<HTMLVideoElement>({} as HTMLVideoElement);
-	const videoSrc = useMemo(
-		() => (video ? URL.createObjectURL(video) : undefined),
-		[video]
-	);
+	const videoSrc = useMemo(() => video || undefined, [video]);
 	useEffect(() => {
 		if (playState === EnVideoPlayState.PLAYING && videoSrc) {
 			const timePollHandler = () => {
@@ -29,21 +26,25 @@ const Player = ({ ...playerProps }: Props) => {
 	return (
 		<S.Container>
 			<Tools />
-			<S.Video
-				ref={videoRef}
-				id="video-player"
-				src={videoSrc}
-				{...playerProps}
-				onLoadedMetadata={() => {
-					setDuration(videoRef.current.duration);
-				}}
-				onTimeUpdate={() => {
-					setTime(videoRef.current.currentTime);
-				}}
-				onPlay={() => setPlayState(EnVideoPlayState.PLAYING)}
-				onPause={() => setPlayState(EnVideoPlayState.PAUSED)}
-			/>
-			<div></div>
+			<S.VideoWrapper>
+				<S.Video
+					ref={videoRef}
+					id="video-player"
+					src={videoSrc}
+					{...playerProps}
+					onLoadedMetadata={() => {
+						console.log(videoRef.current.duration);
+
+						setDuration(videoRef.current.duration);
+					}}
+					onTimeUpdate={() => {
+						setTime(videoRef.current.currentTime);
+					}}
+					onPlay={() => setPlayState(EnVideoPlayState.PLAYING)}
+					onPause={() => setPlayState(EnVideoPlayState.PAUSED)}
+				/>
+			</S.VideoWrapper>
+			<div>Transcript</div>
 		</S.Container>
 	);
 };

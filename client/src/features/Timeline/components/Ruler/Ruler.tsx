@@ -33,12 +33,6 @@ type Props = {};
 
 const Ruler = (props: Props) => {
 	const { duration, thumbX, video } = useVideoStore();
-	const refs = useRef<HTMLDivElement[]>([]);
-	const refAdd = (el: HTMLDivElement | null) => {
-		if (el && !refs.current.find((div) => div.id === el.id)) {
-			refs.current.push(el);
-		}
-	};
 
 	const thumbXRef = useRef(thumbX);
 	useEffect(() => {
@@ -63,35 +57,17 @@ const Ruler = (props: Props) => {
 		} else {
 			return [];
 		}
-	}, [duration]);
+	}, [video, duration]);
 
 	const videoElement = useVideoElement();
+	const [ref, { width }] = useMeasure<HTMLDivElement>();
 
 	useEffect(() => {
-		if (videoElement) {
+		if (videoElement && width && duration) {
 			const handler = () => {
-				let closest = -1;
-				let minDistance = Infinity;
-				let direction = "left";
-				console.log(refs);
-
-				for (const ref of refs.current) {
-					const distance = ref.offsetLeft - thumbXRef.current;
-					if (Math.abs(distance) < minDistance) {
-						minDistance = Math.abs(distance);
-						closest = Number(ref.id.slice(4));
-						if (distance < 0) {
-							direction = "left";
-						} else {
-							direction = "right";
-						}
-					}
-				}
-
-				if (closest !== -1) {
-					videoElement.currentTime = closest;
-					videoElement.play();
-				}
+				const newValue = (thumbXRef.current / width) * duration;
+				videoElement.currentTime = newValue;
+				videoElement.play();
 			};
 
 			ThumbEmitter.on("drag", handler);
@@ -99,19 +75,13 @@ const Ruler = (props: Props) => {
 				ThumbEmitter.off("drag", handler);
 			};
 		}
-	}, [video, videoElement, refs]);
-
-	useEffect(() => {
-		refs.current = [];
-	}, [video]);
-
-	const [ref, { width }] = useMeasure<HTMLDivElement>();
+	}, [video, videoElement, width, duration]);
 
 	return (
 		<S.Wrapper id="ruler" ref={ref}>
 			<S.Container>
 				{ticks.map((tick) => (
-					<Tick tick={tick} key={tick.time} refAdd={refAdd} />
+					<Tick tick={tick} key={tick.time} />
 				))}
 			</S.Container>
 			<Thumb parentWidth={width} />

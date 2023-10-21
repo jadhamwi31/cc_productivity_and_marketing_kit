@@ -1,4 +1,5 @@
 import {
+	faBackward,
 	faPause,
 	faPlay,
 	faScissors,
@@ -16,7 +17,7 @@ import { EnToolItem } from "./ts/tools.enums";
 type Props = {};
 
 const Tools = (props: Props) => {
-	const { playState } = useVideoStore();
+	const { playState, cutVideo, undo, stack } = useVideoStore();
 	const videoRef = useVideoElement();
 	const videoStateHandler = () => {
 		if (playState === EnVideoPlayState.PAUSED) {
@@ -27,7 +28,7 @@ const Tools = (props: Props) => {
 	};
 
 	const { selectedItem, setSelectedItem } = useToolsStore();
-	const { setVideo } = useVideoStore();
+	const { uploadVideo } = useVideoStore();
 	const itemToggleHandler = (tool: EnToolItem) =>
 		setSelectedItem(tool === selectedItem ? EnToolItem.NONE : tool);
 
@@ -35,16 +36,20 @@ const Tools = (props: Props) => {
 	const uploadOnClick = () => uploadRef.current && uploadRef.current.click();
 	const onFileUpload: React.ChangeEventHandler<HTMLInputElement> = (e) => {
 		if (e.target.files && e.target.files[0]) {
-			setVideo(e.target.files[0]);
+			const video = e.target.files[0];
+			uploadVideo(video);
 		}
 	};
 	const uploadRef = useRef<HTMLInputElement>(null);
+
+	const undoDisabled = stack.length <= 1;
+
 	return (
 		<S.Container>
 			<ToolItem
 				icon={playState === EnVideoPlayState.PLAYING ? faPause : faPlay}
 				name={playState === EnVideoPlayState.PLAYING ? "Pause" : "Play"}
-				value={EnToolItem.UPLOAD}
+				value={EnToolItem.PLAYSTATE}
 				onClick={videoStateHandler}
 			/>
 			<ToolItem
@@ -64,7 +69,14 @@ const Tools = (props: Props) => {
 				icon={faScissors}
 				name={"Cut"}
 				value={EnToolItem.CUT}
-				onClick={itemToggleHandler}
+				// onClick={}
+			/>
+			<ToolItem
+				icon={faBackward}
+				name={"Undo"}
+				value={EnToolItem.UNDO}
+				onClick={undo}
+				disabled={undoDisabled}
 			/>
 		</S.Container>
 	);

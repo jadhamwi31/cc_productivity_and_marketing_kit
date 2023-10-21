@@ -12,6 +12,9 @@ const Primary = styled.button`
 	&:hover {
 		background-color: var(--black);
 	}
+	&:disabled {
+		opacity: 0.5;
+	}
 `;
 const Secondary = styled.button`
 	border: none;
@@ -25,6 +28,9 @@ const Secondary = styled.button`
 
 	&:hover {
 		background-color: rgba(0, 0, 0, 0.4);
+	}
+	&:disabled {
+		opacity: 0.5;
 	}
 `;
 

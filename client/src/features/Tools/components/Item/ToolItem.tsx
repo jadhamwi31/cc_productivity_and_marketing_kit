@@ -10,7 +10,8 @@ type Props = {
 	value: EnToolItem;
 	onClick?: (tool: EnToolItem) => void;
 	predicate?: (value: EnToolItem) => boolean;
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick">;
+	disabled?: boolean;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "disabled">;
 
 const ToolItem = ({
 	icon,
