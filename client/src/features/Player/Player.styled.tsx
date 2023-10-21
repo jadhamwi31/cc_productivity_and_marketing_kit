@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 const Container = styled.div`
-	padding: 0.5em;
 	background-color: var(--black-lighter);
 	border-radius: var(--border-radius);
 	display: grid;

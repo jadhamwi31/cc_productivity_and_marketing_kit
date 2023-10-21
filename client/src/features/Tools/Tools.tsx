@@ -4,20 +4,19 @@ import {
 	faScissors,
 	faUpload,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { useVideoElement } from "../../hooks/useVideoElement";
+import { useVideoStore } from "../../stores/video.store";
+import { EnVideoPlayState } from "../../ts/enums/video.enums";
 import { S } from "./Tools.styled";
 import ToolItem from "./components/Item/ToolItem";
 import { useToolsStore } from "./stores/tools.store";
 import { EnToolItem } from "./ts/tools.enums";
-import { useVideoStore } from "../../stores/video.store";
-import { useVideoElement } from "../../hooks/useVideoElement";
-import { EnVideoPlayState } from "../../ts/enums/video.enums";
 
 type Props = {};
 
 const Tools = (props: Props) => {
-	const { playState, setFullscreen } = useVideoStore();
+	const { playState } = useVideoStore();
 	const videoRef = useVideoElement();
 	const videoStateHandler = () => {
 		if (playState === EnVideoPlayState.PAUSED) {
@@ -27,17 +26,6 @@ const Tools = (props: Props) => {
 		}
 	};
 
-	useEffect(() => {
-		const setter = () => {
-			if (document.fullscreenEnabled) {
-				setFullscreen(true);
-			} else {
-				setFullscreen(false);
-			}
-		};
-		document.addEventListener("fullscreenchange", setter);
-		return () => document.removeEventListener("fullscreenchange", setter);
-	}, []);
 	const { selectedItem, setSelectedItem } = useToolsStore();
 	const { setVideo } = useVideoStore();
 	const itemToggleHandler = (tool: EnToolItem) =>

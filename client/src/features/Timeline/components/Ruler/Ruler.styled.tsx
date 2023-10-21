@@ -8,7 +8,7 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
 	position: absolute;
-	top: 0.75em;
+
 	left: 50%;
 	transform: translateX(-50%);
 	width: 100%;
@@ -19,14 +19,13 @@ const Container = styled.div`
 	flex-direction: row;
 	align-items: flex-start;
 	justify-content: space-between;
-	padding: 0 0.5em;
 `;
 
 const Tick = styled.div`
 	height: 12px;
 	width: 1px;
 	background-color: var(--blue);
-	position: relative;
+
 	top: 100%;
 `;
 
@@ -42,7 +41,7 @@ const TickFollow = styled.div`
 	height: 4px;
 	width: 1px;
 	background-color: var(--blue);
-	position: relative;
+
 	top: 100%;
 `;
 

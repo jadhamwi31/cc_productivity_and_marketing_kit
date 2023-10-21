@@ -1,7 +1,6 @@
-import React from "react";
+import { DraggableCore } from "react-draggable";
 import { S } from "./Timeline.styled";
 import Ruler from "./components/Ruler/Ruler";
-import Thumb from "./components/Thumb/Thumb";
 
 type Props = {};
 

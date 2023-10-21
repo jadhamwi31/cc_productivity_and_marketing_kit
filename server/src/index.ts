@@ -1,4 +1,3 @@
-import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
@@ -6,8 +5,7 @@ import morgan from "morgan";
 import { ErrorMiddleware } from "./middlewares/Error.middleware";
 import Database from "./models";
 import { AuthRouter } from "./routers/Auth.router";
-import { AuthMiddleware } from "./middlewares/Auth.middleware";
-import { VideosRouter } from "./routers/Videos.router";
+
 dotenv.config();
 
 (async function () {
@@ -18,7 +16,6 @@ dotenv.config();
 
 	app.use(express.json());
 	app.use("/auth", AuthRouter);
-	app.use("/videos", VideosRouter);
 
 	app.use(ErrorMiddleware);
 

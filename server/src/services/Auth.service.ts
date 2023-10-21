@@ -1,7 +1,6 @@
-import Zod from "zod";
-import { User } from "../models/User.model";
 import jwt from "jsonwebtoken";
 import _ from "lodash";
+import { User } from "../models/User.model";
 
 interface IUserFormData {
 	username: string;
