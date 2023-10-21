@@ -12,7 +12,7 @@ const Thumb = styled.div`
 	height: 225px;
 	width: 8px;
 	background-color: var(--blue);
-	border-radius: var(--border-radius);
+	border-radius: 2px;
 `;
 
 export const S = { Thumb, Wrapper };
