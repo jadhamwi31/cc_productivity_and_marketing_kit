@@ -3,8 +3,9 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-} from "react-router-dom";
-import Video from "./pages/Video/Video";
+} from 'react-router-dom';
+import Video from './pages/Video/Video';
+import Home from './pages/Home';
 
 export default function App() {
   return (
@@ -12,9 +13,10 @@ export default function App() {
       router={createBrowserRouter(
         createRoutesFromElements(
           <>
-            <Route path="/video" element={<Video />} />
-          </>
-        )
+            <Route path='/' element={<Home />} />
+            <Route path='/video' element={<Video />} />
+          </>,
+        ),
       )}
     />
   );
