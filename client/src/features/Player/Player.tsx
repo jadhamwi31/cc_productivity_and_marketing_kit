@@ -1,28 +1,28 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useVideoStore } from '../../stores/video.store';
-import { EnVideoPlayState } from '../../ts/enums/video.enums';
 import Tools from '../Tools/Tools';
 import { S } from './Player.styled';
-import { BASE_URL } from '../../constants/constants';
+import { EnVideoPlayback } from '../../ts/enums/video.enums';
 
-type Props = {} & React.VideoHTMLAttributes<HTMLVideoElement>;
+type Props = {};
 
-const Player = ({ ...playerProps }: Props) => {
-  const { video, setDuration, setTime, setPlayState, playState } = useVideoStore();
-  const videoRef = useRef<HTMLVideoElement>({} as HTMLVideoElement);
-  const videoSrc = useMemo(() => `${BASE_URL}/storage/videos/${video}` || undefined, [video]);
+const Player = (props: Props) => {
+  const { sources, setPlayback } = useVideoStore();
+  const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
-    if (playState === EnVideoPlayState.PLAYING && videoSrc) {
-      const timePollHandler = () => {
-        setTime(videoRef.current.currentTime);
-      };
-      const id = setInterval(timePollHandler, 1);
-      return () => {
-        clearInterval(id);
-      };
-    }
-  }, [playState]);
-
+    (async () => {
+      if (sources && videoRef.current) {
+        for (const source of sources) {
+          const video = videoRef.current;
+          video.src = source.url;
+          video.play();
+          await new Promise((resolve) => {
+            video.addEventListener('ended', resolve);
+          });
+        }
+      }
+    })();
+  }, [sources]);
   return (
     <S.Container>
       <Tools />
@@ -30,21 +30,10 @@ const Player = ({ ...playerProps }: Props) => {
         <S.Video
           ref={videoRef}
           id='video-player'
-          src={videoSrc}
-          {...playerProps}
-          onLoadedMetadata={() => {
-            console.log(videoRef.current.duration);
-
-            setDuration(videoRef.current.duration);
-          }}
-          onTimeUpdate={() => {
-            setTime(videoRef.current.currentTime);
-          }}
-          onPlay={() => setPlayState(EnVideoPlayState.PLAYING)}
-          onPause={() => setPlayState(EnVideoPlayState.PAUSED)}
+          onPlay={() => setPlayback(EnVideoPlayback.PLAYING)}
+          onPause={() => setPlayback(EnVideoPlayback.PAUSED)}
         />
       </S.VideoWrapper>
-      <div>Transcript</div>
     </S.Container>
   );
 };

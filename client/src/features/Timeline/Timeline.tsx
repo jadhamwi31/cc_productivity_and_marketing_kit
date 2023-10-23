@@ -1,17 +1,22 @@
-import { DraggableCore } from "react-draggable";
-import { S } from "./Timeline.styled";
-import Ruler from "./components/Ruler/Ruler";
-import Marker from "./components/Marker/Marker";
+import React from 'react';
+import { useVideoStore } from '../../stores/video.store';
+import { S } from './Timeline.styled';
+import Ruler from './components/Ruler/Ruler';
 
 type Props = {};
 
 const Timeline = (props: Props) => {
-	return (
-		<S.Container>
-			<Ruler />
-			<Marker />
-		</S.Container>
-	);
+  const { sources } = useVideoStore();
+  return (
+    <S.Container>
+      <Ruler />
+      {/* {sources.map((source) => (
+        <div key={source.id}>
+          {source.id} - {source.mimeType} - {source.duration}
+        </div>
+      ))} */}
+    </S.Container>
+  );
 };
 
 export default Timeline;

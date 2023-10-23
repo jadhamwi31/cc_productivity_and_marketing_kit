@@ -1,59 +1,36 @@
-import styled from "styled-components";
-
-const Wrapper = styled.div`
-	height: 100%;
-	width: 100%;
-	position: relative;
-`;
+import styled from 'styled-components';
 
 const Container = styled.div`
-	position: absolute;
-
-	left: 50%;
-	transform: translateX(-50%);
-	width: 100%;
-	margin: 0 auto;
-	height: 4px;
-	background-color: rgba(69, 108, 248, 0.3);
-	display: flex;
-	flex-direction: row;
-	align-items: flex-start;
-	justify-content: space-between;
+  width: 100%;
+  height: 2px;
+  border-radius: var(--border-radius);
+  background-color: var(--blue);
+  margin-top: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.2em;
 `;
 
-const Tick = styled.div`
-	height: 12px;
-	width: 1px;
-	background-color: var(--blue);
-
-	top: 100%;
+const Timestamp = styled.div`
+  position: relative;
+  top: -1em;
+  font-size: 10px;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  &:hover {
+    color: var(--blue);
+  }
 `;
 
-const TickLabel = styled.div`
-	position: absolute;
-	top: 150%;
-	transform: translateX(-50%);
-	font-size: 9px;
-	opacity: 1;
-
-	cursor: pointer;
+const TimestampSegmentTick = styled.div`
+  height: 2px;
+  width: 2px;
+  background-color: white;
+  position: relative;
+  border-radius: 100%;
+  top: -0.5em;
 `;
 
-const TickFollow = styled.div`
-	height: 4px;
-	width: 1px;
-	background-color: var(--blue);
-
-	top: 100%;
-`;
-
-const Thumb = styled.div`
-	height: 100%;
-	width: 2px;
-	position: absolute;
-	top: 0;
-	left: 2;
-	background-color: var(--blue);
-`;
-
-export const S = { Container, Tick, TickLabel, TickFollow, Thumb, Wrapper };
+export const S = { Container, Timestamp, TimestampSegmentTick };

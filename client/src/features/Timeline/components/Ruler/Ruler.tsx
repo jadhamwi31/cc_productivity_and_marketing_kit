@@ -1,92 +1,64 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useVideoStore } from "../../../../stores/video.store";
-import { S } from "./Ruler.styled";
-import Thumb, { ThumbEmitter } from "../Thumb/Thumb";
-import Tick from "./Tick";
-import { useMeasure } from "@uidotdev/usehooks";
-import { useVideoElement } from "../../../../hooks/useVideoElement";
+import React, { useMemo } from 'react';
+import { S } from './Ruler.styled';
+import { useVideoStore } from '../../../../stores/video.store';
+import _ from 'lodash';
 
-const getScale = (duration: number) => {
-	switch (true) {
-		case duration <= 60:
-			return 10;
-		default:
-			return 60;
-	}
+const formatTimestamp = (timestamp: string) => {
+  const [minutes, seconds] = timestamp.split(':');
+  if (minutes !== '00') {
+    return `${Number(minutes)}m`;
+  } else {
+    return `${Number(seconds)}s`;
+  }
 };
 
-export const formatTime = (seconds: number) => {
-	const minutes = Math.floor(seconds / 60);
-	const remainingSeconds = seconds % 60;
-	return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
-		.toString()
-		.padStart(2, "0")}`;
-};
+function generateAutoSegmentedTimestamps(duration: number) {
+  const MAX_SEGMENTS = 10;
+  const SEGMENT_DURATION = 5;
 
-export interface ITick {
-	time: number;
-	label: string;
-	follow?: number;
+  let numSegments = Math.ceil(duration / SEGMENT_DURATION);
+
+  numSegments = Math.min(numSegments, MAX_SEGMENTS);
+
+  const interval = Math.ceil(duration / numSegments);
+  const timestamps = [];
+
+  for (let i = 0; i <= duration; i += interval) {
+    const minutes = Math.floor(i / 60);
+    const seconds = i % 60;
+    timestamps.push(`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
+  }
+
+  return timestamps;
 }
-
 type Props = {};
 
 const Ruler = (props: Props) => {
-	const { duration, thumbX, video } = useVideoStore();
+  const { sources } = useVideoStore();
 
-	const thumbXRef = useRef(thumbX);
-	useEffect(() => {
-		thumbXRef.current = thumbX;
-	}, [thumbX]);
+  const timestamps = useMemo(() => {
+    if (sources) {
+      const maxSource = _.maxBy(sources, 'duration');
+      if (maxSource) {
+        return generateAutoSegmentedTimestamps(maxSource.duration);
+      }
+    } else {
+      return [];
+    }
+  }, [sources]);
 
-	const ticks = useMemo((): ITick[] => {
-		if (duration) {
-			const scale = getScale(duration);
-			const numberOfTicks = Math.ceil(duration / scale);
-
-			return new Array(numberOfTicks).fill(0).map(
-				(_, index): ITick => ({
-					time: scale * index,
-					label: formatTime(scale * index),
-					follow:
-						index === numberOfTicks - 1
-							? Math.ceil((scale * index) / duration)
-							: Math.floor(scale) - 1,
-				})
-			);
-		} else {
-			return [];
-		}
-	}, [video, duration]);
-
-	const videoElement = useVideoElement();
-	const [ref, { width }] = useMeasure<HTMLDivElement>();
-
-	useEffect(() => {
-		if (videoElement && width && duration) {
-			const handler = () => {
-				const newValue = (thumbXRef.current / width) * duration;
-				videoElement.currentTime = newValue;
-				videoElement.play();
-			};
-
-			ThumbEmitter.on("drag", handler);
-			return () => {
-				ThumbEmitter.off("drag", handler);
-			};
-		}
-	}, [video, videoElement, width, duration]);
-
-	return (
-		<S.Wrapper id="ruler" ref={ref}>
-			<S.Container>
-				{ticks.map((tick) => (
-					<Tick tick={tick} key={tick.time} />
-				))}
-			</S.Container>
-			<Thumb parentWidth={width} />
-		</S.Wrapper>
-	);
+  return (
+    <S.Container>
+      {timestamps?.map((timestamp, i) => (
+        <>
+          <S.Timestamp>{formatTimestamp(timestamp)}</S.Timestamp>
+          {_.range(3).map(() => (
+            <S.TimestampSegmentTick />
+          ))}
+        </>
+      ))}
+    </S.Container>
+  );
 };
 
 export default Ruler;

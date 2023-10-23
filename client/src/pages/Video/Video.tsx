@@ -8,7 +8,7 @@ type Props = {};
 const Video = (props: Props) => {
   return (
     <S.Container>
-      <Player style={{ height: '50vh', width: '50vw' }} />
+      <Player />
       <Timeline />
     </S.Container>
   );

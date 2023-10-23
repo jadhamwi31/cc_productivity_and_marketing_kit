@@ -1,4 +1,4 @@
-export enum EnVideoPlayState {
-	PLAYING,
-	PAUSED,
+export enum EnVideoPlayback {
+  PLAYING,
+  PAUSED,
 }
