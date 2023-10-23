@@ -5,6 +5,8 @@ import morgan from "morgan";
 import { ErrorMiddleware } from "./middlewares/Error.middleware";
 import Database from "./models";
 import { AuthRouter } from "./routers/Auth.router";
+import { VideosRouter } from "./routers/Videos.router";
+import path from "path";
 
 dotenv.config();
 
@@ -16,6 +18,12 @@ dotenv.config();
 
 	app.use(express.json());
 	app.use("/auth", AuthRouter);
+	app.use("/videos", VideosRouter);
+
+	app.use(
+		"/storage/videos",
+		express.static(path.join(__dirname, "../storage/videos"))
+	);
 
 	app.use(ErrorMiddleware);
 

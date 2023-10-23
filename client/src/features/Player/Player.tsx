@@ -1,52 +1,52 @@
-import { useEffect, useMemo, useRef } from "react";
-import { useVideoStore } from "../../stores/video.store";
-import { EnVideoPlayState } from "../../ts/enums/video.enums";
-import Tools from "../Tools/Tools";
-import { S } from "./Player.styled";
+import { useEffect, useMemo, useRef } from 'react';
+import { useVideoStore } from '../../stores/video.store';
+import { EnVideoPlayState } from '../../ts/enums/video.enums';
+import Tools from '../Tools/Tools';
+import { S } from './Player.styled';
+import { BASE_URL } from '../../constants/constants';
 
 type Props = {} & React.VideoHTMLAttributes<HTMLVideoElement>;
 
 const Player = ({ ...playerProps }: Props) => {
-	const { video, setDuration, setTime, setPlayState, playState } =
-		useVideoStore();
-	const videoRef = useRef<HTMLVideoElement>({} as HTMLVideoElement);
-	const videoSrc = useMemo(() => video || undefined, [video]);
-	useEffect(() => {
-		if (playState === EnVideoPlayState.PLAYING && videoSrc) {
-			const timePollHandler = () => {
-				setTime(videoRef.current.currentTime);
-			};
-			const id = setInterval(timePollHandler, 1);
-			return () => {
-				clearInterval(id);
-			};
-		}
-	}, [playState]);
+  const { video, setDuration, setTime, setPlayState, playState } = useVideoStore();
+  const videoRef = useRef<HTMLVideoElement>({} as HTMLVideoElement);
+  const videoSrc = useMemo(() => `${BASE_URL}/storage/videos/${video}` || undefined, [video]);
+  useEffect(() => {
+    if (playState === EnVideoPlayState.PLAYING && videoSrc) {
+      const timePollHandler = () => {
+        setTime(videoRef.current.currentTime);
+      };
+      const id = setInterval(timePollHandler, 1);
+      return () => {
+        clearInterval(id);
+      };
+    }
+  }, [playState]);
 
-	return (
-		<S.Container>
-			<Tools />
-			<S.VideoWrapper>
-				<S.Video
-					ref={videoRef}
-					id="video-player"
-					src={videoSrc}
-					{...playerProps}
-					onLoadedMetadata={() => {
-						console.log(videoRef.current.duration);
+  return (
+    <S.Container>
+      <Tools />
+      <S.VideoWrapper>
+        <S.Video
+          ref={videoRef}
+          id='video-player'
+          src={videoSrc}
+          {...playerProps}
+          onLoadedMetadata={() => {
+            console.log(videoRef.current.duration);
 
-						setDuration(videoRef.current.duration);
-					}}
-					onTimeUpdate={() => {
-						setTime(videoRef.current.currentTime);
-					}}
-					onPlay={() => setPlayState(EnVideoPlayState.PLAYING)}
-					onPause={() => setPlayState(EnVideoPlayState.PAUSED)}
-				/>
-			</S.VideoWrapper>
-			<div>Transcript</div>
-		</S.Container>
-	);
+            setDuration(videoRef.current.duration);
+          }}
+          onTimeUpdate={() => {
+            setTime(videoRef.current.currentTime);
+          }}
+          onPlay={() => setPlayState(EnVideoPlayState.PLAYING)}
+          onPause={() => setPlayState(EnVideoPlayState.PAUSED)}
+        />
+      </S.VideoWrapper>
+      <div>Transcript</div>
+    </S.Container>
+  );
 };
 
 export default Player;
