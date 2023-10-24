@@ -2,15 +2,7 @@ import React, { useMemo } from 'react';
 import { S } from './Ruler.styled';
 import { useVideoStore } from '../../../../stores/video.store';
 import _ from 'lodash';
-
-const formatTimestamp = (timestamp: string) => {
-  const [minutes, seconds] = timestamp.split(':');
-  if (minutes !== '00') {
-    return `${Number(minutes)}m`;
-  } else {
-    return `${Number(seconds)}s`;
-  }
-};
+import { formatTimestamp } from '../../../../utils/utils';
 
 function generateAutoSegmentedTimestamps(duration: number) {
   const MAX_SEGMENTS = 10;

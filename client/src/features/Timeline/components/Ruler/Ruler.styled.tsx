@@ -11,6 +11,8 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 0.2em;
+  position: sticky;
+  top: 0;
 `;
 
 const Timestamp = styled.div`

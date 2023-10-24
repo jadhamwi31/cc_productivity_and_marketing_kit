@@ -8,4 +8,10 @@ const Container = styled.div`
   border-radius: var(--border-radius);
 `;
 
-export const S = { Container };
+const Timelines = styled.div`
+  height: fit-content;
+  width: 100%;
+  padding: 0.5em 0;
+`;
+
+export const S = { Container, Timelines };
