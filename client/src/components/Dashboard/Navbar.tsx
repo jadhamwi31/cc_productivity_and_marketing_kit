@@ -2,7 +2,13 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
 import octopus from '../../assets/octopus.webp';
-import { RiHomeFill } from 'react-icons/ri';
+import {
+  RiHomeLine,
+  RiAppsLine,
+  RiTapeLine,
+  RiSettings4Line,
+  RiArtboard2Line,
+} from 'react-icons/ri';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +60,7 @@ export default function Navbar() {
           hidden: !isOpen,
         })}
       >
-        <nav className='space-y-6 py-5 bg-New_Gray'>
+        <nav className='space-y-6 py-5 bg-New_Gray h-full '>
           <div>
             <NavLink
               end
@@ -62,7 +68,7 @@ export default function Navbar() {
               to=''
               className='flex text-xl border-l-emerald-500 border-l-4 items-center p-2 gap-3'
             >
-              <RiHomeFill size={25} /> Home
+              <RiHomeLine size={25} /> <span className='pt-2'>Home</span>
             </NavLink>
 
             <NavLink
@@ -71,7 +77,36 @@ export default function Navbar() {
               to=''
               className='flex text-xl border-l-emerald-500 border-l-4 items-center p-2 gap-3'
             >
-              <RiHomeFill size={25} /> Home
+              <RiAppsLine size={25} />
+              <span className='pt-2'> Discover</span>
+            </NavLink>
+            <NavLink
+              end
+              onClick={close}
+              to=''
+              className='flex text-xl border-l-emerald-500 border-l-4 items-center p-2 gap-3'
+            >
+              <RiTapeLine size={25} />
+              <span className='pt-2'> Video Editing</span>
+            </NavLink>
+            <NavLink
+              end
+              onClick={close}
+              to=''
+              className='flex text-xl border-l-emerald-500 border-l-4 items-center p-2 gap-3'
+            >
+              <RiArtboard2Line size={25} />
+              <span className='pt-2'> Photo Editing</span>
+            </NavLink>
+
+            <NavLink
+              end
+              onClick={close}
+              to=''
+              className='flex text-xl border-l-emerald-500 border-l-4 items-center p-2 gap-3 absolute bottom-0'
+            >
+              <RiSettings4Line size={25} />
+              <span className='pt-2'> Setting</span>
             </NavLink>
           </div>
         </nav>
