@@ -6,6 +6,7 @@ import path from "path";
 import { ErrorMiddleware } from "./middlewares/Error.middleware";
 import Database from "./models";
 import { AuthRouter } from "./routers/Auth.router";
+import { VideosRouter } from "./routers/Videos.router";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ dotenv.config();
 
 	app.use(express.json());
 	app.use("/auth", AuthRouter);
+	app.use("/videos", VideosRouter);
 
 	app.use(
 		"/storage/videos",

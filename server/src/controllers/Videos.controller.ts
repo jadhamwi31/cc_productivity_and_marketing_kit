@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { Storage } from "../services/Storage.service";
-import { MulterError } from "multer";
 import ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import path from "path";
+import { Storage } from "../services/Storage.service";
 
 const uploadVideoHandler = async (
 	req: Request,
@@ -17,6 +16,8 @@ const uploadVideoHandler = async (
 				resolve();
 			});
 		});
+		console.log(req.file?.filename);
+
 		return res.status(200).send(req.file?.filename);
 	} catch (e) {
 		return next(e);
