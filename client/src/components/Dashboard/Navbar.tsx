@@ -22,7 +22,7 @@ const Navbar = () => {
   return (
     <section className='flex   gap-6'>
       <div
-        className={` bg-New_Gray min-h-screen ${
+        className={`fixed top-0 left-0 h-screen bg-New_Gray ${
           open ? 'w-72' : 'w-16'
         } duration-500 text-gray-100 px-4`}
       >
