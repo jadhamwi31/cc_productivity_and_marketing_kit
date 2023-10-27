@@ -39,14 +39,7 @@ const Navbar = () => {
               } group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
             >
               <div>{React.createElement(menu?.icon, { size: '20' })}</div>
-              <h2
-                style={{
-                  transitionDelay: `${i + 3}00ms`,
-                }}
-                className={`whitespace-pre duration-500 ${
-                  !open && 'opacity-0 translate-x-28 overflow-hidden'
-                }`}
-              >
+              <h2 className={`whitespace-pre duration-500 ${!open && ' overflow-hidden'}`}>
                 {menu?.name}
               </h2>
               <h2
