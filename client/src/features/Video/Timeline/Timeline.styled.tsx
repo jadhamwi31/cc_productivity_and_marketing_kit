@@ -6,9 +6,10 @@ const Container = styled.div`
   border-radius: var(--border-radius);
   background-color: var(--black);
   border: solid 1px var(--blue);
-  padding: 2em 0.5em;
+  padding: 2em;
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 
 export const S = { Container };

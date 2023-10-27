@@ -9,6 +9,9 @@ const Container = styled.div`
   padding: 0.25em 0.5em;
   height: 30px;
   gap: 0.5em;
+  background-color: var(--black);
+  padding: 1em;
+  border-radius: var(--border-radius);
 `;
 
 export const S = { Container };

@@ -1,13 +1,14 @@
-import React from 'react';
 import { S } from './Timeline.styled';
-import Ruler from './components/Ruler/Ruler';
+import Cursor from './components/Cursor/Cursor';
+import Line from './components/Line/Line';
 
 type Props = {};
 
 const Timeline = (props: Props) => {
   return (
     <S.Container>
-      <Ruler />
+      <Cursor />
+      <Line />
     </S.Container>
   );
 };

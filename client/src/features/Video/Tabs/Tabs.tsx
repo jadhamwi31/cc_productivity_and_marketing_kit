@@ -12,6 +12,7 @@ const Tabs = (props: Props) => {
       {Object.keys(tabs).map((tabId, i) => (
         <Button
           onClick={() => setSelectedTab(tabId)}
+          key={tabId}
           style={{ color: selectedTab === tabId ? 'var(--blue)' : 'var(--white)' }}
         >
           Tab {i + 1}
