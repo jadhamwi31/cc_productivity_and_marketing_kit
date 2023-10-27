@@ -1,7 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@font-face {
+  font-family: 'San Francisco';
+  font-weight: 700;
+  src: url('src/assets/Poppins-Regular.ttf');
+}
 :root {
   --black: #000000;
   --black-lighter: #171717;
@@ -63,6 +67,7 @@ p {
 }
 body {
   background-color: #000000;
+  font-family: 'San Francisco', sans-serif;
 }
 * {
   box-sizing: border-box;
