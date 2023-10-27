@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import Logo from '../Main/Logo';
 import { MdOutlineDashboard } from 'react-icons/md';
 import { RiSettings4Line } from 'react-icons/ri';
 import { TbReportAnalytics } from 'react-icons/tb';
 import { AiOutlineUser, AiOutlineHeart } from 'react-icons/ai';
 import { FiMessageSquare, FiFolder, FiShoppingCart } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import React from 'react';
+import octopus from '../../assets/Small.webp';
 
 const Navbar = () => {
   const menus = [
@@ -21,8 +21,10 @@ const Navbar = () => {
 
   return (
     <section className='flex   gap-6'>
-      <div className='fixed top-0 left-0 h-screen bg-New_Gray w-16 text-gray-100 px-4'>
+      <div className='fixed top-0 left-0 h-screen bg-New_Gray w-16 text-gray-100'>
         <div className='mt-4 flex flex-col gap-4 relative'>
+          <img src={octopus} alt='' className='pl-2 pr-1' />
+
           {menus?.map((menu, i) => (
             <Link
               to={menu?.link}
@@ -31,7 +33,7 @@ const Navbar = () => {
                 menu?.margin && 'mt-5'
               } group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
             >
-              <div>{React.createElement(menu?.icon, { size: '20' })}</div>
+              <div className=' px-4'>{React.createElement(menu?.icon, { size: '20' })}</div>
               <h2 className='absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit '>
                 {menu?.name}
               </h2>
