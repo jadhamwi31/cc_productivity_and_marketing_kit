@@ -8,8 +8,7 @@ type Props = {};
 
 const Player = (props: Props) => {
   const tab = useCurrentTab();
-  const { playback, setPlayback, updateVideoCurrentTime, setVideoDuration, updateVideoDuration } =
-    useVideosStore();
+  const { playback, setPlayback, updateVideoCurrentTime, updateVideoDuration } = useVideosStore();
 
   const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
@@ -25,31 +24,37 @@ const Player = (props: Props) => {
   }, [playback]);
 
   useEffect(() => {
-    if (tab.videoId !== null && playback === EnVideoPlayback.PLAYING) {
-      const timeUpdateHandler = () => {
-        if (videoRef.current) updateVideoCurrentTime(videoRef.current.currentTime);
-      };
-      const intervalId = setInterval(timeUpdateHandler, 1);
-      return () => {
-        clearInterval(intervalId);
-      };
-    }
+    const timeUpdateHandler = () => {
+      if (videoRef.current) updateVideoCurrentTime(videoRef.current.currentTime);
+    };
+    const intervalId = setInterval(timeUpdateHandler, 1);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [tab, playback]);
+
+  const onLoadHandler = () => {
+    if (videoRef.current) {
+      const video = videoRef.current;
+      updateVideoCurrentTime(0);
+      updateVideoDuration(video.duration);
+    }
+  };
 
   return (
     <S.Container>
-      {tab.videoUrl !== null && (
-        <S.Video
-          ref={videoRef}
-          onPlay={() => setPlayback(EnVideoPlayback.PLAYING)}
-          onPause={() => {
-            setPlayback(EnVideoPlayback.PAUSED);
-          }}
-          onLoadedMetadata={(e) => setVideoDuration(e.currentTarget.duration)}
-          onLoadedData={(e) => updateVideoDuration(e.currentTarget.duration)}
-          src={tab.videoUrl}
-        />
-      )}
+      <S.Video
+        id='video-player'
+        ref={videoRef}
+        onPlay={() => setPlayback(EnVideoPlayback.PLAYING)}
+        onPause={() => {
+          setPlayback(EnVideoPlayback.PAUSED);
+        }}
+        onLoadedMetadata={onLoadHandler}
+        onLoadedData={onLoadHandler}
+        onLoad={onLoadHandler}
+        src={tab.videoUrl ?? ''}
+      />
     </S.Container>
   );
 };

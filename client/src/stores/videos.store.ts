@@ -10,7 +10,7 @@ export interface IVideoTab {
   videoId: string | null;
   currentTime: number;
   duration: number;
-  currentDuration: number;
+  lineWidth: number;
 }
 
 interface IVideosStore {
@@ -23,7 +23,8 @@ interface IVideosStore {
   setPlayback: (playback: EnVideoPlayback) => void;
   updateVideoCurrentTime: (newTime: number) => void;
   updateVideoDuration: (duration: number) => void;
-  setVideoDuration: (duration: number) => void;
+  cut: (start: number, end: number) => Promise<void>;
+  setLineWidth: (lineWidth: number) => void;
 }
 
 const INITIAL_TAB_ID = uuid();
@@ -34,8 +35,9 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       videoUrl: null,
       videoId: null,
       currentTime: 0,
-      currentDuration: 0,
+
       duration: 0,
+      lineWidth: 0,
     },
   },
   addTab: () => {
@@ -46,7 +48,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       videoId: null,
       currentTime: 0,
       duration: 0,
-      currentDuration: 0,
+      lineWidth: 0,
     };
     set({ tabs: newTabs, selectedTab: tabId });
   },
@@ -64,6 +66,20 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     const newTabs = { ...get().tabs };
     newTabs[currentTab].videoUrl = `${BASE_URL}/storage/videos/${filename}`;
     newTabs[currentTab].videoId = filename;
+    newTabs[currentTab].currentTime = 0;
+    set({ tabs: newTabs });
+  },
+  cut: async (start, end) => {
+    const currentTab = get().selectedTab;
+    const videoId = get().tabs[currentTab].videoId;
+    const filename = await axios
+      .post<{}, AxiosResponse<string>>(`/videos/${videoId}/cut`, { start, end })
+      .then(({ data }) => data);
+    const newTabs = { ...get().tabs };
+    newTabs[currentTab].videoUrl = `${BASE_URL}/storage/videos/${filename}`;
+    newTabs[currentTab].videoId = filename;
+    newTabs[currentTab].currentTime = 0;
+
     set({ tabs: newTabs });
   },
   playback: EnVideoPlayback.PAUSED,
@@ -76,12 +92,13 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
 
   updateVideoDuration: (duration) => {
     const newTabs = { ...get().tabs };
-    newTabs[get().selectedTab].currentDuration = duration;
+
+    newTabs[get().selectedTab].duration = duration;
     set({ tabs: newTabs });
   },
-  setVideoDuration: (duration) => {
+  setLineWidth: (lineWidth) => {
     const newTabs = { ...get().tabs };
-    newTabs[get().selectedTab].duration = duration;
+    newTabs[get().selectedTab].lineWidth = lineWidth;
     set({ tabs: newTabs });
   },
 }));

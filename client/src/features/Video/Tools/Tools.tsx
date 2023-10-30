@@ -4,11 +4,14 @@ import Button from '../../../components/Button/Button';
 import { useVideosStore } from '../../../stores/videos.store';
 import { createSources } from './helpers/Tools.helpers';
 import { EnVideoPlayback } from '../../../ts/enums/video.enums';
+import { useTabStore } from '../../../hooks/useCurrentTab';
+import { useVideoElement } from '../../../hooks/useVideoElement';
 
 type Props = {};
 
 const Tools = (props: Props) => {
-  const { uploadFile, playback, setPlayback } = useVideosStore();
+  const { uploadFile, playback, setPlayback, cut, updateVideoDuration, updateVideoCurrentTime } =
+    useVideosStore();
   const uploadRef = useRef<HTMLInputElement>(null);
   const uploadHandler: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     if (uploadRef.current) {
@@ -27,6 +30,12 @@ const Tools = (props: Props) => {
     }
   };
 
+  const cutHandler = () => {
+    cut(5, 15);
+  };
+
+  const tab = useTabStore();
+
   return (
     <S.Container>
       <Button onClick={() => uploadRef.current?.click()}>Upload</Button>
@@ -36,8 +45,11 @@ const Tools = (props: Props) => {
         ref={uploadRef}
         onChange={uploadHandler}
       />
-      <Button onClick={playbackHandler}>
+      <Button onClick={playbackHandler} disabled={tab.videoId === null}>
         {playback === EnVideoPlayback.PAUSED ? 'Play' : 'Pause'}
+      </Button>
+      <Button onClick={cutHandler} disabled={tab.videoId === null}>
+        Cut
       </Button>
     </S.Container>
   );
