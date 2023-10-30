@@ -6,7 +6,8 @@ export default function Dashboard() {
   return (
     <div className='flex'>
       <Navbar />
-      <div className='ml-16 overflow-y-scroll text-white text-xl p-5'>
+      <div className='ml-16 overflow-hidden w-[calc(100vw-4rem)] text-white'>
+        <Header />
         <Outlet />
       </div>
     </div>
