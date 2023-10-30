@@ -14,6 +14,7 @@ import {
   AiOutlineZoomOut,
 } from 'react-icons/ai';
 import { FiSave } from 'react-icons/fi';
+import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
 
 export default function GraphicEditor() {
   //Background
@@ -34,6 +35,48 @@ export default function GraphicEditor() {
     }
   }, [height, width]);
 
+  //Images
+  const [imageURLs, setImageURLs] = useState<any>([]);
+  const [images, setImages] = useState<any>([]);
+  const [selectedId, selectShape] = useState<any>(null);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files) {
+      // Iterate through the selected files and create an array of image objects and URLs
+      const imageArray = Array.from(files).map((file, index) => {
+        const reader = new FileReader();
+        const image = new window.Image();
+
+        reader.onload = (e) => {
+          const imageURL = e.target?.result as string;
+
+          image.onload = () => {
+            // Add the loaded image to the array of images
+            setImages((prevImages: any) => [
+              ...prevImages,
+              {
+                id: prevImages.length,
+                image,
+                x: 0,
+                y: 0,
+                width: image.width,
+                height: image.height,
+              },
+            ]);
+          };
+
+          image.src = imageURL;
+        };
+
+        reader.readAsDataURL(file);
+        return URL.createObjectURL(file);
+      });
+
+      // Update the array of image URLs
+      setImageURLs(imageArray);
+    }
+  };
   return (
     <div className='flex justify-between'>
       <div className=' h-[95vh] w-[5vw] flex flex-col items-center justify-center'>
@@ -44,9 +87,18 @@ export default function GraphicEditor() {
           <button className='px-2 py-1 hover:bg-[#4f245f] hover:rounded-t-lg '>
             <BsType size='25' />
           </button>
-          <button className='px-2 py-1  hover:bg-[#4f245f] '>
+
+          <label className='px-2 py-1  hover:bg-[#4f245f] ' htmlFor='img'>
             <TbPhotoSearch size='25' />
-          </button>
+          </label>
+          <input
+            id='img'
+            type='file'
+            accept='image/*'
+            className='hidden'
+            onChange={handleImageChange}
+          />
+
           <button className='px-2 py-1 hover:bg-[#4f245f] hover:rounded-b-lg '>
             <IoShapesOutline size='25' />
           </button>
@@ -68,24 +120,38 @@ export default function GraphicEditor() {
           </button>
         </div>
       </div>
-      <div className='flex-col flex   items-center  justify-center ' style={{ zoom: `${zoom}%` }}>
+      <div className='flex-col flex items-center justify-center' style={{ zoom: `${zoom}%` }}>
         <Stage
           width={width}
           height={height}
           style={{
             borderRadius: '25px',
             overflow: 'hidden',
-            boxShadow: ' 0px 0px 10px 10px rgba(38,38,38,0.6)',
-          }}
-          onClick={() => {
-            setBackgroundForm(true);
+            boxShadow: '0px 0px 10px 10px rgba(38,38,38,0.6)',
           }}
         >
           <Layer>
             <Rect x={0} y={0} width={width} height={height} fill={backgroundColor} />
+            {images.map((imageData: any, i: any) => (
+              <CustomImage
+                key={i}
+                shapeProps={imageData}
+                isSelected={imageData.id === selectedId}
+                onSelect={() => {
+                  selectShape(imageData.id);
+                }}
+                onChange={(newAttrs) => {
+                  const updatedImages = images.map((img: any) =>
+                    img.id === imageData.id ? { ...img, ...newAttrs } : img,
+                  );
+                  setImages(updatedImages);
+                }}
+              />
+            ))}
           </Layer>
         </Stage>
       </div>
+
       <div className='h-[95vh] mr-16'>
         {backgroundForm ? (
           <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw]'>
