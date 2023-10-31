@@ -8,6 +8,7 @@ import { IoShapesOutline } from 'react-icons/io5';
 import { BiColorFill } from 'react-icons/bi';
 import { RiSettings4Line, RiDeleteBin6Line } from 'react-icons/ri';
 import { AiOutlineZoomIn, AiOutlineZoomOut, AiOutlinePlus } from 'react-icons/ai';
+import { FaRegCircle, FaRegSquare, FaRegStar } from 'react-icons/fa';
 import { FiSave } from 'react-icons/fi';
 import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
 import { toast } from 'react-toastify';
@@ -190,6 +191,14 @@ export default function GraphicEditor() {
       setUpateTextForm(false);
     }
   };
+  //Shapes
+  const [shapeType, setShapeType] = useState('');
+  const [newShapeForm, setNewShapeForm] = useState(true);
+  const [newCircle, setNewCircle] = useState(false);
+  const [newStar, setNewStar] = useState(false);
+  const [newRectangle, setNewRectangle] = useState(false);
+  const [shapeColor, setShapeColor] = useState('');
+
   //Deselcet Funtion
   const checkDeselect = (e: any) => {
     const clickedOnEmpty = e.target === e.target.getStage();
@@ -560,6 +569,78 @@ export default function GraphicEditor() {
                 className=' bg-[#2A2438] px-2 py-1 w-full rounded-md hover:bg-[#191521]'
               >
                 Add Text
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className='w-[15vw] bg-red-200'></div>
+        )}
+        {newShapeForm ? (
+          <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw] mt-5'>
+            <div className='flex flex-col justify-center text-gray-500'>
+              <span className=' flex '>
+                <IoShapesOutline size={20} className='mr-2' /> Add Shape
+              </span>
+              <hr className='h-px mb-2 bg-gray-500 border-0 ' />
+              <label htmlFor='' className='flex'>
+                Select Shape Type
+              </label>
+              <div className='bg-[#2a2438] h-32  rounded-md mb-2 p-4  flex'>
+                <div
+                  className={`${
+                    newCircle ? 'bg-[#15121C]' : 'bg-[#2a2438]'
+                  } rounded-md p-2 w-12 cursor-pointer h-12 `}
+                  onClick={() => {
+                    setNewCircle(true);
+                    setNewRectangle(false);
+                    setNewStar(false);
+                  }}
+                >
+                  <FaRegCircle size='30' />
+                </div>
+                <div
+                  className={`${
+                    newRectangle ? 'bg-[#15121C]' : 'bg-[#2a2438]'
+                  } rounded-md p-2 w-12 cursor-pointer h-12 `}
+                  onClick={() => {
+                    setNewCircle(false);
+                    setNewStar(false);
+                    setNewRectangle(true);
+                  }}
+                >
+                  <FaRegSquare size='30' />
+                </div>
+                <div
+                  className={`${
+                    newStar ? 'bg-[#15121C]' : 'bg-[#2a2438]'
+                  } rounded-md p-2 w-12 cursor-pointer  h-12`}
+                  onClick={() => {
+                    setNewCircle(false);
+                    setNewStar(true);
+                    setNewRectangle(false);
+                  }}
+                >
+                  <FaRegStar size='30' />
+                </div>
+              </div>
+              <label htmlFor='' className='flex'>
+                <span className='pt-1'>Shape Color</span>
+                <input
+                  className='rounded px-2 py-1 bg-[#2a2438]  mb-4 ml-2'
+                  type='color'
+                  value={shapeColor}
+                  onChange={(e) => {
+                    setShapeColor(e.target.value);
+                  }}
+                />
+              </label>
+              <button
+                onClick={() => {
+                  addText();
+                }}
+                className=' bg-[#2A2438] px-2 py-1 w-full rounded-md hover:bg-[#191521]'
+              >
+                Add Shape
               </button>
             </div>
           </div>
