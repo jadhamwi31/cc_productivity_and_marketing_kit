@@ -7,12 +7,7 @@ import { TbPhotoSearch } from 'react-icons/tb';
 import { IoShapesOutline } from 'react-icons/io5';
 import { BiColorFill } from 'react-icons/bi';
 import { RiSettings4Line } from 'react-icons/ri';
-import {
-  AiOutlineZoomIn,
-  AiOutlineColumnHeight,
-  AiOutlineColumnWidth,
-  AiOutlineZoomOut,
-} from 'react-icons/ai';
+import { AiOutlineZoomIn, AiOutlineZoomOut } from 'react-icons/ai';
 import { FiSave } from 'react-icons/fi';
 import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
 
@@ -20,18 +15,15 @@ export default function GraphicEditor() {
   //Background
   const [width, setWidth] = useState(800);
   const [height, setHeight] = useState(800);
-  const [zoom, setZoom] = useState(70);
+  const [zoom, setZoom] = useState(100);
   const [backgroundColor, setBackgroundColor] = useState('#eeeeee');
   const [backgroundForm, setBackgroundForm] = useState(true);
   useEffect(() => {
-    if (height > 1200 || width > 1200) {
-      setZoom(30);
+    if (height >= 900) {
+      setHeight((prevHeight) => prevHeight / 3);
     }
-    if (height < 1200 || width < 1200) {
-      setZoom(50);
-    }
-    if (height < 700 || width < 700) {
-      setZoom(120);
+    if (width >= 900) {
+      setWidth((prevWidth) => prevWidth / 3);
     }
   }, [height, width]);
 
@@ -60,8 +52,8 @@ export default function GraphicEditor() {
                 image,
                 x: 0,
                 y: 0,
-                width: image.width,
-                height: image.height,
+                width: image.width / 2,
+                height: image.height / 2,
               },
             ]);
           };
@@ -115,6 +107,7 @@ export default function GraphicEditor() {
           <button
             className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg  '
             onClick={() => setZoom((prevZoom) => prevZoom - 5)}
+            disabled={zoom === 100}
           >
             <AiOutlineZoomOut size='25' />
           </button>
@@ -157,28 +150,6 @@ export default function GraphicEditor() {
           <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw]'>
             <div className='flex flex-col justify-center text-gray-500'>
               <label htmlFor='' className='flex'>
-                <AiOutlineColumnWidth size='22' className='mr-2' /> Width
-              </label>
-              <input
-                type='text'
-                value={width}
-                onChange={(e) => {
-                  setWidth(Number(e.target.value));
-                }}
-                className='rounded px-2 py-1 bg-[#2a2438] mb-4'
-              />
-              <label htmlFor='' className='flex'>
-                <AiOutlineColumnHeight size='22' className='mr-2' /> Height
-              </label>
-              <input
-                type='text'
-                className='rounded px-2 py-1 bg-[#2a2438]  mb-4'
-                value={height}
-                onChange={(e) => {
-                  setHeight(Number(e.target.value));
-                }}
-              />
-              <label htmlFor='' className='flex'>
                 <RiSettings4Line size='22' className='mr-2' /> Presets{' '}
               </label>
 
@@ -201,7 +172,7 @@ export default function GraphicEditor() {
                   Instagram Portrait: 1080 x 1350
                 </option>
                 <option value='{"width":"1080","height":"1920"}'>
-                  Instagram Storiey: 1080 x 1920
+                  Instagram Story: 1080 x 1920
                 </option>
                 <option value='{"width":"1080","height":"1920"}'>
                   Instagram Storiey: 1080 x 1920
