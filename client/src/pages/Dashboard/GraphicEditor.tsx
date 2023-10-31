@@ -44,7 +44,6 @@ export default function GraphicEditor() {
           const imageURL = e.target?.result as string;
 
           image.onload = () => {
-            // Add the loaded image to the array of images
             setImages((prevImages: any) => [
               ...prevImages,
               {
@@ -65,7 +64,6 @@ export default function GraphicEditor() {
         return URL.createObjectURL(file);
       });
 
-      // Update the array of image URLs
       setImageURLs(imageArray);
     }
   };
