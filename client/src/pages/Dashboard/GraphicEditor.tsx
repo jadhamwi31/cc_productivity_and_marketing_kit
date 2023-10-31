@@ -1,7 +1,7 @@
 import { HexColorPicker } from 'react-colorful';
 
 import { Stage, Layer, Text, Image, Rect } from 'react-konva';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BsType } from 'react-icons/bs';
 import { TbPhotoSearch } from 'react-icons/tb';
 import { IoShapesOutline } from 'react-icons/io5';
@@ -18,14 +18,43 @@ export default function GraphicEditor() {
   const [zoom, setZoom] = useState(100);
   const [backgroundColor, setBackgroundColor] = useState('#eeeeee');
   const [backgroundForm, setBackgroundForm] = useState(true);
+  const [backgroundRec, setBackgroundRec] = useState(false);
   useEffect(() => {
+    console.log(backgroundRec);
     if (height >= 900) {
       setHeight((prevHeight) => prevHeight / 3);
     }
     if (width >= 900) {
       setWidth((prevWidth) => prevWidth / 3);
     }
-  }, [height, width]);
+  }, [height, width, backgroundRec]);
+  const stageRef = React.useRef(null);
+  function downloadURI(uri: any, name: any) {
+    var link = document.createElement('a');
+    link.download = name;
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  const handleExport = () => {
+    setTimeout(() => {
+      setBackgroundRec(true);
+    }, 1000);
+
+    setTimeout(() => {
+      if (stageRef && stageRef.current) {
+        const stage = stageRef.current as any;
+        const uri = stage.toDataURL();
+        downloadURI(uri, 'stage.png');
+      } else {
+        console.error('stageRef.current is null');
+      }
+
+      setBackgroundRec(false);
+    }, 1000);
+  };
 
   //Images
   const [imageURLs, setImageURLs] = useState<any>([]);
@@ -35,7 +64,6 @@ export default function GraphicEditor() {
     const files = e.target.files;
 
     if (files) {
-      // Iterate through the selected files and create an array of image objects and URLs
       const imageArray = Array.from(files).map((file, index) => {
         const reader = new FileReader();
         const image = new window.Image();
@@ -67,10 +95,23 @@ export default function GraphicEditor() {
       setImageURLs(imageArray);
     }
   };
+
+  const checkDeselect = (e: any) => {
+    const clickedOnEmpty = e.target === e.target.getStage();
+    if (clickedOnEmpty) {
+      selectShape(null);
+    }
+  };
   return (
     <div className='flex justify-between'>
       <div className=' h-[95vh] w-[5vw] flex flex-col items-center justify-center'>
-        <button className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg'>
+        <button
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg'
+          onClick={() => {
+            setBackgroundRec(true);
+            handleExport();
+          }}
+        >
           <FiSave size='25' />
         </button>
         <div className=' bg-[#2a2438] justify-around rounded-lg  flex flex-col text-white mt-10'>
@@ -112,35 +153,41 @@ export default function GraphicEditor() {
         </div>
       </div>
       <div className='flex-col flex items-center justify-center' style={{ zoom: `${zoom}%` }}>
-        <Stage
-          width={width}
-          height={height}
-          style={{
-            borderRadius: '25px',
-            overflow: 'hidden',
-            boxShadow: '0px 0px 10px 10px rgba(38,38,38,0.6)',
-          }}
-        >
-          <Layer>
-            <Rect x={0} y={0} width={width} height={height} fill={backgroundColor} />
-            {images.map((imageData: any, i: any) => (
-              <CustomImage
-                key={i}
-                shapeProps={imageData}
-                isSelected={imageData.id === selectedId}
-                onSelect={() => {
-                  selectShape(imageData.id);
-                }}
-                onChange={(newAttrs) => {
-                  const updatedImages = images.map((img: any) =>
-                    img.id === imageData.id ? { ...img, ...newAttrs } : img,
-                  );
-                  setImages(updatedImages);
-                }}
-              />
-            ))}
-          </Layer>
-        </Stage>
+        <div style={{ backgroundColor: backgroundColor, borderRadius: '25px' }}>
+          <Stage
+            ref={stageRef}
+            width={width}
+            height={height}
+            style={{
+              borderRadius: '25px',
+              overflow: 'hidden',
+              boxShadow: '0px 0px 10px 10px rgba(38,38,38,0.6)',
+            }}
+            onMouseDown={checkDeselect}
+          >
+            <Layer>
+              {backgroundRec && (
+                <Rect x={0} y={0} width={width} height={height} fill={backgroundColor} />
+              )}
+              {images.map((imageData: any, i: any) => (
+                <CustomImage
+                  key={i}
+                  shapeProps={imageData}
+                  isSelected={imageData.id === selectedId}
+                  onSelect={() => {
+                    selectShape(imageData.id);
+                  }}
+                  onChange={(newAttrs) => {
+                    const updatedImages = images.map((img: any) =>
+                      img.id === imageData.id ? { ...img, ...newAttrs } : img,
+                    );
+                    setImages(updatedImages);
+                  }}
+                />
+              ))}
+            </Layer>
+          </Stage>
+        </div>
       </div>
 
       <div className='h-[95vh] mr-16'>
