@@ -6,7 +6,7 @@ import { BsType } from 'react-icons/bs';
 import { TbPhotoSearch } from 'react-icons/tb';
 import { IoShapesOutline } from 'react-icons/io5';
 import { BiColorFill } from 'react-icons/bi';
-import { RiSettings4Line } from 'react-icons/ri';
+import { RiSettings4Line, RiDeleteBin6Line } from 'react-icons/ri';
 import { AiOutlineZoomIn, AiOutlineZoomOut } from 'react-icons/ai';
 import { FiSave } from 'react-icons/fi';
 import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
@@ -28,6 +28,12 @@ export default function GraphicEditor() {
       setWidth((prevWidth) => prevWidth / 3);
     }
   }, [height, width, backgroundRec]);
+
+  //General
+  const RemoveAllforms = () => {
+    setBackgroundForm(false);
+    setImageForm(false);
+  };
   const stageRef = React.useRef(null);
   function downloadURI(uri: any, name: any) {
     var link = document.createElement('a');
@@ -37,7 +43,6 @@ export default function GraphicEditor() {
     link.click();
     document.body.removeChild(link);
   }
-
   const handleExport = () => {
     setTimeout(() => {
       setBackgroundRec(true);
@@ -59,10 +64,12 @@ export default function GraphicEditor() {
   //Images
   const [imageURLs, setImageURLs] = useState<any>([]);
   const [images, setImages] = useState<any>([]);
+  const [imageForm, setImageForm] = useState(false);
   const [selectedId, selectShape] = useState<any>(null);
+  const [selectdImageToBeDeleted, setSelectdImageToBeDeleted] = useState<any>();
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-
     if (files) {
       const imageArray = Array.from(files).map((file, index) => {
         const reader = new FileReader();
@@ -95,7 +102,22 @@ export default function GraphicEditor() {
       setImageURLs(imageArray);
     }
   };
+  const handleImageSelect = (i: any) => {
+    setImageForm(true);
+    setSelectdImageToBeDeleted(i);
+  };
 
+  const deleteImage = (): void => {
+    console.log(selectedId);
+    if (selectdImageToBeDeleted !== null) {
+      setImages((prevImages: any) =>
+        prevImages.filter((image: any) => image.id !== selectdImageToBeDeleted),
+      );
+      setImageForm(false); // You may want to close the image form after deleting.
+    }
+  };
+
+  //Deselcet Funtion
   const checkDeselect = (e: any) => {
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
@@ -176,6 +198,7 @@ export default function GraphicEditor() {
                   isSelected={imageData.id === selectedId}
                   onSelect={() => {
                     selectShape(imageData.id);
+                    handleImageSelect(i);
                   }}
                   onChange={(newAttrs) => {
                     const updatedImages = images.map((img: any) =>
@@ -258,6 +281,28 @@ export default function GraphicEditor() {
                 onChange={setBackgroundColor}
                 className='mx-auto'
               />
+            </div>
+          </div>
+        ) : (
+          <div className='w-[15vw] bg-red-200'></div>
+        )}
+        {imageForm ? (
+          <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw] mt-5'>
+            <div className='flex flex-col justify-center text-gray-500'>
+              <span className=' flex '>
+                <TbPhotoSearch size={20} className='mr-2' /> Image Settings
+              </span>
+              <hr className='h-px mb-2 bg-gray-500 border-0 ' />
+              <button
+                onClick={() => {
+                  deleteImage();
+                }}
+                className=' bg-red-500  text-red-500 px-4 w-full rounded-md'
+              >
+                <span className='flex  text-white justify-center '>
+                  <RiDeleteBin6Line size={20} className='mr-2 ' /> Delete
+                </span>
+              </button>
             </div>
           </div>
         ) : (
