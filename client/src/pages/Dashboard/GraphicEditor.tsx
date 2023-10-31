@@ -12,6 +12,7 @@ import { FaRegCircle, FaRegSquare, FaRegStar } from 'react-icons/fa';
 import { FiSave } from 'react-icons/fi';
 import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
 import { toast } from 'react-toastify';
+import CustomCircle from '../../components/Dashboard/GraphicEditor/CustomCircle';
 
 export default function GraphicEditor() {
   //Background
@@ -198,12 +199,25 @@ export default function GraphicEditor() {
   const [newStar, setNewStar] = useState(false);
   const [newRectangle, setNewRectangle] = useState(false);
   const [shapeColor, setShapeColor] = useState('');
+  const [shapes, setShapes] = useState<any>([]);
+  const [selectedShapeId, setSelectedShapeId] = useState<any>(null);
 
+  const addShape = () => {
+    const shape = {
+      radius: 50,
+      x: 100,
+      y: 100,
+      fill: 'green',
+      type: 'c',
+    };
+    setShapes([...shapes, shape]);
+  };
   //Deselcet Funtion
   const checkDeselect = (e: any) => {
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       selectShape(null);
+      setSelectedShapeId(null);
     }
   };
   return (
@@ -294,6 +308,24 @@ export default function GraphicEditor() {
                       img.id === imageData.id ? { ...img, ...newAttrs } : img,
                     );
                     setImages(updatedImages);
+                  }}
+                />
+              ))}
+
+              {shapes.map((shape: any, i: any) => (
+                <CustomCircle
+                  key={i}
+                  shapeProps={shape}
+                  isSelected={shape.id === selectedShapeId}
+                  onSelect={() => {
+                    RemoveAllforms();
+                    setSelectedShapeId(shape.id);
+                  }}
+                  onChange={(newAttrs) => {
+                    const updatedShapes = shapes.map((shape1: any) =>
+                      shape1.id === shape.id ? { ...shape1, ...newAttrs } : shape1,
+                    );
+                    setShapes(updatedShapes);
                   }}
                 />
               ))}
@@ -636,7 +668,7 @@ export default function GraphicEditor() {
               </label>
               <button
                 onClick={() => {
-                  addText();
+                  addShape();
                 }}
                 className=' bg-[#2A2438] px-2 py-1 w-full rounded-md hover:bg-[#191521]'
               >
