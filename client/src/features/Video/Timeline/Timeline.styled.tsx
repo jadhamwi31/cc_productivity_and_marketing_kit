@@ -9,7 +9,13 @@ const Container = styled.div`
   padding: 2em;
   display: flex;
   flex-direction: column;
+`;
+
+const Wrapper = styled.div`
+  width: 100%;
+
+  height: 100%;
   position: relative;
 `;
 
-export const S = { Container };
+export const S = { Container, Wrapper };

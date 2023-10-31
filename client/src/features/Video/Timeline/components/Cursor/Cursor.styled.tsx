@@ -1,11 +1,12 @@
 import styled from 'styled-components';
+import Draggable from 'react-draggable';
 
-const Container = styled.div`
-  height: 100%;
+const Container = styled.div<{ $height: number }>`
+  height: ${({ $height }) => $height}px;
   width: 1px;
   background-color: var(--blue);
   position: absolute;
-  top: 0;
+  top: -2.1em;
 `;
 
 const Relative = styled.div`
