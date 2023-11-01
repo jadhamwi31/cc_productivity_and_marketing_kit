@@ -13,7 +13,15 @@ import { FiSave } from 'react-icons/fi';
 import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
 import { toast } from 'react-toastify';
 import CustomCircle from '../../components/Dashboard/GraphicEditor/CustomCircle';
-
+type Shape = {
+  radius: number;
+  x: any;
+  y: any;
+  fill: string;
+  type: any;
+  stroke?: any;
+  strokeWidth?: number;
+};
 export default function GraphicEditor() {
   //Background
   const [width, setWidth] = useState(800);
@@ -34,6 +42,7 @@ export default function GraphicEditor() {
 
   //General
   const RemoveAllforms = () => {
+    setNewShapeForm(false);
     setImageForm(false);
     setTextForm(false);
     setUpateTextForm(false);
@@ -194,23 +203,43 @@ export default function GraphicEditor() {
   };
   //Shapes
   const [shapeType, setShapeType] = useState('');
-  const [newShapeForm, setNewShapeForm] = useState(true);
+  const [newShapeForm, setNewShapeForm] = useState(false);
+
   const [newCircle, setNewCircle] = useState(false);
   const [newStar, setNewStar] = useState(false);
   const [newRectangle, setNewRectangle] = useState(false);
-  const [shapeColor, setShapeColor] = useState('');
+
+  const [shapeRaduis, setShapeRaduis] = useState(1);
+
+  const [shapeColor, setShapeColor] = useState('#000000');
+
+  const [stroke, setStroke] = useState(false);
+
+  const [strokeColor, setStrokeColor] = useState('#000000');
+  const [strokeWidth, setStrokeWidth] = useState(1);
+
   const [shapes, setShapes] = useState<any>([]);
   const [selectedShapeId, setSelectedShapeId] = useState<any>(null);
 
   const addShape = () => {
-    const shape = {
-      radius: 50,
+    const shape: Shape = {
+      radius: Number(shapeRaduis),
       x: 100,
       y: 100,
-      fill: 'green',
+      fill: shapeColor,
       type: 'c',
     };
+
+    if (stroke) {
+      shape.stroke = strokeColor;
+      shape.strokeWidth = strokeWidth;
+    }
+
     setShapes([...shapes, shape]);
+    setNewShapeForm(false);
+    setStrokeWidth(0);
+    setStrokeColor('#000000');
+    setShapeRaduis(1);
   };
   //Deselcet Funtion
   const checkDeselect = (e: any) => {
@@ -254,7 +283,13 @@ export default function GraphicEditor() {
             onChange={handleImageChange}
           />
 
-          <button className='px-2 py-1 hover:bg-[#4f245f] hover:rounded-b-lg '>
+          <button
+            className='px-2 py-1 hover:bg-[#4f245f] hover:rounded-b-lg '
+            onClick={() => {
+              RemoveAllforms();
+              setNewShapeForm(true);
+            }}
+          >
             <IoShapesOutline size='25' />
           </button>
         </div>
@@ -316,14 +351,14 @@ export default function GraphicEditor() {
                 <CustomCircle
                   key={i}
                   shapeProps={shape}
-                  isSelected={shape.id === selectedShapeId}
+                  isSelected={i === selectedShapeId}
                   onSelect={() => {
                     RemoveAllforms();
-                    setSelectedShapeId(shape.id);
+                    setSelectedShapeId(i);
                   }}
                   onChange={(newAttrs) => {
                     const updatedShapes = shapes.map((shape1: any) =>
-                      shape1.id === shape.id ? { ...shape1, ...newAttrs } : shape1,
+                      shape1.id === i ? { ...shape1, ...newAttrs } : shape1,
                     );
                     setShapes(updatedShapes);
                   }}
@@ -492,7 +527,7 @@ export default function GraphicEditor() {
                 type='range'
                 min='10'
                 max='150'
-                className='w-full h-1 mb-6 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm '
+                className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
                 onChange={(event) => setUpdatedTextSize(event.target.value)}
               />
               <label htmlFor='' className='flex'>
@@ -579,7 +614,7 @@ export default function GraphicEditor() {
                 type='range'
                 min='10'
                 max='150'
-                className='w-full h-1 mb-6 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm '
+                className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
                 onChange={(event) => setNewTextSize(event.target.value)}
               />
               <label htmlFor='' className='flex'>
@@ -617,23 +652,23 @@ export default function GraphicEditor() {
               <label htmlFor='' className='flex'>
                 Select Shape Type
               </label>
-              <div className='bg-[#2a2438] h-32  rounded-md mb-2 p-4  flex'>
+              <div className='bg-[#2a2438]   rounded-md mb-2 p-1  flex'>
                 <div
                   className={`${
                     newCircle ? 'bg-[#15121C]' : 'bg-[#2a2438]'
-                  } rounded-md p-2 w-12 cursor-pointer h-12 `}
+                  } rounded-md   cursor-pointer  flex items-center justify-center p-1 `}
                   onClick={() => {
                     setNewCircle(true);
                     setNewRectangle(false);
                     setNewStar(false);
                   }}
                 >
-                  <FaRegCircle size='30' />
+                  <FaRegCircle size='25' />
                 </div>
                 <div
                   className={`${
                     newRectangle ? 'bg-[#15121C]' : 'bg-[#2a2438]'
-                  } rounded-md p-2 w-12 cursor-pointer h-12 `}
+                  } rounded-md   cursor-pointer  flex items-center justify-center p-1 `}
                   onClick={() => {
                     setNewCircle(false);
                     setNewStar(false);
@@ -645,7 +680,7 @@ export default function GraphicEditor() {
                 <div
                   className={`${
                     newStar ? 'bg-[#15121C]' : 'bg-[#2a2438]'
-                  } rounded-md p-2 w-12 cursor-pointer  h-12`}
+                  } rounded-md   cursor-pointer  flex items-center justify-center p-1 `}
                   onClick={() => {
                     setNewCircle(false);
                     setNewStar(true);
@@ -666,6 +701,58 @@ export default function GraphicEditor() {
                   }}
                 />
               </label>
+              <label htmlFor='' className='flex'>
+                Raduis [{shapeRaduis}]
+              </label>
+
+              <input
+                value={shapeRaduis}
+                type='range'
+                min='1'
+                max='150'
+                className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
+                onChange={(event) => setShapeRaduis(Number(event.target.value))}
+              />
+              <label htmlFor='' className='flex mb-2'>
+                <input
+                  id='default-checkbox'
+                  type='checkbox'
+                  checked={stroke}
+                  onChange={(e) => setStroke(!stroke)}
+                  className='w-4 mt-[10px] h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500   focus:ring-2 '
+                />
+                <span className={`ml-2 mt-[6px] ${stroke ? 'no-underline' : 'line-through'}`}>
+                  Stroke
+                </span>
+              </label>
+              {stroke && (
+                <>
+                  <label htmlFor='' className='flex'>
+                    Stroke Width [{strokeWidth}]
+                  </label>
+
+                  <input
+                    value={strokeWidth}
+                    type='range'
+                    min='1'
+                    max='30'
+                    className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
+                    onChange={(event) => setStrokeWidth(Number(event.target.value))}
+                  />
+                  <label htmlFor='' className='flex'>
+                    <span className='pt-1'>Stroke Color</span>
+                    <input
+                      className='rounded px-2 py-1 bg-[#2a2438]  mb-4 ml-2'
+                      type='color'
+                      value={strokeColor}
+                      onChange={(e) => {
+                        setStrokeColor(e.target.value);
+                      }}
+                    />
+                  </label>
+                </>
+              )}
+
               <button
                 onClick={() => {
                   addShape();
