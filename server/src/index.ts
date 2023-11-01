@@ -7,6 +7,8 @@ import { ErrorMiddleware } from "./middlewares/Error.middleware";
 import Database from "./models";
 import { AuthRouter } from "./routers/Auth.router";
 import { VideosRouter } from "./routers/Videos.router";
+import { getStoragePath } from "./utils/utils";
+import { AuthMiddleware } from "./middlewares/Auth.middleware";
 
 dotenv.config();
 
@@ -20,10 +22,7 @@ dotenv.config();
 	app.use("/auth", AuthRouter);
 	app.use("/videos", VideosRouter);
 
-	app.use(
-		"/storage/videos",
-		express.static(path.join(__dirname, "../storage/videos"))
-	);
+	app.use("/storage", express.static(getStoragePath()));
 
 	app.use(ErrorMiddleware);
 

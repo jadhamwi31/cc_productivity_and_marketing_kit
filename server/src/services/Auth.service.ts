@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
 import _ from "lodash";
 import { User } from "../models/User.model";
-
+import fs from "fs";
+import { getStoragePath } from "../utils/utils";
+import path from "path";
 interface IUserFormData {
 	username: string;
 	firstname: string;
@@ -12,6 +14,11 @@ interface IUserFormData {
 
 const signup = async (form: IUserFormData) => {
 	await User.create(form);
+	fs.mkdir(
+		path.join(getStoragePath(), form.username),
+		{ recursive: true },
+		(err) => console.log(err)
+	);
 };
 
 const login = async (username: string) => {

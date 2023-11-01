@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import ffmpeg from "fluent-ffmpeg";
-import fs from "fs";
+import { v4 as uuid } from "uuid";
+import { generateStorageInstance } from "../services/Storage.service";
+import { getStoragePath } from "../utils/utils";
+import { execSync } from "child_process";
 import path from "path";
-import { Storage } from "../services/Storage.service";
 
 const uploadVideoHandler = async (
 	req: Request,
@@ -11,12 +12,13 @@ const uploadVideoHandler = async (
 ) => {
 	try {
 		await new Promise<void>((resolve, reject) => {
-			Storage.single("video")(req, res, function (err) {
+			generateStorageInstance(req.user ? req.user.username : "unknown").single(
+				"video"
+			)(req, res, function (err) {
 				if (err) throw reject(err);
 				resolve();
 			});
 		});
-		console.log(req.file?.filename);
 
 		return res.status(200).send(req.file?.filename);
 	} catch (e) {
@@ -31,21 +33,20 @@ const cutVideoHandler = async (
 	const { start, end } = req.body;
 	const { videoId } = req.params;
 	try {
-		const file = fs.createReadStream(
-			path.join(__dirname, "../../storage/videos", videoId)
+		const userStoragePath = path.join(
+			getStoragePath(),
+			req.user ? req.user.username : "unknown"
 		);
-		console.log(start, end);
+		const newId = uuid();
 
-		ffmpeg(file)
-			.videoFilters(
-				`select='not(between(t,${start},${end}))',setpts=N/FRAME_RATE/TB`
-			)
-			.audioFilters(`aselect='not(between(t,${start},${end}))',asetpts=N/SR/TB`)
-			.addOutput(
-				path.join(__dirname, "../../storage/videos", `${videoId}jad.mp4`)
-			)
-			.run();
-		return res.status(200).send("OK");
+		execSync(
+			`sh ${path.join(
+				__dirname,
+				"../scripts/cut.sh"
+			)} ${userStoragePath} ${videoId} ${start} ${end} ${newId}`
+		);
+
+		return res.status(200).send(`${newId}.mp4`);
 	} catch (e) {
 		return next(e);
 	}
