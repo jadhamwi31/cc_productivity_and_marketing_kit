@@ -11,6 +11,8 @@ export interface IVideoTab {
   currentTime: number;
   duration: number;
   lineWidth: number;
+  selectorStart: number;
+  selectorEnd: number;
 }
 
 interface IVideosStore {
@@ -23,8 +25,10 @@ interface IVideosStore {
   setPlayback: (playback: EnVideoPlayback) => void;
   updateVideoCurrentTime: (newTime: number) => void;
   updateVideoDuration: (duration: number) => void;
-  cut: (start: number, end: number) => Promise<void>;
+  cut: () => Promise<void>;
   setLineWidth: (lineWidth: number) => void;
+  setSelectorStart: (start: number) => void;
+  setSelectorEnd: (start: number) => void;
 }
 
 const INITIAL_TAB_ID = uuid();
@@ -35,7 +39,8 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       videoUrl: null,
       videoId: null,
       currentTime: 0,
-
+      selectorStart: 0,
+      selectorEnd: 0,
       duration: 0,
       lineWidth: 0,
     },
@@ -45,6 +50,8 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     const tabId = uuid();
     newTabs[tabId] = {
       videoUrl: null,
+      selectorEnd: 0,
+      selectorStart: 0,
       videoId: null,
       currentTime: 0,
       duration: 0,
@@ -64,19 +71,24 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       .then(({ data }) => data);
     const currentTab = get().selectedTab;
     const newTabs = { ...get().tabs };
-    newTabs[currentTab].videoUrl = `${BASE_URL}/storage/videos/${filename}`;
+    newTabs[currentTab].videoUrl = `${BASE_URL}/storage/unknown/${filename}`;
     newTabs[currentTab].videoId = filename;
     newTabs[currentTab].currentTime = 0;
     set({ tabs: newTabs });
   },
-  cut: async (start, end) => {
+  cut: async () => {
     const currentTab = get().selectedTab;
+    const { selectorStart, selectorEnd } = get().tabs[currentTab];
+
     const videoId = get().tabs[currentTab].videoId;
     const filename = await axios
-      .post<{}, AxiosResponse<string>>(`/videos/${videoId}/cut`, { start, end })
+      .post<{}, AxiosResponse<string>>(`/videos/${videoId?.split('.')[0]}/cut`, {
+        start: selectorStart,
+        end: selectorEnd,
+      })
       .then(({ data }) => data);
     const newTabs = { ...get().tabs };
-    newTabs[currentTab].videoUrl = `${BASE_URL}/storage/videos/${filename}`;
+    newTabs[currentTab].videoUrl = `${BASE_URL}/storage/unknown/${filename}`;
     newTabs[currentTab].videoId = filename;
     newTabs[currentTab].currentTime = 0;
 
@@ -99,6 +111,16 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
   setLineWidth: (lineWidth) => {
     const newTabs = { ...get().tabs };
     newTabs[get().selectedTab].lineWidth = lineWidth;
+    set({ tabs: newTabs });
+  },
+  setSelectorStart: (start) => {
+    const newTabs = { ...get().tabs };
+    newTabs[get().selectedTab].selectorStart = start;
+    set({ tabs: newTabs });
+  },
+  setSelectorEnd: (end) => {
+    const newTabs = { ...get().tabs };
+    newTabs[get().selectedTab].selectorEnd = end;
     set({ tabs: newTabs });
   },
 }));
