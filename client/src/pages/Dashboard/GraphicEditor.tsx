@@ -304,7 +304,7 @@ export default function GraphicEditor() {
     setShapes(updatedShapes);
     setUpdateShapeForm(false);
   };
-  const deleteShape = (): void => {
+  const deleteShape = (shapeToBeUpdated: number): void => {
     setShapes((prevShapes: any) =>
       prevShapes.filter((shape: any) => shape.id !== shapeToBeUpdated),
     );
@@ -779,7 +779,7 @@ export default function GraphicEditor() {
                 <div
                   className={`${
                     newStar ? 'bg-[#15121C]' : 'bg-[#2a2438]'
-                  } rounded-md   cursor-pointer  flex items-center justify-center p-1 `}
+                  } rounded-md   cursor-pointer   items-center justify-center p-1 hidden`}
                   onClick={() => {
                     setShapeType('star');
                     setNewCircle(false);
@@ -980,7 +980,7 @@ export default function GraphicEditor() {
               )}
               <button
                 onClick={() => {
-                  deleteShape();
+                  deleteShape(1);
                 }}
                 className=' text-sm mb-2 text-red-500 px-4 w-full rounded-md hover:underline'
               >
