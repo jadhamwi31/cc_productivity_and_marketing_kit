@@ -13,12 +13,16 @@ import { FiSave } from 'react-icons/fi';
 import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
 import { toast } from 'react-toastify';
 import CustomCircle from '../../components/Dashboard/GraphicEditor/CustomCircle';
+import CustomRectangle from '../../components/Dashboard/GraphicEditor/CustomRectangle';
+import { update } from 'lodash';
 type Shape = {
-  radius: number;
   x: any;
   y: any;
   fill: string;
   type: any;
+  radius?: number;
+  height?: number;
+  width?: number;
   stroke?: any;
   strokeWidth?: number;
 };
@@ -31,7 +35,9 @@ export default function GraphicEditor() {
   const [backgroundForm, setBackgroundForm] = useState(true);
   const [backgroundRec, setBackgroundRec] = useState(false);
   useEffect(() => {
-    console.log(backgroundRec);
+    if (shapeType == 'circle') {
+      setNewCircle(true);
+    }
     if (height >= 900) {
       setHeight((prevHeight) => prevHeight / 3);
     }
@@ -46,6 +52,7 @@ export default function GraphicEditor() {
     setImageForm(false);
     setTextForm(false);
     setUpateTextForm(false);
+    setUpdateShapeForm(false);
   };
   const stageRef = React.useRef(null);
   function downloadURI(uri: any, name: any) {
@@ -126,7 +133,7 @@ export default function GraphicEditor() {
       setImages((prevImages: any) =>
         prevImages.filter((image: any) => image.id !== selectdImageToBeDeleted),
       );
-      setImageForm(false); // You may want to close the image form after deleting.
+      setImageForm(false);
     }
   };
 
@@ -202,22 +209,30 @@ export default function GraphicEditor() {
     }
   };
   //Shapes
-  const [shapeType, setShapeType] = useState('');
+  const [shapeType, setShapeType] = useState('circle');
   const [newShapeForm, setNewShapeForm] = useState(false);
-
   const [newCircle, setNewCircle] = useState(false);
   const [newStar, setNewStar] = useState(false);
   const [newRectangle, setNewRectangle] = useState(false);
+  const [shapeSelect, setShapeSelect] = useState<number>();
 
+  const [shapeWidth, setShapeWidth] = useState(1);
+  const [shapeHeight, setShapeHeight] = useState(1);
   const [shapeRaduis, setShapeRaduis] = useState(1);
-
   const [shapeColor, setShapeColor] = useState('#000000');
-
   const [stroke, setStroke] = useState(false);
-
   const [strokeColor, setStrokeColor] = useState('#000000');
   const [strokeWidth, setStrokeWidth] = useState(1);
 
+  const [updateShapeWidth, setUpdateShapeWidth] = useState(1);
+  const [updateShapeHeight, setUpdateShapeHeight] = useState(1);
+  const [updateShapeRaduis, setUpdateShapeRaduis] = useState(1);
+  const [updateShapeColor, setUpdateShapeColor] = useState('#000000');
+
+  const [updateShapeType, setUpdateShapeType] = useState('');
+  const [shapeToBeUpdated, setShapeToBeUpdated] = useState('');
+
+  const [updateShapeForm, setUpdateShapeForm] = useState(false);
   const [shapes, setShapes] = useState<any>([]);
   const [selectedShapeId, setSelectedShapeId] = useState<any>(null);
 
@@ -227,9 +242,13 @@ export default function GraphicEditor() {
       x: 100,
       y: 100,
       fill: shapeColor,
-      type: 'c',
+      type: shapeType,
     };
 
+    if (shapeType == 'rectangle') {
+      shape.width = shapeWidth;
+      shape.height = shapeHeight;
+    }
     if (stroke) {
       shape.stroke = strokeColor;
       shape.strokeWidth = strokeWidth;
@@ -240,7 +259,57 @@ export default function GraphicEditor() {
     setStrokeWidth(0);
     setStrokeColor('#000000');
     setShapeRaduis(1);
+    setStroke(false);
+    setShapeHeight(1);
+    setShapeWidth(1);
+    setShapeType('circle');
+    setNewRectangle(false);
+    setNewStar(false);
+    setNewCircle(true);
   };
+
+  const handleShapeSelect = (index: any) => {
+    setShapeToBeUpdated(index);
+    console.log(shapeToBeUpdated);
+    setUpdateShapeForm(true);
+    const updatedShapes = shapes.map((shape: any, i: any) => ({
+      ...shape,
+      isSelected: i === textToBeUpdated,
+    }));
+
+    setUpdateShapeType(updatedShapes[index].type);
+    setUpdateShapeColor(updatedShapes[index].fill);
+    setUpdateShapeRaduis(updatedShapes[index].radius);
+    setUpdateShapeWidth(updatedShapes[index].width);
+    setUpdateShapeHeight(updatedShapes[index].height);
+
+    setShapeSelect(index);
+  };
+
+  const updateShape = () => {
+    const updatedShapes = shapes.map((shape: any, i: any) => ({
+      ...shape,
+      isSelected: i === shapeToBeUpdated,
+    }));
+
+    if (updateShapeType == 'circle') {
+      updatedShapes[shapeToBeUpdated].fill = updateShapeColor;
+      updatedShapes[shapeToBeUpdated].radius = updateShapeRaduis;
+    } else if (updateShapeType == 'rectangle') {
+      updatedShapes[shapeToBeUpdated].width = updateShapeWidth;
+      updatedShapes[shapeToBeUpdated].height = updateShapeHeight;
+      updatedShapes[shapeToBeUpdated].fill = updateShapeColor;
+    }
+
+    setShapes(updatedShapes);
+    setUpdateShapeForm(false);
+  };
+  const deleteShape = (): void => {
+    setShapes((prevShapes: any) =>
+      prevShapes.filter((shape: any) => shape.id !== shapeToBeUpdated),
+    );
+  };
+
   //Deselcet Funtion
   const checkDeselect = (e: any) => {
     const clickedOnEmpty = e.target === e.target.getStage();
@@ -347,23 +416,53 @@ export default function GraphicEditor() {
                 />
               ))}
 
-              {shapes.map((shape: any, i: any) => (
-                <CustomCircle
-                  key={i}
-                  shapeProps={shape}
-                  isSelected={i === selectedShapeId}
-                  onSelect={() => {
-                    RemoveAllforms();
-                    setSelectedShapeId(i);
-                  }}
-                  onChange={(newAttrs) => {
-                    const updatedShapes = shapes.map((shape1: any) =>
-                      shape1.id === i ? { ...shape1, ...newAttrs } : shape1,
+              {shapes.map((shape: any, i: any) => {
+                switch (shape.type) {
+                  case 'circle':
+                    return (
+                      <CustomCircle
+                        key={i}
+                        shapeProps={shape}
+                        isSelected={i === selectedShapeId}
+                        onSelect={() => {
+                          RemoveAllforms();
+                          setSelectedShapeId(i);
+                          setShapeToBeUpdated(i);
+                          handleShapeSelect(i);
+                        }}
+                        onChange={(newAttrs) => {
+                          const updatedShapes = shapes.map((shape1: any) =>
+                            shape1.id === i ? { ...shape1, ...newAttrs } : shape1,
+                          );
+                          setShapes(updatedShapes);
+                        }}
+                      />
                     );
-                    setShapes(updatedShapes);
-                  }}
-                />
-              ))}
+                  case 'rectangle':
+                    return (
+                      <CustomRectangle
+                        key={i}
+                        shapeProps={shape}
+                        isSelected={i === selectedId}
+                        onSelect={() => {
+                          selectShape(i);
+                          RemoveAllforms();
+                          setSelectedShapeId(shape.id);
+                          setShapeToBeUpdated(i);
+                          handleShapeSelect(i);
+                        }}
+                        onChange={(newAttrs) => {
+                          const rects = shapes.slice();
+                          rects[i] = newAttrs;
+                          setShapes(rects);
+                        }}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              })}
+
               {texts.map((text: any, index: any) => (
                 <React.Fragment key={index}>
                   <Text
@@ -464,11 +563,9 @@ export default function GraphicEditor() {
                 onClick={() => {
                   deleteImage();
                 }}
-                className=' bg-red-500  text-red-500 px-4 w-full rounded-md'
+                className=' text-sm mb-2 text-red-500 px-4 w-full rounded-md hover:underline'
               >
-                <span className='flex  text-white justify-center '>
-                  <RiDeleteBin6Line size={20} className='mr-2 ' /> Delete
-                </span>
+                Delete
               </button>
             </div>
           </div>
@@ -658,6 +755,7 @@ export default function GraphicEditor() {
                     newCircle ? 'bg-[#15121C]' : 'bg-[#2a2438]'
                   } rounded-md   cursor-pointer  flex items-center justify-center p-1 `}
                   onClick={() => {
+                    setShapeType('circle');
                     setNewCircle(true);
                     setNewRectangle(false);
                     setNewStar(false);
@@ -670,6 +768,7 @@ export default function GraphicEditor() {
                     newRectangle ? 'bg-[#15121C]' : 'bg-[#2a2438]'
                   } rounded-md   cursor-pointer  flex items-center justify-center p-1 `}
                   onClick={() => {
+                    setShapeType('rectangle');
                     setNewCircle(false);
                     setNewStar(false);
                     setNewRectangle(true);
@@ -682,6 +781,7 @@ export default function GraphicEditor() {
                     newStar ? 'bg-[#15121C]' : 'bg-[#2a2438]'
                   } rounded-md   cursor-pointer  flex items-center justify-center p-1 `}
                   onClick={() => {
+                    setShapeType('star');
                     setNewCircle(false);
                     setNewStar(true);
                     setNewRectangle(false);
@@ -701,18 +801,54 @@ export default function GraphicEditor() {
                   }}
                 />
               </label>
-              <label htmlFor='' className='flex'>
-                Raduis [{shapeRaduis}]
-              </label>
+              {shapeType == 'circle' ? (
+                <>
+                  <label htmlFor='' className='flex'>
+                    Raduis [{shapeRaduis}]
+                  </label>
 
-              <input
-                value={shapeRaduis}
-                type='range'
-                min='1'
-                max='150'
-                className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
-                onChange={(event) => setShapeRaduis(Number(event.target.value))}
-              />
+                  <input
+                    value={shapeRaduis}
+                    type='range'
+                    min='1'
+                    max='150'
+                    className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
+                    onChange={(event) => setShapeRaduis(Number(event.target.value))}
+                  />
+                </>
+              ) : shapeType == 'rectangle' ? (
+                <>
+                  <label htmlFor=''>Width</label>
+                  <input
+                    type='text'
+                    value={shapeWidth}
+                    onChange={(e) => {
+                      const regex = /^\d+(\.\d{0,2})?$/;
+
+                      if (regex.test(e.target.value) || e.target.value === '') {
+                        setShapeWidth(Number(e.target.value));
+                      }
+                    }}
+                    className='rounded px-2 py-1 bg-[#2a2438]  mb-4'
+                  />
+                  <label htmlFor=''>Height</label>
+                  <input
+                    type='text'
+                    value={shapeHeight}
+                    onChange={(e) => {
+                      const regex = /^\d+(\.\d{0,2})?$/;
+
+                      if (regex.test(e.target.value) || e.target.value === '') {
+                        setShapeHeight(Number(e.target.value));
+                      }
+                    }}
+                    className='rounded px-2 py-1 bg-[#2a2438]  mb-4'
+                  />
+                </>
+              ) : (
+                <></>
+              )}
+
               <label htmlFor='' className='flex mb-2'>
                 <input
                   id='default-checkbox'
@@ -760,6 +896,103 @@ export default function GraphicEditor() {
                 className=' bg-[#2A2438] px-2 py-1 w-full rounded-md hover:bg-[#191521]'
               >
                 Add Shape
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className='w-[15vw] bg-red-200'></div>
+        )}
+        {updateShapeForm ? (
+          <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw] mt-5'>
+            <div className='flex flex-col justify-center text-gray-500'>
+              {updateShapeType == 'circle' ? (
+                <>
+                  <span className=' flex '>Circle</span>
+                  <hr className='h-px mb-2 bg-gray-500 border-0 ' />
+                  <label htmlFor='' className='flex'>
+                    <span className='pt-1'>Shape Color</span>
+                    <input
+                      className='rounded px-2 py-1 bg-[#2a2438]  mb-4 ml-2'
+                      type='color'
+                      value={updateShapeColor}
+                      onChange={(e) => {
+                        setUpdateShapeColor(e.target.value);
+                      }}
+                    />
+                  </label>
+                  <label htmlFor='' className='flex'>
+                    Raduis [{updateShapeRaduis}]
+                  </label>
+
+                  <input
+                    value={updateShapeRaduis}
+                    type='range'
+                    min='1'
+                    max='150'
+                    className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
+                    onChange={(event) => setUpdateShapeRaduis(Number(event.target.value))}
+                  />
+                </>
+              ) : updateShapeType == 'rectangle' ? (
+                <>
+                  <span className=' flex '>Rectangle</span>
+                  <hr className='h-px mb-2 bg-gray-500 border-0 ' />
+                  <label htmlFor='' className='flex'>
+                    <span className='pt-1'>Shape Color</span>
+                    <input
+                      className='rounded px-2 py-1 bg-[#2a2438]  mb-4 ml-2'
+                      type='color'
+                      value={updateShapeColor}
+                      onChange={(e) => {
+                        setUpdateShapeColor(e.target.value);
+                      }}
+                    />
+                  </label>
+                  <label htmlFor=''>Width</label>
+                  <input
+                    type='text'
+                    value={updateShapeWidth}
+                    onChange={(e) => {
+                      const regex = /^\d+(\.\d{0,2})?$/;
+
+                      if (regex.test(e.target.value) || e.target.value === '') {
+                        setUpdateShapeWidth(Number(e.target.value));
+                      }
+                    }}
+                    className='rounded px-2 py-1 bg-[#2a2438]  mb-4'
+                  />
+                  <label htmlFor=''>Height</label>
+                  <input
+                    type='text'
+                    value={updateShapeHeight}
+                    onChange={(e) => {
+                      const regex = /^\d+(\.\d{0,2})?$/;
+
+                      if (regex.test(e.target.value) || e.target.value === '') {
+                        setUpdateShapeHeight(Number(e.target.value));
+                      }
+                    }}
+                    className='rounded px-2 py-1 bg-[#2a2438]  mb-4'
+                  />
+                </>
+              ) : (
+                <></>
+              )}
+              <button
+                onClick={() => {
+                  deleteShape();
+                }}
+                className=' text-sm mb-2 text-red-500 px-4 w-full rounded-md hover:underline'
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => {
+                  updateShape();
+                }}
+                className=' bg-[#2A2438] px-2 py-1 w-full rounded-md hover:bg-[#191521]'
+              >
+                Update Shape
               </button>
             </div>
           </div>
