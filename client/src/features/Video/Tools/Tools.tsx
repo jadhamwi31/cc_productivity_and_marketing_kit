@@ -4,7 +4,7 @@ import Button from '../../../components/Button/Button';
 import { useVideosStore } from '../../../stores/videos.store';
 import { createSources } from './helpers/Tools.helpers';
 import { EnVideoPlayback } from '../../../ts/enums/video.enums';
-import { useTabStore } from '../../../hooks/useCurrentTab';
+import { useCurrentTab } from '../../../hooks/useCurrentTab';
 import { useVideoElement } from '../../../hooks/useVideoElement';
 
 type Props = {};
@@ -29,7 +29,7 @@ const Tools = (props: Props) => {
     }
   };
 
-  const tab = useTabStore();
+  const tab = useCurrentTab();
 
   return (
     <S.Container>

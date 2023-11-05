@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { S } from './Ruler.styled';
-import { useTabStore } from '../../../../../hooks/useCurrentTab';
+import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
 import { useMeasure } from '@uidotdev/usehooks';
 
 const getRulerTimestamps = (duration: number) => {
@@ -15,7 +15,7 @@ const getRulerTimestamps = (duration: number) => {
 type Props = {};
 
 const Ruler = (props: Props) => {
-  const tab = useTabStore();
+  const tab = useCurrentTab();
 
   const [timestamps, setTimestamps] = useState<number[]>([]);
   useEffect(() => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { S } from './Cursor.styled';
-import { useTabStore } from '../../../../../hooks/useCurrentTab';
+import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
 import Draggable from 'react-draggable';
 import { useVideosStore } from '../../../../../stores/videos.store';
 import { EnVideoPlayback } from '../../../../../ts/enums/video.enums';
@@ -10,9 +10,9 @@ type Props = { containerHeight: number };
 
 const Cursor = ({ containerHeight }: Props) => {
   const [progress, setProgress] = useState(0);
-  const tab = useTabStore();
+  const tab = useCurrentTab();
   const videoElement = useVideoElement();
-  const { setPlayback, playback, updateVideoCurrentTime } = useVideosStore();
+  const { setPlayback, playback, updateTab } = useVideosStore();
   console.log(tab.lineWidth);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Cursor = ({ containerHeight }: Props) => {
           const newTime = (dragEvent.x / tab.lineWidth) * tab.duration;
           if (videoElement) {
             videoElement.currentTime = newTime;
-            updateVideoCurrentTime(newTime);
+            updateTab({ currentTime: newTime });
           }
         }}
       >

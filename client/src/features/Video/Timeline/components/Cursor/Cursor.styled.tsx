@@ -7,6 +7,7 @@ const Container = styled.div<{ $height: number }>`
   background-color: var(--blue);
   position: absolute;
   top: -2.1em;
+  z-index: 10;
 `;
 
 const Relative = styled.div`

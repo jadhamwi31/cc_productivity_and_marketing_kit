@@ -4,6 +4,12 @@ import { axios } from '../lib/axios';
 import { AxiosResponse } from 'axios';
 import { BASE_URL } from '../constants/constants';
 import { EnVideoPlayback } from '../ts/enums/video.enums';
+import _ from 'lodash';
+
+export interface IVideoPartition {
+  start: number;
+  end: number;
+}
 
 export interface IVideoTab {
   videoUrl: string | null;
@@ -14,6 +20,7 @@ export interface IVideoTab {
   selectorStart: number;
   selectorEnd: number;
   isNew: boolean;
+  partitions: IVideoPartition[];
 }
 
 interface IVideosStore {
@@ -24,12 +31,8 @@ interface IVideosStore {
   uploadFile: (file: File) => Promise<void>;
   playback: EnVideoPlayback;
   setPlayback: (playback: EnVideoPlayback) => void;
-  updateVideoCurrentTime: (newTime: number) => void;
-  updateVideoDuration: (duration: number) => void;
   cut: () => Promise<void>;
-  setLineWidth: (lineWidth: number) => void;
-  setSelectorStart: (start: number) => void;
-  setSelectorEnd: (start: number) => void;
+  updateTab: (values: Partial<IVideoTab>) => void;
 }
 
 const INITIAL_TAB_ID = uuid();
@@ -45,6 +48,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       duration: 0,
       lineWidth: 0,
       isNew: false,
+      partitions: [],
     },
   },
   addTab: () => {
@@ -59,6 +63,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       duration: 0,
       lineWidth: 0,
       isNew: false,
+      partitions: [],
     };
     set({ tabs: newTabs, selectedTab: tabId });
   },
@@ -84,48 +89,30 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
   cut: async () => {
     const currentTab = get().selectedTab;
     const { selectorStart, selectorEnd } = get().tabs[currentTab];
-
+    const start = selectorStart > selectorEnd ? selectorEnd : selectorStart;
+    const end = selectorStart < selectorEnd ? selectorEnd : selectorStart;
     const videoId = get().tabs[currentTab].videoId;
     const filename = await axios
       .post<{}, AxiosResponse<string>>(`/videos/${videoId?.split('.')[0]}/cut`, {
-        start: selectorStart,
-        end: selectorEnd,
+        start,
+        end,
       })
       .then(({ data }) => data);
     const newTabs = { ...get().tabs };
     newTabs[currentTab].videoUrl = `${BASE_URL}/storage/unknown/${filename}`;
     newTabs[currentTab].videoId = filename;
     newTabs[currentTab].currentTime = 0;
-
+    newTabs[currentTab].partitions = [...newTabs[currentTab].partitions, { start, end }];
     set({ tabs: newTabs });
   },
   playback: EnVideoPlayback.PAUSED,
   setPlayback: (playback) => set({ playback }),
-  updateVideoCurrentTime: (newTime) => {
+  updateTab: (values) => {
     const newTabs = { ...get().tabs };
-    newTabs[get().selectedTab].currentTime = newTime;
-    set({ tabs: newTabs });
-  },
 
-  updateVideoDuration: (duration) => {
-    const newTabs = { ...get().tabs };
-    newTabs[get().selectedTab].duration = duration;
-    newTabs[get().selectedTab].isNew = false;
-    set({ tabs: newTabs });
-  },
-  setLineWidth: (lineWidth) => {
-    const newTabs = { ...get().tabs };
-    newTabs[get().selectedTab].lineWidth = lineWidth;
-    set({ tabs: newTabs });
-  },
-  setSelectorStart: (start) => {
-    const newTabs = { ...get().tabs };
-    newTabs[get().selectedTab].selectorStart = start;
-    set({ tabs: newTabs });
-  },
-  setSelectorEnd: (end) => {
-    const newTabs = { ...get().tabs };
-    newTabs[get().selectedTab].selectorEnd = end;
+    for (const [key, value] of Object.entries(values)) {
+      _.update(newTabs, [get().selectedTab, key], () => value);
+    }
     set({ tabs: newTabs });
   },
 }));

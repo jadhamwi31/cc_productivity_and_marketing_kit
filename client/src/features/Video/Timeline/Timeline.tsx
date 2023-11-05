@@ -4,6 +4,7 @@ import Cursor from './components/Cursor/Cursor';
 import Line from './components/Line/Line';
 import Ruler from './components/Ruler/Ruler';
 import Selector from './components/Selector/Selector';
+import Partitions from './components/Partitions/Partitions';
 
 type Props = {};
 
@@ -17,6 +18,7 @@ const Timeline = (props: Props) => {
         <Cursor containerHeight={containerHeight ?? 0} />
         <Selector containerHeight={containerHeight ?? 0} wrapperWidth={wrapperWidth ?? 0} />
         <Line />
+        <Partitions containerHeight={containerHeight ?? 0} wrapperWidth={wrapperWidth ?? 0} />
       </S.Wrapper>
     </S.Container>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useTabStore as useCurrentTab } from '../../../hooks/useCurrentTab';
+import { useCurrentTab as useCurrentTab } from '../../../hooks/useCurrentTab';
 import { useVideosStore } from '../../../stores/videos.store';
 import { EnVideoPlayback } from '../../../ts/enums/video.enums';
 import { S } from './Player.styled';
@@ -8,7 +8,7 @@ type Props = {};
 
 const Player = (props: Props) => {
   const tab = useCurrentTab();
-  const { playback, setPlayback, updateVideoCurrentTime, updateVideoDuration } = useVideosStore();
+  const { playback, setPlayback, updateTab } = useVideosStore();
 
   const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
@@ -25,7 +25,7 @@ const Player = (props: Props) => {
 
   useEffect(() => {
     const timeUpdateHandler = () => {
-      if (videoRef.current) updateVideoCurrentTime(videoRef.current.currentTime);
+      if (videoRef.current) updateTab({ currentTime: videoRef.current.currentTime });
     };
     const intervalId = setInterval(timeUpdateHandler, 1);
     return () => {
@@ -36,8 +36,7 @@ const Player = (props: Props) => {
   const onLoadHandler = () => {
     if (videoRef.current && tab.isNew) {
       const video = videoRef.current;
-      updateVideoCurrentTime(0);
-      updateVideoDuration(video.duration);
+      updateTab({ currentTime: 0, duration: video.duration, isNew: false });
     }
   };
 

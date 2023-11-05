@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import { useTabStore } from '../../../../../hooks/useCurrentTab';
+import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
 import { useVideosStore } from '../../../../../stores/videos.store';
 import { S } from './Selector.styled';
 
 type Props = { containerHeight: number; wrapperWidth: number };
 
 const Selector = ({ containerHeight, wrapperWidth }: Props) => {
-  const tab = useTabStore();
+  const tab = useCurrentTab();
   const [markers, setMarkers] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
   const [currentPosition, setCurrentPosition] = useState(0);
   const [coverWidth, setCoverWidth] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const { setSelectorStart, setSelectorEnd } = useVideosStore();
+  const { updateTab } = useVideosStore();
 
   return (
     <S.Container
@@ -21,14 +21,14 @@ const Selector = ({ containerHeight, wrapperWidth }: Props) => {
 
         setCoverWidth(0);
         setMarkers({ end: 0, start: x });
-        setSelectorStart((x / wrapperWidth) * tab.duration - 1);
+        updateTab({ selectorStart: (x / wrapperWidth) * tab.duration - 1 });
         setIsMouseDown(true);
       }}
       onMouseUp={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - rect.left;
         setMarkers({ ...markers, end: x });
-        setSelectorEnd((x / wrapperWidth) * tab.duration - 1);
+        updateTab({ selectorEnd: (x / wrapperWidth) * tab.duration - 1 });
         setIsMouseDown(false);
       }}
       onMouseMove={(e) => {

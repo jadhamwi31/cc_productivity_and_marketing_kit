@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useTabStore } from '../../../../../hooks/useCurrentTab';
+import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
 import { S } from './Line.styled';
 import { useMeasure } from '@uidotdev/usehooks';
 import { useVideosStore } from '../../../../../stores/videos.store';
@@ -8,14 +8,14 @@ type Props = {};
 
 const Line = (props: Props) => {
   const [progress, setProgress] = useState(0);
-  const tab = useTabStore();
-  const { setLineWidth } = useVideosStore();
+  const tab = useCurrentTab();
+  const { updateTab } = useVideosStore();
   useEffect(() => {
     if (tab.videoId !== null) setProgress((tab.currentTime / tab.duration) * 100);
   }, [tab.currentTime, tab.duration]);
   const [ref, { width: widthInPixels }] = useMeasure<HTMLDivElement>();
   useEffect(() => {
-    if (widthInPixels) setLineWidth(widthInPixels);
+    if (widthInPixels) updateTab({ lineWidth: widthInPixels });
   }, [widthInPixels, tab]);
   return (
     tab.videoId && (
