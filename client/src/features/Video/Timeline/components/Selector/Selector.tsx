@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { S } from './Selector.styled';
+import { useState } from 'react';
 import { useTabStore } from '../../../../../hooks/useCurrentTab';
 import { useVideosStore } from '../../../../../stores/videos.store';
+import { S } from './Selector.styled';
 
 type Props = { containerHeight: number; wrapperWidth: number };
 
@@ -12,8 +12,6 @@ const Selector = ({ containerHeight, wrapperWidth }: Props) => {
   const [coverWidth, setCoverWidth] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const { setSelectorStart, setSelectorEnd } = useVideosStore();
-
-  console.log((markers.start / wrapperWidth) * tab.duration - 1);
 
   return (
     <S.Container

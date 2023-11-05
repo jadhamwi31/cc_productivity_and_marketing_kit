@@ -13,6 +13,7 @@ export interface IVideoTab {
   lineWidth: number;
   selectorStart: number;
   selectorEnd: number;
+  isNew: boolean;
 }
 
 interface IVideosStore {
@@ -43,6 +44,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       selectorEnd: 0,
       duration: 0,
       lineWidth: 0,
+      isNew: false,
     },
   },
   addTab: () => {
@@ -56,6 +58,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       currentTime: 0,
       duration: 0,
       lineWidth: 0,
+      isNew: false,
     };
     set({ tabs: newTabs, selectedTab: tabId });
   },
@@ -69,11 +72,13 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     const filename = await axios
       .post<{}, AxiosResponse<string>>('/videos', formData)
       .then(({ data }) => data);
+
     const currentTab = get().selectedTab;
     const newTabs = { ...get().tabs };
     newTabs[currentTab].videoUrl = `${BASE_URL}/storage/unknown/${filename}`;
     newTabs[currentTab].videoId = filename;
     newTabs[currentTab].currentTime = 0;
+    newTabs[currentTab].isNew = true;
     set({ tabs: newTabs });
   },
   cut: async () => {
@@ -104,8 +109,8 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
 
   updateVideoDuration: (duration) => {
     const newTabs = { ...get().tabs };
-
     newTabs[get().selectedTab].duration = duration;
+    newTabs[get().selectedTab].isNew = false;
     set({ tabs: newTabs });
   },
   setLineWidth: (lineWidth) => {

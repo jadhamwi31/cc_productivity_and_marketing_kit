@@ -34,7 +34,7 @@ const Player = (props: Props) => {
   }, [tab, playback]);
 
   const onLoadHandler = () => {
-    if (videoRef.current) {
+    if (videoRef.current && tab.isNew) {
       const video = videoRef.current;
       updateVideoCurrentTime(0);
       updateVideoDuration(video.duration);

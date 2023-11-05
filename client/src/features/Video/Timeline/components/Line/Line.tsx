@@ -16,7 +16,7 @@ const Line = (props: Props) => {
   const [ref, { width: widthInPixels }] = useMeasure<HTMLDivElement>();
   useEffect(() => {
     if (widthInPixels) setLineWidth(widthInPixels);
-  }, [widthInPixels]);
+  }, [widthInPixels, tab]);
   return (
     tab.videoId && (
       <S.Container style={{ width: `100%` }} ref={ref}>

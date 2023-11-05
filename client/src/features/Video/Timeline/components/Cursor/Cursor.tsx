@@ -13,6 +13,7 @@ const Cursor = ({ containerHeight }: Props) => {
   const tab = useTabStore();
   const videoElement = useVideoElement();
   const { setPlayback, playback, updateVideoCurrentTime } = useVideosStore();
+  console.log(tab.lineWidth);
 
   useEffect(() => {
     const percentage = tab.currentTime / tab.duration;
