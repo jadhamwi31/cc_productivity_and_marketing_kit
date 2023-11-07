@@ -137,7 +137,7 @@ export default function GraphicEditor() {
     }
   };
 
-  //Text
+  //Textttt
   const [texts, setTexts] = useState<any>([]);
   const [newText, setNewText] = useState('');
   const [newTextColor, setNewTextColor] = useState('');
@@ -149,7 +149,7 @@ export default function GraphicEditor() {
   const [updatedText, setUpdatedText] = useState('');
   const [updatedTextFont, setUpdatedTextFont] = useState('');
   const [updatedTextColor, setUpdatedTextColor] = useState('');
-  const [updatedTextSize, setUpdatedTextSize] = useState('');
+  const [updatedTextSize, setUpdatedTextSize] = useState<number>();
   const [textToBeUpdated, setTextToBeUpdated] = useState(0);
 
   const addText = () => {
@@ -623,9 +623,9 @@ export default function GraphicEditor() {
                 value={updatedTextSize}
                 type='range'
                 min='10'
-                max='150'
+                max='200'
                 className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
-                onChange={(event) => setUpdatedTextSize(event.target.value)}
+                onChange={(event) => setUpdatedTextSize(Number(event.target.value))}
               />
               <label htmlFor='' className='flex'>
                 <span className='pt-1'>Text Color</span>
