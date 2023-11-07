@@ -25,7 +25,22 @@ const Player = (props: Props) => {
 
   useEffect(() => {
     const timeUpdateHandler = () => {
-      if (videoRef.current) updateTab({ currentTime: videoRef.current.currentTime });
+      if (videoRef.current) {
+        if (!tab.isCursorGrabbed) {
+          const partitionFound = tab.partitions.find(
+            (partition) =>
+              partition.start < videoRef.current!.currentTime &&
+              Number(partition.end.toFixed(0)) > Number(videoRef.current!.currentTime.toFixed(0)),
+          );
+
+          if (partitionFound) {
+            videoRef.current.currentTime = partitionFound.end;
+          }
+        }
+        updateTab({
+          currentTime: videoRef.current.currentTime,
+        });
+      }
     };
     const intervalId = setInterval(timeUpdateHandler, 1);
     return () => {
@@ -34,9 +49,13 @@ const Player = (props: Props) => {
   }, [tab, playback]);
 
   const onLoadHandler = () => {
-    if (videoRef.current && tab.isNew) {
+    if (videoRef.current) {
       const video = videoRef.current;
-      updateTab({ currentTime: 0, duration: video.duration, isNew: false });
+      updateTab({
+        currentTime: 0,
+        duration: video.duration,
+        isNew: false,
+      });
     }
   };
 

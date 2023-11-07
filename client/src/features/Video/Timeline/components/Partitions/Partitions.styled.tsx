@@ -8,7 +8,6 @@ const Container = styled.div`
   color: white;
 
   top: 0;
-  z-index: 2;
 `;
 
 const PartitionSection = styled.div`
@@ -20,9 +19,15 @@ const PartitionSection = styled.div`
 `;
 
 const Connector = styled.div`
+  cursor: not-allowed;
   position: absolute;
   top: -2.05em;
   background-color: rgba(255, 255, 255, 0.1);
+  display: grid;
+  place-items: center;
+  & > div {
+    z-index: 15;
+  }
 `;
 
 export const S = { Connector, Container, PartitionSection };

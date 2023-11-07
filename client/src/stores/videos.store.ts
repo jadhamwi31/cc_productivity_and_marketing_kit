@@ -21,6 +21,7 @@ export interface IVideoTab {
   selectorEnd: number;
   isNew: boolean;
   partitions: IVideoPartition[];
+  isCursorGrabbed: boolean;
 }
 
 interface IVideosStore {
@@ -49,6 +50,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       lineWidth: 0,
       isNew: false,
       partitions: [],
+      isCursorGrabbed: false,
     },
   },
   addTab: () => {
@@ -64,6 +66,8 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       lineWidth: 0,
       isNew: false,
       partitions: [],
+
+      isCursorGrabbed: false,
     };
     set({ tabs: newTabs, selectedTab: tabId });
   },
@@ -84,6 +88,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     newTabs[currentTab].videoId = filename;
     newTabs[currentTab].currentTime = 0;
     newTabs[currentTab].isNew = true;
+
     set({ tabs: newTabs });
   },
   cut: async () => {
@@ -91,18 +96,12 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     const { selectorStart, selectorEnd } = get().tabs[currentTab];
     const start = selectorStart > selectorEnd ? selectorEnd : selectorStart;
     const end = selectorStart < selectorEnd ? selectorEnd : selectorStart;
-    const videoId = get().tabs[currentTab].videoId;
-    const filename = await axios
-      .post<{}, AxiosResponse<string>>(`/videos/${videoId?.split('.')[0]}/cut`, {
-        start,
-        end,
-      })
-      .then(({ data }) => data);
     const newTabs = { ...get().tabs };
-    newTabs[currentTab].videoUrl = `${BASE_URL}/storage/unknown/${filename}`;
-    newTabs[currentTab].videoId = filename;
     newTabs[currentTab].currentTime = 0;
-    newTabs[currentTab].partitions = [...newTabs[currentTab].partitions, { start, end }];
+    newTabs[currentTab].partitions = [
+      ...newTabs[currentTab].partitions,
+      { start: start + 1, end: end + 1 },
+    ];
     set({ tabs: newTabs });
   },
   playback: EnVideoPlayback.PAUSED,

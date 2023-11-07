@@ -13,12 +13,10 @@ const Cursor = ({ containerHeight }: Props) => {
   const tab = useCurrentTab();
   const videoElement = useVideoElement();
   const { setPlayback, playback, updateTab } = useVideosStore();
-  console.log(tab.lineWidth);
 
   useEffect(() => {
     const percentage = tab.currentTime / tab.duration;
     const pixels = percentage * tab.lineWidth;
-
     setProgress(pixels);
   }, [tab.currentTime, tab.duration, tab.lineWidth]);
   const shouldPlay = useRef(false);
@@ -31,9 +29,11 @@ const Cursor = ({ containerHeight }: Props) => {
         onStart={() => {
           shouldPlay.current = playback === EnVideoPlayback.PLAYING;
           setPlayback(EnVideoPlayback.PAUSED);
+          updateTab({ isCursorGrabbed: true });
         }}
         onStop={() => {
           if (shouldPlay.current) setPlayback(EnVideoPlayback.PLAYING);
+          updateTab({ isCursorGrabbed: false });
         }}
         onDrag={(_, dragEvent) => {
           const newTime = (dragEvent.x / tab.lineWidth) * tab.duration;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { S } from './Ruler.styled';
 import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
 import { useMeasure } from '@uidotdev/usehooks';
+import { formatTimestamp } from '../../../../../utils/utils';
 
 const getRulerTimestamps = (duration: number) => {
   const interval = duration / 8;
@@ -24,7 +25,7 @@ const Ruler = (props: Props) => {
   return (
     <S.Container>
       {timestamps.map((timestamp) => (
-        <S.Timestamp>{timestamp}</S.Timestamp>
+        <S.Timestamp>{formatTimestamp(timestamp)}</S.Timestamp>
       ))}
     </S.Container>
   );
