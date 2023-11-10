@@ -1,10 +1,9 @@
-import { create } from 'zustand';
-import { v4 as uuid } from 'uuid';
-import { axios } from '../lib/axios';
 import { AxiosResponse } from 'axios';
-import { BASE_URL } from '../constants/constants';
-import { EnVideoPlayback } from '../ts/enums/video.enums';
 import _ from 'lodash';
+import { v4 as uuid } from 'uuid';
+import { create } from 'zustand';
+import { axios } from '../lib/axios';
+import { EnVideoPlayback } from '../ts/enums/video.enums';
 
 export interface IVideoPartition {
   start: number;
@@ -77,15 +76,20 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
   },
   uploadFile: async (file) => {
     const formData = new FormData();
-    formData.append('video', file);
-    const filename = await axios
-      .post<{}, AxiosResponse<string>>('/videos', formData)
-      .then(({ data }) => data);
 
     const currentTab = get().selectedTab;
+    formData.append('video', file);
+
+    axios
+      .post<{}, AxiosResponse<string>>('/videos', formData)
+      .then(({ data }) => data)
+      .then((videoId) => {
+        newTabs[currentTab].videoId = videoId;
+        set({ tabs: newTabs });
+      });
+
     const newTabs = { ...get().tabs };
-    newTabs[currentTab].videoUrl = `${BASE_URL}/storage/unknown/${filename}`;
-    newTabs[currentTab].videoId = filename;
+    newTabs[currentTab].videoUrl = URL.createObjectURL(file);
     newTabs[currentTab].currentTime = 0;
     newTabs[currentTab].isNew = true;
 
