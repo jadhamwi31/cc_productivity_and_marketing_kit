@@ -9,7 +9,8 @@ const Container = styled.div`
   border: solid 1px var(--blue);
   border-radius: var(--border-radius);
   padding: 1em;
-  gap: 1em;
+  gap: 0.2em;
+  font-size: 15px;
 `;
 
 const UploadHidden = styled.input`

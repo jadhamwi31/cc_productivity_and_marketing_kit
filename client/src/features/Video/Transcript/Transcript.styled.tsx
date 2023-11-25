@@ -7,6 +7,7 @@ const Container = styled.div`
   place-items: center;
   border: solid 1px var(--blue);
   border-radius: var(--border-radius);
+  color: var(--white);
 `;
 
 export const S = { Container };

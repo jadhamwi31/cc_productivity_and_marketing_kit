@@ -4,4 +4,4 @@ import { VideosController } from "../controllers/Videos.controller";
 export const VideosRouter = Router();
 
 VideosRouter.post("/", VideosController.uploadVideoHandler);
-VideosRouter.post("/:videoId/cut", VideosController.cutVideoHandler);
+VideosRouter.post("/:videoId/export", VideosController.exportVideoHandler);

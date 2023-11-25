@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { create } from 'zustand';
 import { axios } from '../lib/axios';
 import { EnVideoPlayback } from '../ts/enums/video.enums';
+import fileDownload from 'js-file-download';
 
 export interface IVideoPartition {
   start: number;
@@ -26,6 +27,7 @@ export interface IVideoTab {
   undo: TabHistory[];
   redo: TabHistory[];
   uploadProgress: number | null;
+  exporting: boolean;
 }
 
 interface IVideosStore {
@@ -40,6 +42,7 @@ interface IVideosStore {
   updateTab: (values: Partial<IVideoTab>) => void;
   undo: () => void;
   redo: () => void;
+  exportVideo: () => void;
 }
 
 const INITIAL_TAB_ID = uuid();
@@ -58,16 +61,20 @@ const DEFAULT_TAB_VALUES: IVideoTab = {
   undo: [{ partitions: [] }],
   redo: [{ partitions: [] }],
   uploadProgress: null,
+  exporting: false,
 };
 
 export const useVideosStore = create<IVideosStore>((set, get) => ({
   tabs: {
-    [INITIAL_TAB_ID]: DEFAULT_TAB_VALUES,
+    [INITIAL_TAB_ID]: { ...DEFAULT_TAB_VALUES },
   },
   addTab: () => {
     const newTabs = { ...get().tabs };
     const tabId = uuid();
-    newTabs[tabId] = DEFAULT_TAB_VALUES;
+
+    newTabs[tabId] = { ...DEFAULT_TAB_VALUES };
+    console.log(newTabs);
+
     set({ tabs: newTabs, selectedTab: tabId });
   },
   selectedTab: INITIAL_TAB_ID,
@@ -149,6 +156,21 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
 
     newTabs[currentTab] = { ...newTabs[currentTab], ...newState, undo: undos };
     set({ tabs: newTabs });
+  },
+  exportVideo: () => {
+    const tabs = { ...get().tabs };
+    const currentTab = tabs[get().selectedTab];
+    currentTab.exporting = true;
+    set({ tabs });
+    axios
+      .post(`/videos/${currentTab.videoId}/export`, currentTab.partitions, { responseType: 'blob' })
+      .then(({ data }) => {
+        fileDownload(data, `${currentTab.videoId}.mp4`);
+      })
+      .finally(() => {
+        currentTab.exporting = false;
+        set({ tabs });
+      });
   },
 }));
 
