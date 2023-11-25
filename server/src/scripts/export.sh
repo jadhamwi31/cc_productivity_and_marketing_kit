@@ -22,5 +22,5 @@ done
 ffmpeg -f concat -i input.txt -c:v libx264 -c:a aac "$NEW_VIDEO_ID.mp4"
 
 # Cleanup
-rm -rf "$VIDEO_ID.part"*.*
+rm -rf $VIDEO_ID.part*
 rm input.txt
