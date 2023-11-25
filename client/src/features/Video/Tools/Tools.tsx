@@ -10,7 +10,7 @@ import { useVideoElement } from '../../../hooks/useVideoElement';
 type Props = {};
 
 const Tools = (props: Props) => {
-  const { uploadFile, playback, setPlayback, cut } = useVideosStore();
+  const { uploadFile, playback, setPlayback, cut, undo, redo } = useVideosStore();
   const uploadRef = useRef<HTMLInputElement>(null);
   const uploadHandler: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     if (uploadRef.current && uploadRef.current.value !== '') {
@@ -55,6 +55,12 @@ const Tools = (props: Props) => {
         disabled={tab.videoId === null || tab.selectorStart === 0 || tab.selectorEnd === 0}
       >
         Cut
+      </Button>
+      <Button onClick={undo} disabled={tab.undo.length === 1}>
+        Undo
+      </Button>
+      <Button onClick={redo} disabled={tab.redo.length === 1}>
+        Redo
       </Button>
     </S.Container>
   );

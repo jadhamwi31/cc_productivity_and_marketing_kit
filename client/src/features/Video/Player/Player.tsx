@@ -61,6 +61,9 @@ const Player = (props: Props) => {
 
   return (
     <S.Container>
+      <S.UploadProgressElement>
+        {tab.uploadProgress !== null && `Upload Progress : ${tab.uploadProgress}`}
+      </S.UploadProgressElement>
       <S.Video
         id='video-player'
         ref={videoRef}

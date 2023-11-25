@@ -7,6 +7,8 @@ const Container = styled.div`
   border: solid 1px var(--blue);
   display: grid;
   place-items: center;
+  padding: 1em;
+  position: relative;
 `;
 
 const Video = styled.video`
@@ -14,4 +16,12 @@ const Video = styled.video`
   width: 100%;
 `;
 
-export const S = { Container, Video };
+const UploadProgressElement = styled.div`
+  position: absolute;
+  top: 0.5em;
+  right: 1em;
+  color: var(--blue);
+  font-size: 12px;
+`;
+
+export const S = { Container, Video, UploadProgressElement };
