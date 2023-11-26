@@ -25,7 +25,7 @@ export default function App() {
         rtl={false}
         autoClose={2000}
         draggable={false}
-        theme='colored'
+        theme='coloredss'
       />
       <RouterProvider
         router={createBrowserRouter(
