@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { S } from './Ruler.styled';
+import { useEffect, useState } from 'react';
 import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
-import { useMeasure } from '@uidotdev/usehooks';
 import { formatTimestamp } from '../../../../../utils/utils';
+import { S } from './Ruler.styled';
 
 const getRulerTimestamps = (duration: number) => {
-  const interval = duration / 8;
+  const interval = duration / 15;
   const timestamps: number[] = [];
-  for (let i = 0; i < duration; i += interval) {
-    timestamps.push(Math.floor(i));
+  for (let i = 0; i <= duration; i += interval) {
+    timestamps.push(Math.ceil(i));
   }
   return timestamps;
 };
