@@ -1,20 +1,20 @@
 import React, { useRef } from 'react';
-import { S } from './Tools.styled';
 import Button from '../../../components/Button/Button';
-import { useVideosStore } from '../../../stores/videos.store';
-import { createSources } from './helpers/Tools.helpers';
-import { EnVideoPlayback } from '../../../ts/enums/video.enums';
 import { useCurrentTab } from '../../../hooks/useCurrentTab';
-import { useVideoElement } from '../../../hooks/useVideoElement';
+import { useVideosStore } from '../../../stores/videos.store';
+import { EnVideoPlayback } from '../../../ts/enums/video.enums';
+import { S } from './Tools.styled';
 
 type Props = {};
 
 const Tools = (props: Props) => {
-  const { uploadFile, playback, setPlayback, cut, undo, redo, exportVideo } = useVideosStore();
+  const { uploadFile, playback, setPlayback, cut, undo, redo, downloadVideo } = useVideosStore();
   const uploadRef = useRef<HTMLInputElement>(null);
+
   const uploadHandler: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     if (uploadRef.current && uploadRef.current.value !== '') {
       const files = e.target.files;
+
       if (files && files[0]) {
         uploadFile(files[0]);
       }
@@ -62,8 +62,11 @@ const Tools = (props: Props) => {
       <Button onClick={redo} disabled={tab.redo.length === 1}>
         Redo
       </Button>
-      <Button disabled={tab.uploadProgress !== 100 || tab.videoUrl === null} onClick={exportVideo}>
-        Export
+      <Button
+        disabled={tab.uploadProgress !== 100 || tab.videoUrl === null}
+        onClick={downloadVideo}
+      >
+        Download
       </Button>
     </S.Container>
   );

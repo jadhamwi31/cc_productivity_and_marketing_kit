@@ -5,6 +5,7 @@ import { create } from 'zustand';
 import { axios } from '../lib/axios';
 import { EnVideoPlayback } from '../ts/enums/video.enums';
 import fileDownload from 'js-file-download';
+import { decode as base64_decode, encode as base64_encode } from 'base-64';
 
 export interface IVideoPartition {
   start: number;
@@ -27,7 +28,8 @@ export interface IVideoTab {
   undo: TabHistory[];
   redo: TabHistory[];
   uploadProgress: number | null;
-  exporting: boolean;
+  downloading: boolean;
+  buffer: ArrayBuffer | null;
 }
 
 interface IVideosStore {
@@ -42,7 +44,7 @@ interface IVideosStore {
   updateTab: (values: Partial<IVideoTab>) => void;
   undo: () => void;
   redo: () => void;
-  exportVideo: () => void;
+  downloadVideo: () => void;
 }
 
 const INITIAL_TAB_ID = uuid();
@@ -61,7 +63,8 @@ const DEFAULT_TAB_VALUES: IVideoTab = {
   undo: [{ partitions: [] }],
   redo: [{ partitions: [] }],
   uploadProgress: null,
-  exporting: false,
+  downloading: false,
+  buffer: null,
 };
 
 export const useVideosStore = create<IVideosStore>((set, get) => ({
@@ -107,6 +110,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     newTabs[currentTab].videoUrl = URL.createObjectURL(file);
     newTabs[currentTab].currentTime = 0;
     newTabs[currentTab].isNew = true;
+    newTabs[currentTab].buffer = await file.arrayBuffer();
 
     set({ tabs: newTabs });
   },
@@ -157,10 +161,10 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     newTabs[currentTab] = { ...newTabs[currentTab], ...newState, undo: undos };
     set({ tabs: newTabs });
   },
-  exportVideo: () => {
+  downloadVideo: () => {
     const tabs = { ...get().tabs };
     const currentTab = tabs[get().selectedTab];
-    currentTab.exporting = true;
+    currentTab.downloading = true;
     set({ tabs });
     axios
       .post(`/videos/${currentTab.videoId}/export`, currentTab.partitions, { responseType: 'blob' })
@@ -168,7 +172,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
         fileDownload(data, `${currentTab.videoId}.mp4`);
       })
       .finally(() => {
-        currentTab.exporting = false;
+        currentTab.downloading = false;
         set({ tabs });
       });
   },

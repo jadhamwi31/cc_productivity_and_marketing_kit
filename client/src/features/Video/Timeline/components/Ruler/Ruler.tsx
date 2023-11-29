@@ -19,7 +19,9 @@ const Ruler = (props: Props) => {
 
   const [timestamps, setTimestamps] = useState<number[]>([]);
   useEffect(() => {
-    setTimestamps(getRulerTimestamps(tab.duration));
+    if (tab.duration) {
+      setTimestamps(getRulerTimestamps(tab.duration));
+    }
   }, [tab.duration]);
   return (
     <S.Container>
