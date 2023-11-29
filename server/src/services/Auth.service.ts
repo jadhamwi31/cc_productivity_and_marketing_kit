@@ -4,6 +4,7 @@ import { User } from "../models/User.model";
 import fs from "fs";
 import { getStoragePath } from "../utils/utils";
 import path from "path";
+import { generateStorageInstance } from "./Storage.service";
 interface IUserFormData {
 	username: string;
 	firstname: string;
@@ -28,6 +29,17 @@ const login = async (username: string) => {
 		{ username: user.username },
 		String(process.env.SECRET_KEY)
 	);
+
+	const userPath = path.join(getStoragePath(), user.username);
+
+	const files = fs.readdirSync(userPath, { recursive: true });
+	files.forEach((file) => {
+		try {
+			if (typeof file === "string") fs.unlinkSync(path.join(userPath, file));
+		} catch (e) {
+			console.log(e);
+		}
+	});
 
 	return { token, data: _.omit(user.dataValues, ["password"]) };
 };
