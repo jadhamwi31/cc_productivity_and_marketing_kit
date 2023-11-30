@@ -17,6 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@uidotdev/usehooks": "^2.4.0",
     "axios": "^1.5.1",
+    "base-64": "^1.0.0",
     "eventemitter3": "^5.0.1",
     "js-file-download": "^0.4.12",
     "konva": "^9.2.2",
@@ -39,6 +40,7 @@
     "zustand": "^4.4.3"
   },
   "devDependencies": {
+    "@types/base-64": "^1.0.2",
     "@types/lodash": "^4.14.200",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

@@ -6,7 +6,7 @@ type Props = {};
 
 const Transcript = (props: Props) => {
   const tab = useCurrentTab();
-  return <S.Container>{tab.exporting && 'Exporting...'}</S.Container>;
+  return <S.Container>{tab.downloading && 'Downloading...'}</S.Container>;
 };
 
 export default Transcript;
