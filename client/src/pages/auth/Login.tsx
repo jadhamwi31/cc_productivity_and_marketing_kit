@@ -1,10 +1,15 @@
 import { Link } from 'react-router-dom';
-
+import building from '../../assets/artworks/building.svg';
+import yard from '../../assets/artworks/yard.svg';
+import mountain from '../../assets/artworks/mountain.svg';
 export default function Login() {
+  const images = [building, yard, mountain];
+  const randomImage = images[Math.floor(Math.random() * images.length)];
+  console.log(randomImage);
   return (
     <div className=' lg:flex lg:justify-between w-screen  h-screen '>
       <div
-        className='absolute h-screen w-screen bg-black/90 lg:w-[30vw]
+        className='absolute h-screen w-screen bg-black/60 backdrop-blur-md lg:w-[30vw] z-20
                   lg:bg-transparent lg:flex p-20 items-center justify-center
                   lg:static'
       >
@@ -40,7 +45,21 @@ export default function Login() {
           </Link>
         </form>
       </div>
-      <div className='w-screen lg:w-[80vw] h-screen bg-cover login-artwork bg-black '></div>
+      <div className='relative'>
+        <div
+          className='lg:absolute w-screen lg:w-[70vw] h-screen bg-cover lg:z-10'
+          style={{
+            backgroundImage: `url(${randomImage})`,
+          }}
+        ></div>
+
+        <div
+          className='lg:block hidden w-screen lg:w-[70vw] h-screen bg-cover blur-xl'
+          style={{
+            backgroundImage: `url(${randomImage})`,
+          }}
+        ></div>
+      </div>
     </div>
   );
 }
