@@ -141,7 +141,7 @@ export default function GraphicEditor() {
   const [texts, setTexts] = useState<any>([]);
   const [newText, setNewText] = useState('');
   const [newTextColor, setNewTextColor] = useState('');
-  const [newTextSize, setNewTextSize] = useState('12');
+  const [newTextSize, setNewTextSize] = useState('');
   const [newTextFont, setNewTextFont] = useState('');
   const [textForm, setTextForm] = useState(false);
 
@@ -149,7 +149,7 @@ export default function GraphicEditor() {
   const [updatedText, setUpdatedText] = useState('');
   const [updatedTextFont, setUpdatedTextFont] = useState('');
   const [updatedTextColor, setUpdatedTextColor] = useState('');
-  const [updatedTextSize, setUpdatedTextSize] = useState<number>();
+  const [updatedTextSize, setUpdatedTextSize] = useState('');
   const [textToBeUpdated, setTextToBeUpdated] = useState(0);
 
   const addText = () => {
@@ -196,7 +196,7 @@ export default function GraphicEditor() {
     } else {
       updatedTexts[textToBeUpdated].text = updatedText;
       updatedTexts[textToBeUpdated].fill = updatedTextColor;
-      updatedTexts[textToBeUpdated].fontSize = updatedTextSize;
+      updatedTexts[textToBeUpdated].Size = updatedTextSize;
       updatedTexts[textToBeUpdated].fontFamily = updatedTextFont;
       setTexts(updatedTexts);
       setUpateTextForm(false);
@@ -625,7 +625,7 @@ export default function GraphicEditor() {
                 min='10'
                 max='200'
                 className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
-                onChange={(event) => setUpdatedTextSize(Number(event.target.value))}
+                onChange={(event) => setUpdatedTextSize(event.target.value)}
               />
               <label htmlFor='' className='flex'>
                 <span className='pt-1'>Text Color</span>
