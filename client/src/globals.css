@@ -89,3 +89,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+.login-artwork {
+  background-image: url('./assets/login.svg');
+}

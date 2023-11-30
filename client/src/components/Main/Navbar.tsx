@@ -1,9 +1,11 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
+  const location = useLocation();
+  const [currentURL, setCurrentURL] = useState<string>('');
   const closeMenu = () => {
     const hamburger = document.getElementById('hamburger') as HTMLInputElement;
     if (hamburger) {
@@ -11,16 +13,28 @@ const Navbar: React.FC<NavbarProps> = () => {
     }
   };
 
+  useEffect(() => {
+    setCurrentURL(location.pathname.slice(1));
+  }, [location.pathname]);
+
   return (
     <div className='fixed top-0 w-screen z-30  '>
       <div className='relative '>
         <div className='px-6 md:px-12 lg:px-6 w-full lg:py-4'>
           <div className='flex items-center justify-between '>
             <div className='relative z-30 w-full '>
-              <div className='z-10 text-xl text-white'>CreatorsYard</div>
+              <div className='z-10 text-xl text-white'>
+                <Link onClick={closeMenu} to='/'>
+                  CreatorsYard
+                </Link>
+              </div>
             </div>
 
-            <div className='flex items-center w-full justify-end '>
+            <div
+              className={`flex items-center w-full justify-end ${
+                currentURL === 'login' || currentURL === 'signup' ? 'lg:hidden' : 'lg:'
+              }`}
+            >
               <input
                 type='checkbox'
                 name='hamburger'
