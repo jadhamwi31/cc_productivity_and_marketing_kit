@@ -3,6 +3,7 @@ import { RiSettings4Line } from 'react-icons/ri';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { AiOutlineUser, AiOutlineHeart } from 'react-icons/ai';
 import { FiMessageSquare, FiFolder, FiShoppingCart } from 'react-icons/fi';
+import { IoVideocamOutline } from 'react-icons/io5';
 import { Link, NavLink } from 'react-router-dom';
 import React from 'react';
 import octopus from '../../assets/Small.webp';
@@ -13,7 +14,7 @@ const Navbar = () => {
     { name: 'user', link: '', icon: AiOutlineUser },
     { name: 'messages', link: '', icon: FiMessageSquare },
     { name: 'Graphic', link: 'graphic', icon: MdOutlineAddPhotoAlternate, margin: true },
-    { name: 'File Manager', link: '', icon: FiFolder },
+    { name: 'Video', link: 'video', icon: IoVideocamOutline },
     { name: 'Cart', link: '', icon: FiShoppingCart },
     { name: 'Saved', link: '', icon: AiOutlineHeart, margin: true },
     { name: 'Setting', link: '', icon: RiSettings4Line },

@@ -14,33 +14,30 @@ export default function Login() {
                   lg:static'
       >
         <form className='flex-col '>
-          <label htmlFor='' className='text-gray-200 text-lg '>
+          <label htmlFor='' className='text-gray-200 text-md '>
             Email
           </label>
-          <br />
+
           <input
             type='text'
-            className='bg-[#262626] appearance-none  rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500'
+            className='bg-[#262626] appearance-none mb-4  rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500'
           />
-          <br />
-          <br />
-          <label htmlFor='' className='text-gray-200 text-lg '>
+
+          <label htmlFor='' className='text-gray-200 text-md '>
             Password
           </label>
           <input
             type='password'
-            className='bg-[#262626] appearance-none  rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500'
+            className='bg-[#262626] appearance-none mb-4  rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500'
           />
-          <br />
-          <br />
-          <button className='bg-purple-900 text-[#A149FA]  hover:text-white py-2 rounded  w-full text-lg'>
+
+          <button className='bg-purple-900 text-[#A149FA] mb-4  hover:text-white py-2 rounded  w-full text-md'>
             Log in
           </button>
-          <br />
-          <br />
+
           <Link to='/signup'>
             <p className='text-gray-500   ml-auto w-full text-right hover:underline hover:text-white'>
-              Don't have acount
+              Don't have account
             </p>
           </Link>
         </form>

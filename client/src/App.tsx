@@ -40,8 +40,8 @@ export default function App() {
               <Route path='/dashboard' element={<Dashboard />}>
                 <Route index element={<DashboardMain />} />
                 <Route path='graphic' element={<GraphicEditor />} />
+                <Route path='video' element={<Video />} />
               </Route>
-              <Route path='/video' element={<Video />} />
             </>,
           ),
         )}
