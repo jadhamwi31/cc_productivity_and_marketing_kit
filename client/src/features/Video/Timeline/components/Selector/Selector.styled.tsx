@@ -13,7 +13,7 @@ const Marker = styled.div`
   width: 0px;
   position: absolute;
   top: -2.05em;
-  border: dashed 1px var(--blue);
+  border: dashed 1px #2a2438;
   pointer-events: none;
 `;
 

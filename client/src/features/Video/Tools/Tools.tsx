@@ -39,7 +39,7 @@ const Tools = (props: Props) => {
     <S.Container>
       <div className=' bg-[#2a2438] justify-around rounded-lg  flex flex-col text-white mt-10'>
         <button
-          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-t-lg hover:rounded-t-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={() => {
             if (uploadRef.current?.value) uploadRef.current.value = '';
             uploadRef.current?.click();
@@ -49,7 +49,7 @@ const Tools = (props: Props) => {
         </button>
 
         <button
-          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-t-lg  rounded-lg disabled:bg-transparent disabled:text-gray-600'
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f]   rounded-lg disabled:bg-transparent disabled:text-gray-600'
           disabled={tab.uploadProgress !== 100 || tab.videoUrl === null}
           onClick={downloadVideo}
         >
@@ -63,7 +63,7 @@ const Tools = (props: Props) => {
         />
 
         <button
-          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={cut}
           disabled={tab.videoId === null || tab.selectorStart === 0 || tab.selectorEnd === 0}
         >

@@ -17,7 +17,7 @@ const Tabs = (props: Props) => {
             backgroundColor: selectedTab === tabId ? '#2A2438' : '',
             textAlign: 'left',
             width: '170px',
-            padding: '5px',
+            paddingLeft: '20px',
           }}
         >
           Tab {i + 1}

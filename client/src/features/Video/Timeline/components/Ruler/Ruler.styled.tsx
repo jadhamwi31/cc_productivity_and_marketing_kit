@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   width: 100%;
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #2a2438;
   border-radius: var(--border-radius);
   position: absolute;
   top: -1em;

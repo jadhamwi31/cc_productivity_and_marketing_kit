@@ -36,8 +36,8 @@ const Controls = (props: Props) => {
   const tab = useCurrentTab();
 
   return (
-    <div className='bg-red-400 flex  '>
-      <div className='bg-blue-100'>
+    <div className=' flex  '>
+      <div className=''>
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={undo}
