@@ -1,20 +1,20 @@
 import { HexColorPicker } from 'react-colorful';
 
-import { Stage, Layer, Text, Image, Rect } from 'react-konva';
+import { Stage, Layer, Text, Rect } from 'react-konva';
 import React, { useState, useEffect, useRef } from 'react';
 import { BsType } from 'react-icons/bs';
 import { TbPhotoSearch } from 'react-icons/tb';
 import { IoShapesOutline } from 'react-icons/io5';
 import { BiColorFill } from 'react-icons/bi';
-import { RiSettings4Line, RiDeleteBin6Line } from 'react-icons/ri';
-import { AiOutlineZoomIn, AiOutlineZoomOut, AiOutlinePlus } from 'react-icons/ai';
+import { RiSettings4Line } from 'react-icons/ri';
+import { AiOutlineZoomIn, AiOutlineZoomOut } from 'react-icons/ai';
 import { FaRegCircle, FaRegSquare, FaRegStar } from 'react-icons/fa';
 import { FiSave } from 'react-icons/fi';
 import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
 import { toast } from 'react-toastify';
 import CustomCircle from '../../components/Dashboard/GraphicEditor/CustomCircle';
 import CustomRectangle from '../../components/Dashboard/GraphicEditor/CustomRectangle';
-import { update } from 'lodash';
+
 type Shape = {
   x: any;
   y: any;
@@ -137,7 +137,7 @@ export default function GraphicEditor() {
     }
   };
 
-  //Textttt
+  //Text
   const [texts, setTexts] = useState<any>([]);
   const [newText, setNewText] = useState('');
   const [newTextColor, setNewTextColor] = useState('');
@@ -150,7 +150,7 @@ export default function GraphicEditor() {
   const [updatedTextFont, setUpdatedTextFont] = useState('');
   const [updatedTextColor, setUpdatedTextColor] = useState('');
   const [updatedTextSize, setUpdatedTextSize] = useState('');
-  const [textToBeUpdated, setTextToBeUpdated] = useState(0);
+  const [textToBeUpdated, setTextToBeUpdated] = useState<any>();
 
   const addText = () => {
     if (newText === '') {
@@ -196,16 +196,18 @@ export default function GraphicEditor() {
     } else {
       updatedTexts[textToBeUpdated].text = updatedText;
       updatedTexts[textToBeUpdated].fill = updatedTextColor;
-      updatedTexts[textToBeUpdated].Size = updatedTextSize;
+      updatedTexts[textToBeUpdated].size = updatedTextSize;
       updatedTexts[textToBeUpdated].fontFamily = updatedTextFont;
       setTexts(updatedTexts);
       setUpateTextForm(false);
     }
   };
   const deleteText = (): void => {
-    if (selectdImageToBeDeleted !== null) {
-      setTexts((prevTexts: any) => prevTexts.filter((text: any) => text.id !== textToBeUpdated));
+    if (textToBeUpdated !== null) {
+      setTexts((prevTexts: any) => prevTexts.splice(textToBeUpdated, 1));
       setUpateTextForm(false);
+      console.log(textToBeUpdated);
+      console.log(texts);
     }
   };
   //Shapes
@@ -319,7 +321,7 @@ export default function GraphicEditor() {
     }
   };
   return (
-    <div className='flex justify-between'>
+    <div className='flex justify-between pt-10'>
       <div className=' h-[95vh] w-[5vw] flex flex-col items-center justify-center'>
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg'
@@ -470,6 +472,7 @@ export default function GraphicEditor() {
                     onMouseDown={() => {
                       RemoveAllforms();
                       handleTextSelect(index);
+                      setTextToBeUpdated(index);
                     }}
                   />
                 </React.Fragment>
