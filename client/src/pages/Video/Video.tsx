@@ -1,6 +1,7 @@
 import Player from '../../features/Video/Player/Player';
 import Tabs from '../../features/Video/Tabs/Tabs';
 import Timeline from '../../features/Video/Timeline/Timeline';
+import Controls from '../../features/Video/Tools/Controls';
 
 import Tools from '../../features/Video/Tools/Tools';
 import Transcript from '../../features/Video/Transcript/Transcript';
@@ -14,9 +15,10 @@ const Video = (props: Props) => {
       <Tabs />
       <S.PlayerToolsTranscriptRow>
         <Tools />
-        <Player />
         <Transcript />
+        <Player />
       </S.PlayerToolsTranscriptRow>
+      <Controls />
       <Timeline />
     </S.Container>
   );

@@ -5,19 +5,16 @@ const Container = styled.div`
   width: 100%;
   background-color: var(--black-lighter);
   display: grid;
-  grid-template-rows: 0.1fr repeat(2, 1fr);
-  padding: 1em;
-  gap: 1em;
+  grid-template-rows: 0.6fr 1fr 0.6fr 4fr;
+  gap: 0.5em;
 `;
 
 const PlayerToolsTranscriptRow = styled.div`
   display: grid;
-  grid-template-columns: 0.2fr 1fr 1fr;
+  grid-template-columns: 0.1fr 1fr 1fr;
   width: 100%;
-  gap: 1em;
-  & > div {
-    background-color: var(--black);
-  }
+  gap: 0.5em;
+  padding: 0.5em;
 `;
 
 export const S = { Container, PlayerToolsTranscriptRow };

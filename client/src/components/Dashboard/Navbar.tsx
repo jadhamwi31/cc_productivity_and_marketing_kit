@@ -35,7 +35,7 @@ const Navbar = () => {
               } group flex items-center  p-2 hover:border-l-2 hover:border-[#70358A] hover:pl-1.5 `}
             >
               <div className=' px-4'>{React.createElement(menu?.icon, { size: '20' })}</div>
-              <h2 className='absolute left-48 bg-white  whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit '>
+              <h2 className='absolute  left-48 bg-white  whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit '>
                 {menu?.name}
               </h2>
             </NavLink>

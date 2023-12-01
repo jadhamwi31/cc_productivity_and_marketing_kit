@@ -11,8 +11,8 @@ import { TbCut } from 'react-icons/tb';
 import { LiaUndoSolid, LiaRedoSolid } from 'react-icons/lia';
 type Props = {};
 
-const Tools = (props: Props) => {
-  const { uploadFile, playback, setPlayback, cut, undo, redo, downloadVideo } = useVideosStore();
+const Controls = (props: Props) => {
+  const { uploadFile, playback, setPlayback, undo, redo } = useVideosStore();
   const uploadRef = useRef<HTMLInputElement>(null);
 
   const uploadHandler: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
@@ -36,42 +36,34 @@ const Tools = (props: Props) => {
   const tab = useCurrentTab();
 
   return (
-    <S.Container>
-      <div className=' bg-[#2a2438] justify-around rounded-lg  flex flex-col text-white mt-10'>
+    <div className='bg-red-400 flex  '>
+      <div className='bg-blue-100'>
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
-          onClick={() => {
-            if (uploadRef.current?.value) uploadRef.current.value = '';
-            uploadRef.current?.click();
-          }}
+          onClick={undo}
+          disabled={tab.undo.length === 1}
         >
-          <HiOutlineUpload size={25} />
+          <LiaUndoSolid size='25' />
         </button>
-
-        <button
-          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-t-lg  rounded-lg disabled:bg-transparent disabled:text-gray-600'
-          disabled={tab.uploadProgress !== 100 || tab.videoUrl === null}
-          onClick={downloadVideo}
-        >
-          <FiSave size='25' />
-        </button>
-        <S.UploadHidden
-          type='file'
-          accept='video/*, audio/*'
-          ref={uploadRef}
-          onChange={uploadHandler}
-        />
-
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
-          onClick={cut}
-          disabled={tab.videoId === null || tab.selectorStart === 0 || tab.selectorEnd === 0}
+          onClick={redo}
+          disabled={tab.redo.length === 1}
         >
-          <TbCut size='25' />
+          <LiaRedoSolid size='25' />
         </button>
       </div>
-    </S.Container>
+      <div className='grow  text-center'>
+        <button
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
+          onClick={playbackHandler}
+          disabled={tab.videoId === null}
+        >
+          {playback === EnVideoPlayback.PAUSED ? <FaPlay size={25} /> : <FaPause size={25} />}
+        </button>
+      </div>
+    </div>
   );
 };
 
-export default Tools;
+export default Controls;

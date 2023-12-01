@@ -7,12 +7,12 @@ const Container = styled.div`
   border: solid 1px var(--blue);
   display: grid;
   place-items: center;
-  padding: 1em;
+
   position: relative;
 `;
 
 const Video = styled.video`
-  height: 250px;
+  height: 500px;
   width: 100%;
 `;
 
