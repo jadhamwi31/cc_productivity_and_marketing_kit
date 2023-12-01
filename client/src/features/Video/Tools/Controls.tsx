@@ -37,16 +37,16 @@ const Controls = (props: Props) => {
 
   return (
     <div className=' flex  '>
-      <div className=''>
+      <div className=' pl-10'>
         <button
-          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-l-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={undo}
           disabled={tab.undo.length === 1}
         >
           <LiaUndoSolid size='25' />
         </button>
         <button
-          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-r-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={redo}
           disabled={tab.redo.length === 1}
         >
