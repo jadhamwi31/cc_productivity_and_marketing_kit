@@ -78,7 +78,7 @@ const Player = (props: Props) => {
         src={tab.videoUrl ?? ''}
       />
       <S.Video
-        className='absolute rounded-lg '
+        className='absolute'
         id='video-player'
         ref={videoRef}
         onPlay={() => setPlayback(EnVideoPlayback.PLAYING)}
