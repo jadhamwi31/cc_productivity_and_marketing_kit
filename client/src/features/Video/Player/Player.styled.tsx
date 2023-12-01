@@ -3,7 +3,6 @@ import styled from 'styled-components';
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  border-bottom: solid 1px #0e0e0e;
   display: grid;
   place-items: center;
   position: relative;

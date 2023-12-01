@@ -65,6 +65,20 @@ const Player = (props: Props) => {
         {tab.uploadProgress !== null && `Upload Progress : ${tab.uploadProgress}`}
       </S.UploadProgressElement>
       <S.Video
+        className='blur-3xl rounded-lg '
+        id='video-player'
+        ref={videoRef}
+        onPlay={() => setPlayback(EnVideoPlayback.PLAYING)}
+        onPause={() => {
+          setPlayback(EnVideoPlayback.PAUSED);
+        }}
+        onLoadedMetadata={onLoadHandler}
+        onLoadedData={onLoadHandler}
+        onLoad={onLoadHandler}
+        src={tab.videoUrl ?? ''}
+      />
+      <S.Video
+        className='absolute rounded-lg '
         id='video-player'
         ref={videoRef}
         onPlay={() => setPlayback(EnVideoPlayback.PLAYING)}
