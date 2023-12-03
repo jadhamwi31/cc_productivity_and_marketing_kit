@@ -14,7 +14,12 @@ import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
 import { toast } from 'react-toastify';
 import CustomCircle from '../../components/Dashboard/GraphicEditor/CustomCircle';
 import CustomRectangle from '../../components/Dashboard/GraphicEditor/CustomRectangle';
-
+import {
+  PiStackDuotone,
+  PiStackFill,
+  PiStackSimpleFill,
+  PiStackSimpleDuotone,
+} from 'react-icons/pi';
 type Shape = {
   x: any;
   y: any;
@@ -27,13 +32,14 @@ type Shape = {
   strokeWidth?: number;
 };
 export default function GraphicEditor() {
-  //Background
   const [width, setWidth] = useState(800);
   const [height, setHeight] = useState(800);
   const [zoom, setZoom] = useState(100);
   const [backgroundColor, setBackgroundColor] = useState('#eeeeee');
   const [backgroundForm, setBackgroundForm] = useState(true);
   const [backgroundRec, setBackgroundRec] = useState(false);
+  const [layerForm, setLayerForm] = useState(false);
+
   useEffect(() => {
     if (shapeType == 'circle') {
       setNewCircle(true);
@@ -46,7 +52,6 @@ export default function GraphicEditor() {
     }
   }, [height, width, backgroundRec]);
 
-  //General
   const RemoveAllforms = () => {
     setNewShapeForm(false);
     setImageForm(false);
@@ -81,6 +86,8 @@ export default function GraphicEditor() {
     }, 1000);
   };
 
+  const [items, setItems] = useState<any>([]);
+
   //Images
   const [imageURLs, setImageURLs] = useState<any>([]);
   const [images, setImages] = useState<any>([]);
@@ -99,15 +106,16 @@ export default function GraphicEditor() {
           const imageURL = e.target?.result as string;
 
           image.onload = () => {
-            setImages((prevImages: any) => [
-              ...prevImages,
+            setItems((prevItems: any) => [
+              ...prevItems,
               {
-                id: prevImages.length,
+                id: prevItems.length,
                 image,
                 x: 0,
                 y: 0,
                 width: image.width / 2,
                 height: image.height / 2,
+                type: 'image',
               },
             ]);
           };
@@ -256,7 +264,7 @@ export default function GraphicEditor() {
       shape.strokeWidth = strokeWidth;
     }
 
-    setShapes([...shapes, shape]);
+    setItems([...items, shape]);
     setNewShapeForm(false);
     setStrokeWidth(0);
     setStrokeColor('#000000');
@@ -382,6 +390,7 @@ export default function GraphicEditor() {
           </button>
         </div>
       </div>
+
       <div className='flex-col flex items-center justify-center' style={{ zoom: `${zoom}%` }}>
         <div style={{ backgroundColor: backgroundColor, borderRadius: '25px' }}>
           <Stage
@@ -399,64 +408,64 @@ export default function GraphicEditor() {
               {backgroundRec && (
                 <Rect x={0} y={0} width={width} height={height} fill={backgroundColor} />
               )}
-              {images.map((imageData: any, i: any) => (
-                <CustomImage
-                  key={i}
-                  shapeProps={imageData}
-                  isSelected={imageData.id === selectedId}
-                  onSelect={() => {
-                    RemoveAllforms();
-                    selectShape(imageData.id);
-                    handleImageSelect(i);
-                  }}
-                  onChange={(newAttrs) => {
-                    const updatedImages = images.map((img: any) =>
-                      img.id === imageData.id ? { ...img, ...newAttrs } : img,
-                    );
-                    setImages(updatedImages);
-                  }}
-                />
-              ))}
 
-              {shapes.map((shape: any, i: any) => {
-                switch (shape.type) {
+              {items.map((item: any, index: any) => {
+                switch (item.type) {
+                  case 'image':
+                    return (
+                      <CustomImage
+                        key={index}
+                        shapeProps={item}
+                        isSelected={item.id === selectedId}
+                        onSelect={() => {
+                          RemoveAllforms();
+                          selectShape(item.id);
+                          handleImageSelect(index);
+                        }}
+                        onChange={(newAttrs) => {
+                          const updatedImages = items.map((img: any) =>
+                            img.id === item.id ? { ...img, ...newAttrs } : img,
+                          );
+                          setItems(updatedImages);
+                        }}
+                      />
+                    );
                   case 'circle':
                     return (
                       <CustomCircle
-                        key={i}
-                        shapeProps={shape}
-                        isSelected={i === selectedShapeId}
+                        key={index}
+                        shapeProps={item}
+                        isSelected={index === selectedId}
                         onSelect={() => {
                           RemoveAllforms();
-                          setSelectedShapeId(i);
-                          setShapeToBeUpdated(i);
-                          handleShapeSelect(i);
+                          selectShape(index);
+                          setShapeToBeUpdated(index);
+                          handleShapeSelect(index);
                         }}
                         onChange={(newAttrs) => {
-                          const updatedShapes = shapes.map((shape1: any) =>
-                            shape1.id === i ? { ...shape1, ...newAttrs } : shape1,
+                          const updatedShapes = items.map((shape1: any) =>
+                            shape1.id === index ? { ...shape1, ...newAttrs } : shape1,
                           );
-                          setShapes(updatedShapes);
+                          setItems(updatedShapes);
                         }}
                       />
                     );
                   case 'rectangle':
                     return (
                       <CustomRectangle
-                        key={i}
-                        shapeProps={shape}
-                        isSelected={i === selectedId}
+                        key={index}
+                        shapeProps={item}
+                        isSelected={index === selectedId}
                         onSelect={() => {
-                          selectShape(i);
                           RemoveAllforms();
-                          setSelectedShapeId(shape.id);
-                          setShapeToBeUpdated(i);
-                          handleShapeSelect(i);
+                          selectShape(index);
+                          setShapeToBeUpdated(index);
+                          handleShapeSelect(index);
                         }}
                         onChange={(newAttrs) => {
-                          const rects = shapes.slice();
-                          rects[i] = newAttrs;
-                          setShapes(rects);
+                          const rects = items.slice();
+                          rects[index] = newAttrs;
+                          setItems(rects);
                         }}
                       />
                     );
@@ -464,21 +473,22 @@ export default function GraphicEditor() {
                     return null;
                 }
               })}
-
-              {texts.map((text: any, index: any) => (
-                <React.Fragment key={index}>
-                  <Text
-                    {...text}
-                    onMouseDown={() => {
-                      RemoveAllforms();
-                      handleTextSelect(index);
-                      setTextToBeUpdated(index);
-                    }}
-                  />
-                </React.Fragment>
-              ))}
             </Layer>
           </Stage>
+        </div>
+        <div className='flex  bg-[#2a2438] justify-around rounded-lg mt-5'>
+          <button className='px-2 py-1 hover:bg-[#4f245f] hover:rounded-l-lg '>
+            <PiStackDuotone size='25' />
+          </button>
+          <button className='px-2 py-1 hover:bg-[#4f245f]  '>
+            <PiStackSimpleDuotone size='25' />
+          </button>
+          <button className='px-2 py-1 hover:bg-[#4f245f]  '>
+            <PiStackSimpleFill size='25' />
+          </button>
+          <button className='px-2 py-1 hover:bg-[#4f245f] hover:rounded-r-lg '>
+            <PiStackFill size='25' />
+          </button>
         </div>
       </div>
 
