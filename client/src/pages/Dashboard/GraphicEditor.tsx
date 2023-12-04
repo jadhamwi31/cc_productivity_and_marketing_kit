@@ -8,7 +8,7 @@ import { IoShapesOutline } from 'react-icons/io5';
 import { BiColorFill } from 'react-icons/bi';
 import { RiSettings4Line } from 'react-icons/ri';
 import { TiTrash } from 'react-icons/ti';
-
+import useImage from 'use-image';
 import { RxCross2 } from 'react-icons/rx';
 import { AiOutlineZoomIn, AiOutlineZoomOut } from 'react-icons/ai';
 import { FaRegCircle, FaRegSquare, FaRegStar } from 'react-icons/fa';
@@ -157,6 +157,28 @@ export default function GraphicEditor() {
 
       setImageURLs(imageArray);
     }
+  };
+  const AddOnlineImage = (url: string): void => {
+    setImageForm(false);
+    const image = new Image();
+    image.src = url;
+
+    image.onload = () => {
+      setItems((prevItems: any) => [
+        ...prevItems,
+        {
+          id: prevItems.length,
+          image: image,
+          x: 0,
+          y: 0,
+          type: 'image',
+        },
+      ]);
+    };
+
+    image.onerror = (error) => {
+      console.error('Error loading image:', error);
+    };
   };
 
   //Text
@@ -492,14 +514,21 @@ export default function GraphicEditor() {
                   <div className='grid grid-cols-2  gap-1'>
                     {onlineImages &&
                       onlineImages.map((img: any, index: number) => (
-                        <div className='img__wrap'>
+                        <div className='img__wrap' key={index}>
                           <img
                             key={index}
                             src={img.urls.small}
                             className=' img__img w-full h-60 object-cover hover:bg-black/20  cursor-pointer '
                             alt={`Image ${index}`}
                           />
-                          <p className='img__description'>Add</p>
+                          <p
+                            className='img__description'
+                            onClick={() => {
+                              AddOnlineImage(img.urls.small);
+                            }}
+                          >
+                            Add
+                          </p>
                         </div>
                       ))}
                   </div>
