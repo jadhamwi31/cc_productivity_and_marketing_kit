@@ -9,9 +9,10 @@ import { BiColorFill } from 'react-icons/bi';
 import { RiSettings4Line } from 'react-icons/ri';
 import { TiTrash } from 'react-icons/ti';
 
+import { RxCross2 } from 'react-icons/rx';
 import { AiOutlineZoomIn, AiOutlineZoomOut } from 'react-icons/ai';
 import { FaRegCircle, FaRegSquare, FaRegStar } from 'react-icons/fa';
-import { FiSave } from 'react-icons/fi';
+import { FiSave, FiUpload } from 'react-icons/fi';
 import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
 import { toast } from 'react-toastify';
 import CustomCircle from '../../components/Dashboard/GraphicEditor/CustomCircle';
@@ -58,7 +59,6 @@ export default function GraphicEditor() {
 
   const RemoveAllforms = () => {
     setNewShapeForm(false);
-    setImageForm(false);
     setTextForm(false);
     setUpateTextForm(false);
     setUpdateShapeForm(false);
@@ -95,11 +95,35 @@ export default function GraphicEditor() {
   //Images
   const [imageURLs, setImageURLs] = useState<any>([]);
   const [images, setImages] = useState<any>([]);
+  const [onlineImages, setOnlineImages] = useState<any>([]);
   const [imageForm, setImageForm] = useState(false);
   const [selectedId, setSelectID] = useState<any>(null);
+  const [search, setSearch] = useState<any>('');
+
+  useEffect(() => {
+    const searchImages = async () => {
+      try {
+        const response = await fetch(
+          `https://api.unsplash.com/search/photos/?query=${search}&client_id=HMFeaCvvd8FxdLbiTD925AUjDkhhXFAaHNUX7iI0K2U&page=1&per_page=150`,
+        );
+        const data = await response.json();
+
+        console.log(data);
+        const images = data.results || [];
+
+        setOnlineImages(images);
+      } catch (error) {
+        console.error('Error fetching images:', error);
+      }
+    };
+
+    searchImages();
+  }, [search]);
+
   const [selectdImageToBeDeleted, setSelectdImageToBeDeleted] = useState<any>();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImageForm(false);
     const files = e.target.files;
     if (files) {
       const imageArray = Array.from(files).map((file, index) => {
@@ -132,20 +156,6 @@ export default function GraphicEditor() {
       });
 
       setImageURLs(imageArray);
-    }
-  };
-  const handleImageSelect = (i: any) => {
-    setImageForm(true);
-    setSelectdImageToBeDeleted(i);
-  };
-
-  const deleteImage = (): void => {
-    console.log(selectedId);
-    if (selectdImageToBeDeleted !== null) {
-      setImages((prevImages: any) =>
-        prevImages.filter((image: any) => image.id !== selectdImageToBeDeleted),
-      );
-      setImageForm(false);
     }
   };
 
@@ -215,14 +225,7 @@ export default function GraphicEditor() {
       setUpateTextForm(false);
     }
   };
-  const deleteText = (): void => {
-    if (textToBeUpdated !== null) {
-      setTexts((prevTexts: any) => prevTexts.splice(textToBeUpdated, 1));
-      setUpateTextForm(false);
-      console.log(textToBeUpdated);
-      console.log(texts);
-    }
-  };
+
   //Shapes
   const [shapeType, setShapeType] = useState('circle');
   const [newShapeForm, setNewShapeForm] = useState(false);
@@ -410,16 +413,14 @@ export default function GraphicEditor() {
             <BsType size='25' />
           </button>
 
-          <label className='px-2 py-1  hover:bg-[#4f245f] ' htmlFor='img'>
+          <button
+            className='px-2 py-1  hover:bg-[#4f245f] '
+            onClick={() => {
+              setImageForm(true);
+            }}
+          >
             <TbPhotoSearch size='25' />
-          </label>
-          <input
-            id='img'
-            type='file'
-            accept='image/*'
-            className='hidden'
-            onChange={handleImageChange}
-          />
+          </button>
 
           <button
             className='px-2 py-1 hover:bg-[#4f245f] hover:rounded-b-lg '
@@ -448,6 +449,62 @@ export default function GraphicEditor() {
             <AiOutlineZoomOut size='25' />
           </button>
         </div>
+        {imageForm && (
+          <div className='bg-[#15121C] rounded-lg w-[300px] absolute h-[80vh] left-36 overflow-hidden '>
+            <div className='flex-col p-2 '>
+              <label
+                onClick={() => {
+                  setImageForm(false);
+                }}
+              >
+                <RxCross2
+                  size='25'
+                  className='text-gray-500 ml-auto hover:text-white cursor-pointer'
+                />
+              </label>
+              <label
+                htmlFor='img'
+                className='flex pl-2 text-gray-500 hover:text-white cursor-pointer hover:underline'
+              >
+                <FiUpload size='22' className='mr-2' /> Upload Image
+              </label>
+              <input
+                id='img'
+                type='file'
+                accept='image/*'
+                className='hidden'
+                onChange={handleImageChange}
+              />
+              <div className='mt-4'>
+                <input
+                  type='text'
+                  className='rounded px-2 py-1 bg-[#2a2438] text-gray-500 mb-4 w-full ring-0 outline-none'
+                  placeholder='Search for Image'
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
+                />
+                <div
+                  className='overflow-y-scroll relative'
+                  style={{ maxHeight: 'calc(80vh - 40px)' }}
+                >
+                  <div className='grid grid-cols-2  gap-1'>
+                    {onlineImages &&
+                      onlineImages.map((img: any, index: number) => (
+                        <img
+                          key={index}
+                          src={img.urls.small}
+                          className='w-full h-60 object-cover'
+                          alt={`Image ${index}`}
+                        />
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className='flex-col flex items-center justify-center' style={{ zoom: `${zoom}%` }}>
@@ -552,7 +609,7 @@ export default function GraphicEditor() {
               })}
             </Layer>
           </Stage>
-        </div>{' '}
+        </div>
         <div className=' absolute top-0 flex'>
           {selectedId != null ? (
             <>
@@ -751,14 +808,7 @@ export default function GraphicEditor() {
                   }}
                 />
               </label>
-              <button
-                onClick={() => {
-                  deleteText();
-                }}
-                className=' text-sm mb-2 text-red-500 px-4 w-full rounded-md hover:underline'
-              >
-                Delete
-              </button>
+
               <button
                 className=' bg-[#2A2438]   px-2 py-1 w-full rounded-md hover:bg-[#191521]'
                 onClick={() => {
