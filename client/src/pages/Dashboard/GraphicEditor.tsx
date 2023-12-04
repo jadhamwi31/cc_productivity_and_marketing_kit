@@ -22,6 +22,7 @@ import {
   PiStackSimpleFill,
   PiStackSimpleDuotone,
 } from 'react-icons/pi';
+import CustomText from '../../components/Dashboard/GraphicEditor/CustomText';
 type Shape = {
   x: any;
   y: any;
@@ -152,7 +153,7 @@ export default function GraphicEditor() {
   const [texts, setTexts] = useState<any>([]);
   const [newText, setNewText] = useState('');
   const [newTextColor, setNewTextColor] = useState('');
-  const [newTextSize, setNewTextSize] = useState('');
+  const [newTextSize, setNewTextSize] = useState(20);
   const [newTextFont, setNewTextFont] = useState('');
   const [textForm, setTextForm] = useState(false);
 
@@ -160,7 +161,7 @@ export default function GraphicEditor() {
   const [updatedText, setUpdatedText] = useState('');
   const [updatedTextFont, setUpdatedTextFont] = useState('');
   const [updatedTextColor, setUpdatedTextColor] = useState('');
-  const [updatedTextSize, setUpdatedTextSize] = useState('');
+  const [updatedTextSize, setUpdatedTextSize] = useState(20);
   const [textToBeUpdated, setTextToBeUpdated] = useState<any>();
 
   const addText = () => {
@@ -171,18 +172,19 @@ export default function GraphicEditor() {
         text: newText,
         x: 100,
         y: 100,
+        align: 'center',
         fill: newTextColor,
         fontSize: newTextSize,
         fontFamily: newTextFont,
-        draggable: true,
-        isSelected: false,
+
+        type: 'text',
       };
       setUpateTextForm(false);
       setNewText('');
       setNewTextColor('#000000');
-      setNewTextSize('');
-      setNewTextSize('');
-      setTexts([...texts, text]);
+      setNewTextSize(20);
+      setItems([text, ...items]);
+      console.log(items);
     }
   };
   const handleTextSelect = (index: any) => {
@@ -528,62 +530,84 @@ export default function GraphicEditor() {
                         }}
                       />
                     );
+                  case 'text':
+                    return (
+                      <CustomText
+                        key={index}
+                        shapeProps={item}
+                        isSelected={index === selectedId}
+                        onSelect={() => {
+                          setSelectID(index);
+                        }}
+                        onChange={(newAttrs) => {
+                          const item = items.slice();
+                          item[index] = newAttrs;
+                          setItems(item);
+                        }}
+                      />
+                    );
                   default:
                     return null;
                 }
               })}
             </Layer>
           </Stage>
-        </div>
-        <div className='flex'>
-          <div className='   mr-5 flex justify-around rounded-lg mt-5'>
-            <button
-              className='px-2 py-1  bg-[#2a2438]    hover:bg-[#4f245f] rounded-lg hover:rounded-lg '
-              onClick={() => {
-                deleteItem();
-              }}
-            >
-              <TiTrash size='25' />
-            </button>
-          </div>
-          <div className='flex justify-around rounded-lg mt-5'>
-            <button
-              className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400 bg-[#4f245f] rounded-l-lg hover:rounded-l-lg '
-              onClick={() => {
-                sendToBack(selectedId);
-              }}
-              disabled={selectedId == null || selectedId == 0 ? true : false}
-            >
-              <PiStackDuotone size='25' />
-            </button>
-            <button
-              className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400 bg-[#4f245f]  '
-              onClick={() => {
-                sendBackward(selectedId);
-              }}
-              disabled={selectedId == null || selectedId == 0 ? true : false}
-            >
-              <PiStackSimpleDuotone size='25' />
-            </button>
-            <button
-              className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400  bg-[#4f345f]  '
-              onClick={() => {
-                bringForward(selectedId);
-              }}
-              disabled={selectedId == null || selectedId == items.length - 1 ? true : false}
-            >
-              <PiStackSimpleFill size='25' />
-            </button>
-            <button
-              className='px-2 py-1  disabled:bg-[#2a2438]  disabled:text-gray-400  bg-[#4f245f] rounded-r-lg hover:rounded-r-lg '
-              onClick={() => {
-                bringToFront(selectedId);
-              }}
-              disabled={selectedId == null || selectedId == items.length - 1 ? true : false}
-            >
-              <PiStackFill size='25' />
-            </button>
-          </div>
+        </div>{' '}
+        <div className=' absolute top-0 flex'>
+          {selectedId != null ? (
+            <>
+              <div className='   mr-5 flex justify-around rounded-lg mt-5'>
+                <button
+                  className='px-2 py-1  bg-[#2a2438]    hover:bg-[#4f245f] rounded-lg hover:rounded-lg '
+                  onClick={() => {
+                    deleteItem();
+                  }}
+                >
+                  <TiTrash size='25' />
+                </button>
+              </div>
+              <div className='flex justify-around rounded-lg mt-5'>
+                <button
+                  className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400 bg-[#4f245f] rounded-l-lg hover:rounded-l-lg '
+                  onClick={() => {
+                    sendToBack(selectedId);
+                  }}
+                  disabled={selectedId == null || selectedId == 0 ? true : false}
+                >
+                  <PiStackDuotone size='25' />
+                </button>
+                <button
+                  className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400 bg-[#4f245f]  '
+                  onClick={() => {
+                    sendBackward(selectedId);
+                  }}
+                  disabled={selectedId == null || selectedId == 0 ? true : false}
+                >
+                  <PiStackSimpleDuotone size='25' />
+                </button>
+                <button
+                  className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400   bg-[#4f245f]  '
+                  onClick={() => {
+                    bringForward(selectedId);
+                  }}
+                  disabled={selectedId == null || selectedId == items.length - 1 ? true : false}
+                >
+                  <PiStackSimpleFill size='25' />
+                </button>
+                <button
+                  className='px-2 py-1  disabled:bg-[#2a2438]  disabled:text-gray-400  bg-[#4f245f] rounded-r-lg hover:rounded-r-lg '
+                  onClick={() => {
+                    bringToFront(selectedId);
+                  }}
+                  disabled={selectedId == null || selectedId == items.length - 1 ? true : false}
+                >
+                  <PiStackFill size='25' />
+                </button>
+              </div>
+            </>
+          ) : (
+            ''
+          )}{' '}
         </div>
       </div>
 
@@ -714,7 +738,7 @@ export default function GraphicEditor() {
                 min='10'
                 max='200'
                 className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
-                onChange={(event) => setUpdatedTextSize(event.target.value)}
+                onChange={(event) => setUpdatedTextSize(Number(event.target.value))}
               />
               <label htmlFor='' className='flex'>
                 <span className='pt-1'>Text Color</span>
@@ -801,7 +825,7 @@ export default function GraphicEditor() {
                 min='10'
                 max='150'
                 className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
-                onChange={(event) => setNewTextSize(event.target.value)}
+                onChange={(event) => setNewTextSize(Number(event.target.value))}
               />
               <label htmlFor='' className='flex'>
                 <span className='pt-1'>Text Color</span>
