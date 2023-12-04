@@ -347,20 +347,42 @@ export default function GraphicEditor() {
     setSelectID(null);
     console.log(items);
   }
-  function sendBackward(index: number) {}
-  function bringToFront(index: number) {}
+  function sendBackward(index: number) {
+    console.log(items);
+
+    setSelectID(null);
+
+    const updatedArray = [...items];
+    const [removedItem] = updatedArray.splice(index, 1);
+    updatedArray.splice(index - 1, 0, removedItem);
+
+    setItems(updatedArray);
+    setSelectID(null);
+    console.log(updatedArray);
+  }
+  function bringToFront(index: number) {
+    console.log(items);
+
+    setSelectID(null);
+
+    const updatedArray = [...items];
+    const [removedItem] = updatedArray.splice(index, 1);
+    updatedArray.splice(index + 1, 0, removedItem);
+
+    setItems(updatedArray);
+    setSelectID(null);
+    console.log(updatedArray);
+  }
   function bringForward(index: number) {
-    console.log(items);
-
     setSelectID(null);
 
-    const updatedItems = [...items];
-    const [removedItem] = updatedItems.splice(index, 1);
-    updatedItems.push(removedItem);
+    const updatedArray = [...items];
+    const [removedItem] = updatedArray.splice(index, 1);
+    updatedArray.splice(index + 1, 0, removedItem); // Insert the removed item at the next index
 
-    setItems(updatedItems);
+    setItems(updatedArray);
     setSelectID(null);
-    console.log(items);
+    console.log(updatedArray);
   }
 
   return (
@@ -536,20 +558,26 @@ export default function GraphicEditor() {
             </button>
             <button
               className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400 bg-[#4f245f]  '
-              disabled={true}
+              onClick={() => {
+                sendBackward(selectedId);
+              }}
+              disabled={selectedId == null || selectedId == 0 ? true : false}
             >
               <PiStackSimpleDuotone size='25' />
             </button>
             <button
-              className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400  bg-[#4f245f]  '
-              disabled={true}
+              className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400  bg-[#4f345f]  '
+              onClick={() => {
+                bringForward(selectedId);
+              }}
+              disabled={selectedId == null || selectedId == items.length - 1 ? true : false}
             >
               <PiStackSimpleFill size='25' />
             </button>
             <button
               className='px-2 py-1  disabled:bg-[#2a2438]  disabled:text-gray-400  bg-[#4f245f] rounded-r-lg hover:rounded-r-lg '
               onClick={() => {
-                bringForward(selectedId);
+                bringToFront(selectedId);
               }}
               disabled={selectedId == null || selectedId == items.length - 1 ? true : false}
             >
