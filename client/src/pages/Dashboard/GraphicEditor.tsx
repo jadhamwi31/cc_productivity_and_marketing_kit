@@ -492,12 +492,15 @@ export default function GraphicEditor() {
                   <div className='grid grid-cols-2  gap-1'>
                     {onlineImages &&
                       onlineImages.map((img: any, index: number) => (
-                        <img
-                          key={index}
-                          src={img.urls.small}
-                          className='w-full h-60 object-cover'
-                          alt={`Image ${index}`}
-                        />
+                        <div className='img__wrap'>
+                          <img
+                            key={index}
+                            src={img.urls.small}
+                            className=' img__img w-full h-60 object-cover hover:bg-black/20  cursor-pointer '
+                            alt={`Image ${index}`}
+                          />
+                          <p className='img__description'>Add</p>
+                        </div>
                       ))}
                   </div>
                 </div>
