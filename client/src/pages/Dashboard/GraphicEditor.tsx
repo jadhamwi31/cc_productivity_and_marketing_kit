@@ -334,7 +334,19 @@ export default function GraphicEditor() {
       setSelectID(null);
     }
   };
-  function sendToBack(index: number) {}
+  function sendToBack(index: number) {
+    console.log(items);
+
+    setSelectID(null);
+
+    const updatedItems = [...items];
+    const [removedItem] = updatedItems.splice(index, 1);
+    updatedItems.unshift(removedItem);
+
+    setItems(updatedItems);
+    setSelectID(null);
+    console.log(items);
+  }
   function sendBackward(index: number) {}
   function bringToFront(index: number) {}
   function bringForward(index: number) {
@@ -344,7 +356,7 @@ export default function GraphicEditor() {
 
     const updatedItems = [...items];
     const [removedItem] = updatedItems.splice(index, 1);
-    updatedItems.unshift(removedItem);
+    updatedItems.push(removedItem);
 
     setItems(updatedItems);
     setSelectID(null);
@@ -516,8 +528,9 @@ export default function GraphicEditor() {
             <button
               className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400 bg-[#4f245f] rounded-l-lg hover:rounded-l-lg '
               onClick={() => {
-                bringForward(selectedId);
+                sendToBack(selectedId);
               }}
+              disabled={selectedId == null || selectedId == 0 ? true : false}
             >
               <PiStackDuotone size='25' />
             </button>
@@ -535,7 +548,10 @@ export default function GraphicEditor() {
             </button>
             <button
               className='px-2 py-1  disabled:bg-[#2a2438]  disabled:text-gray-400  bg-[#4f245f] rounded-r-lg hover:rounded-r-lg '
-              disabled={true}
+              onClick={() => {
+                bringForward(selectedId);
+              }}
+              disabled={selectedId == null || selectedId == items.length - 1 ? true : false}
             >
               <PiStackFill size='25' />
             </button>
