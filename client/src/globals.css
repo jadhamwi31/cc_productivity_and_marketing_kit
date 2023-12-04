@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 @font-face {
-  font-family: 'San Francisco';
+  font-family: 'Font';
   font-weight: 700;
-  src: url('src/assets/Poppins-Regular.ttf');
+  src: url('src/assets/Font.ttf');
 }
 :root {
   --black: #000000;

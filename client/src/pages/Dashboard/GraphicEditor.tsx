@@ -7,6 +7,8 @@ import { TbPhotoSearch } from 'react-icons/tb';
 import { IoShapesOutline } from 'react-icons/io5';
 import { BiColorFill } from 'react-icons/bi';
 import { RiSettings4Line } from 'react-icons/ri';
+import { TiTrash } from 'react-icons/ti';
+
 import { AiOutlineZoomIn, AiOutlineZoomOut } from 'react-icons/ai';
 import { FaRegCircle, FaRegSquare, FaRegStar } from 'react-icons/fa';
 import { FiSave } from 'react-icons/fi';
@@ -39,6 +41,7 @@ export default function GraphicEditor() {
   const [backgroundForm, setBackgroundForm] = useState(true);
   const [backgroundRec, setBackgroundRec] = useState(false);
   const [layerForm, setLayerForm] = useState(false);
+  const [itemID, setItemID] = useState();
 
   useEffect(() => {
     if (shapeType == 'circle') {
@@ -92,7 +95,7 @@ export default function GraphicEditor() {
   const [imageURLs, setImageURLs] = useState<any>([]);
   const [images, setImages] = useState<any>([]);
   const [imageForm, setImageForm] = useState(false);
-  const [selectedId, selectShape] = useState<any>(null);
+  const [selectedId, setSelectID] = useState<any>(null);
   const [selectdImageToBeDeleted, setSelectdImageToBeDeleted] = useState<any>();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -314,20 +317,40 @@ export default function GraphicEditor() {
     setShapes(updatedShapes);
     setUpdateShapeForm(false);
   };
-  const deleteShape = (shapeToBeUpdated: number): void => {
-    setShapes((prevShapes: any) =>
-      prevShapes.filter((shape: any) => shape.id !== shapeToBeUpdated),
-    );
+  const deleteShape = (shapeToBeUpdated: number): void => {};
+  const deleteItem = (): void => {
+    if (selectedId !== null) {
+      setItems((prevItems: any) =>
+        prevItems.filter((item: any, index: number) => index !== selectedId),
+      );
+      setSelectID(null);
+    }
   };
 
   //Deselcet Funtion
   const checkDeselect = (e: any) => {
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
-      selectShape(null);
-      setSelectedShapeId(null);
+      setSelectID(null);
     }
   };
+  function sendToBack(index: number) {}
+  function sendBackward(index: number) {}
+  function bringToFront(index: number) {}
+  function bringForward(index: number) {
+    console.log(items);
+
+    setSelectID(null);
+
+    const updatedItems = [...items];
+    const [removedItem] = updatedItems.splice(index, 1);
+    updatedItems.unshift(removedItem);
+
+    setItems(updatedItems);
+    setSelectID(null);
+    console.log(items);
+  }
+
   return (
     <div className='flex justify-between pt-10'>
       <div className=' h-[95vh] w-[5vw] flex flex-col items-center justify-center'>
@@ -416,17 +439,18 @@ export default function GraphicEditor() {
                       <CustomImage
                         key={index}
                         shapeProps={item}
-                        isSelected={item.id === selectedId}
+                        isSelected={index === selectedId}
                         onSelect={() => {
                           RemoveAllforms();
-                          selectShape(item.id);
-                          handleImageSelect(index);
+                          setSelectID(index);
+
+                          console.log(index);
+                          setItemID(index);
                         }}
                         onChange={(newAttrs) => {
-                          const updatedImages = items.map((img: any) =>
-                            img.id === item.id ? { ...img, ...newAttrs } : img,
-                          );
-                          setItems(updatedImages);
+                          const item = items.slice();
+                          item[index] = newAttrs;
+                          setItems(item);
                         }}
                       />
                     );
@@ -438,15 +462,15 @@ export default function GraphicEditor() {
                         isSelected={index === selectedId}
                         onSelect={() => {
                           RemoveAllforms();
-                          selectShape(index);
+                          setSelectID(index);
                           setShapeToBeUpdated(index);
-                          handleShapeSelect(index);
+                          console.log(index);
+                          setItemID(index);
                         }}
                         onChange={(newAttrs) => {
-                          const updatedShapes = items.map((shape1: any) =>
-                            shape1.id === index ? { ...shape1, ...newAttrs } : shape1,
-                          );
-                          setItems(updatedShapes);
+                          const item = items.slice();
+                          item[index] = newAttrs;
+                          setItems(item);
                         }}
                       />
                     );
@@ -458,14 +482,15 @@ export default function GraphicEditor() {
                         isSelected={index === selectedId}
                         onSelect={() => {
                           RemoveAllforms();
-                          selectShape(index);
+                          setSelectID(index);
                           setShapeToBeUpdated(index);
-                          handleShapeSelect(index);
+                          setItemID(index);
+                          console.log(index);
                         }}
                         onChange={(newAttrs) => {
-                          const rects = items.slice();
-                          rects[index] = newAttrs;
-                          setItems(rects);
+                          const item = items.slice();
+                          item[index] = newAttrs;
+                          setItems(item);
                         }}
                       />
                     );
@@ -476,19 +501,45 @@ export default function GraphicEditor() {
             </Layer>
           </Stage>
         </div>
-        <div className='flex  bg-[#2a2438] justify-around rounded-lg mt-5'>
-          <button className='px-2 py-1 hover:bg-[#4f245f] hover:rounded-l-lg '>
-            <PiStackDuotone size='25' />
-          </button>
-          <button className='px-2 py-1 hover:bg-[#4f245f]  '>
-            <PiStackSimpleDuotone size='25' />
-          </button>
-          <button className='px-2 py-1 hover:bg-[#4f245f]  '>
-            <PiStackSimpleFill size='25' />
-          </button>
-          <button className='px-2 py-1 hover:bg-[#4f245f] hover:rounded-r-lg '>
-            <PiStackFill size='25' />
-          </button>
+        <div className='flex'>
+          <div className='   mr-5 flex justify-around rounded-lg mt-5'>
+            <button
+              className='px-2 py-1  bg-[#2a2438]    hover:bg-[#4f245f] rounded-lg hover:rounded-lg '
+              onClick={() => {
+                deleteItem();
+              }}
+            >
+              <TiTrash size='25' />
+            </button>
+          </div>
+          <div className='flex justify-around rounded-lg mt-5'>
+            <button
+              className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400 bg-[#4f245f] rounded-l-lg hover:rounded-l-lg '
+              onClick={() => {
+                bringForward(selectedId);
+              }}
+            >
+              <PiStackDuotone size='25' />
+            </button>
+            <button
+              className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400 bg-[#4f245f]  '
+              disabled={true}
+            >
+              <PiStackSimpleDuotone size='25' />
+            </button>
+            <button
+              className='px-2 py-1  disabled:bg-[#2a2438] disabled:text-gray-400  bg-[#4f245f]  '
+              disabled={true}
+            >
+              <PiStackSimpleFill size='25' />
+            </button>
+            <button
+              className='px-2 py-1  disabled:bg-[#2a2438]  disabled:text-gray-400  bg-[#4f245f] rounded-r-lg hover:rounded-r-lg '
+              disabled={true}
+            >
+              <PiStackFill size='25' />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -565,26 +616,7 @@ export default function GraphicEditor() {
         ) : (
           <div className='w-[15vw] bg-red-200'></div>
         )}
-        {imageForm ? (
-          <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw] mt-5'>
-            <div className='flex flex-col justify-center text-gray-500'>
-              <span className=' flex '>
-                <TbPhotoSearch size={20} className='mr-2' /> Image Settings
-              </span>
-              <hr className='h-px mb-2 bg-gray-500 border-0 ' />
-              <button
-                onClick={() => {
-                  deleteImage();
-                }}
-                className=' text-sm mb-2 text-red-500 px-4 w-full rounded-md hover:underline'
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className='w-[15vw] bg-red-200'></div>
-        )}
+
         {updateTextForm ? (
           <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw] mt-5'>
             <div className='flex flex-col justify-center text-gray-500'>
