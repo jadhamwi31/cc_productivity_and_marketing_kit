@@ -44,6 +44,7 @@ const CustomText: React.FC<CusProps> = ({ shapeProps, isSelected, onSelect, onCh
             ...shapeProps,
             x: node.x(),
             y: node.y(),
+
             width: Math.max(5, node.width() * scaleX),
             height: Math.max(node.height() * scaleY),
           });
