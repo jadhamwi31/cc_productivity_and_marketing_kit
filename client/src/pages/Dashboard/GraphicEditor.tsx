@@ -8,20 +8,9 @@ import { IoShapesOutline } from 'react-icons/io5';
 import { BiColorFill } from 'react-icons/bi';
 import { RiSettings4Line } from 'react-icons/ri';
 import { TiTrash } from 'react-icons/ti';
-import {
-  Slider,
-  Sketch,
-  Material,
-  Colorful,
-  Compact,
-  Circle,
-  Wheel,
-  Block,
-  Github,
-  Chrome,
-} from '@uiw/react-color';
+
 import { RxCross2 } from 'react-icons/rx';
-import { AiOutlineZoomIn, AiOutlineZoomOut } from 'react-icons/ai';
+
 import { FaRegCircle, FaRegSquare, FaRegStar } from 'react-icons/fa';
 import { FiSave, FiUpload } from 'react-icons/fi';
 import CustomImage from '../../components/Dashboard/GraphicEditor/CustomImage';
@@ -55,6 +44,8 @@ export default function GraphicEditor() {
   const [backgroundRec, setBackgroundRec] = useState(false);
   const [layerForm, setLayerForm] = useState(false);
   const [itemID, setItemID] = useState();
+  const [undo, setUndo] = useState<any>([]);
+  const [redo, setRedo] = useState<any>([]);
 
   useEffect(() => {
     if (shapeType == 'circle') {
@@ -280,6 +271,7 @@ export default function GraphicEditor() {
 
   const deleteItem = (): void => {
     if (selectedId !== null) {
+      setUndo(undo.push(items));
       setItems((prevItems: any) =>
         prevItems.filter((item: any, index: number) => index !== selectedId),
       );
