@@ -8,7 +8,18 @@ import { IoShapesOutline } from 'react-icons/io5';
 import { BiColorFill } from 'react-icons/bi';
 import { RiSettings4Line } from 'react-icons/ri';
 import { TiTrash } from 'react-icons/ti';
-import useImage from 'use-image';
+import {
+  Slider,
+  Sketch,
+  Material,
+  Colorful,
+  Compact,
+  Circle,
+  Wheel,
+  Block,
+  Github,
+  Chrome,
+} from '@uiw/react-color';
 import { RxCross2 } from 'react-icons/rx';
 import { AiOutlineZoomIn, AiOutlineZoomOut } from 'react-icons/ai';
 import { FaRegCircle, FaRegSquare, FaRegStar } from 'react-icons/fa';
@@ -61,7 +72,6 @@ export default function GraphicEditor() {
     setNewShapeForm(false);
     setTextForm(false);
     setUpateTextForm(false);
-    setUpdateShapeForm(false);
   };
   const stageRef = React.useRef(null);
   function downloadURI(uri: any, name: any) {
@@ -94,7 +104,6 @@ export default function GraphicEditor() {
 
   //Images
   const [imageURLs, setImageURLs] = useState<any>([]);
-  const [images, setImages] = useState<any>([]);
   const [onlineImages, setOnlineImages] = useState<any>([]);
   const [imageForm, setImageForm] = useState(false);
   const [selectedId, setSelectID] = useState<any>(null);
@@ -119,8 +128,6 @@ export default function GraphicEditor() {
 
     searchImages();
   }, [search]);
-
-  const [selectdImageToBeDeleted, setSelectdImageToBeDeleted] = useState<any>();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setImageForm(false);
@@ -182,7 +189,6 @@ export default function GraphicEditor() {
   };
 
   //Text
-  const [texts, setTexts] = useState<any>([]);
   const [newText, setNewText] = useState('');
   const [newTextColor, setNewTextColor] = useState('');
   const [newTextSize, setNewTextSize] = useState(20);
@@ -200,51 +206,27 @@ export default function GraphicEditor() {
     if (newText === '') {
       toast.error('Empty text not allowed');
     } else {
-      const text = {
-        text: newText,
-        x: 100,
-        y: 100,
-        align: 'center',
-        fill: newTextColor,
-        fontSize: newTextSize,
-        fontFamily: newTextFont,
+      if (newTextFont === '') {
+        toast.error('Please Choose Font');
+      } else {
+        const text = {
+          text: newText,
+          x: 100,
+          y: 100,
+          align: 'center',
+          fill: newTextColor,
+          fontSize: newTextSize,
+          fontFamily: newTextFont,
 
-        type: 'text',
-      };
-      setUpateTextForm(false);
-      setNewText('');
-      setNewTextColor('#000000');
-      setNewTextSize(20);
-      setItems([text, ...items]);
-      console.log(items);
-    }
-  };
-  const handleTextSelect = (index: any) => {
-    const updatedTexts = texts.map((text: any, i: any) => ({
-      ...text,
-      isSelected: i === textToBeUpdated,
-    }));
-    setUpdatedText(updatedTexts[index].text);
-    setUpdatedTextSize(updatedTexts[index].fontSize);
-    setUpdatedTextColor(updatedTexts[index].fill);
-    setUpateTextForm(true);
-    setTextForm(false);
-    setTextToBeUpdated(index);
-  };
-  const updateTextAction = () => {
-    const updatedTexts = texts.map((text: any, i: any) => ({
-      ...text,
-      isSelected: i === textToBeUpdated,
-    }));
-    if (updatedText === '') {
-      toast.error('Empty text not allowed');
-    } else {
-      updatedTexts[textToBeUpdated].text = updatedText;
-      updatedTexts[textToBeUpdated].fill = updatedTextColor;
-      updatedTexts[textToBeUpdated].size = updatedTextSize;
-      updatedTexts[textToBeUpdated].fontFamily = updatedTextFont;
-      setTexts(updatedTexts);
-      setUpateTextForm(false);
+          type: 'text',
+        };
+        setUpateTextForm(false);
+        setNewText('');
+        setNewTextColor('#000000');
+        setNewTextSize(20);
+        setItems([text, ...items]);
+        console.log(items);
+      }
     }
   };
 
@@ -263,18 +245,6 @@ export default function GraphicEditor() {
   const [stroke, setStroke] = useState(false);
   const [strokeColor, setStrokeColor] = useState('#000000');
   const [strokeWidth, setStrokeWidth] = useState(1);
-
-  const [updateShapeWidth, setUpdateShapeWidth] = useState(1);
-  const [updateShapeHeight, setUpdateShapeHeight] = useState(1);
-  const [updateShapeRaduis, setUpdateShapeRaduis] = useState(1);
-  const [updateShapeColor, setUpdateShapeColor] = useState('#000000');
-
-  const [updateShapeType, setUpdateShapeType] = useState('');
-  const [shapeToBeUpdated, setShapeToBeUpdated] = useState('');
-
-  const [updateShapeForm, setUpdateShapeForm] = useState(false);
-  const [shapes, setShapes] = useState<any>([]);
-  const [selectedShapeId, setSelectedShapeId] = useState<any>(null);
 
   const addShape = () => {
     const shape: Shape = {
@@ -308,43 +278,6 @@ export default function GraphicEditor() {
     setNewCircle(true);
   };
 
-  const handleShapeSelect = (index: any) => {
-    setShapeToBeUpdated(index);
-    console.log(shapeToBeUpdated);
-    setUpdateShapeForm(true);
-    const updatedShapes = shapes.map((shape: any, i: any) => ({
-      ...shape,
-      isSelected: i === textToBeUpdated,
-    }));
-
-    setUpdateShapeType(updatedShapes[index].type);
-    setUpdateShapeColor(updatedShapes[index].fill);
-    setUpdateShapeRaduis(updatedShapes[index].radius);
-    setUpdateShapeWidth(updatedShapes[index].width);
-    setUpdateShapeHeight(updatedShapes[index].height);
-
-    setShapeSelect(index);
-  };
-
-  const updateShape = () => {
-    const updatedShapes = shapes.map((shape: any, i: any) => ({
-      ...shape,
-      isSelected: i === shapeToBeUpdated,
-    }));
-
-    if (updateShapeType == 'circle') {
-      updatedShapes[shapeToBeUpdated].fill = updateShapeColor;
-      updatedShapes[shapeToBeUpdated].radius = updateShapeRaduis;
-    } else if (updateShapeType == 'rectangle') {
-      updatedShapes[shapeToBeUpdated].width = updateShapeWidth;
-      updatedShapes[shapeToBeUpdated].height = updateShapeHeight;
-      updatedShapes[shapeToBeUpdated].fill = updateShapeColor;
-    }
-
-    setShapes(updatedShapes);
-    setUpdateShapeForm(false);
-  };
-  const deleteShape = (shapeToBeUpdated: number): void => {};
   const deleteItem = (): void => {
     if (selectedId !== null) {
       setItems((prevItems: any) =>
@@ -358,6 +291,7 @@ export default function GraphicEditor() {
   const checkDeselect = (e: any) => {
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
+      RemoveAllforms();
       setSelectID(null);
     }
   };
@@ -454,23 +388,7 @@ export default function GraphicEditor() {
             <IoShapesOutline size='25' />
           </button>
         </div>
-        <div className=' justify-around flex flex-col text-white mt-10'>
-          <button
-            className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg  '
-            onClick={() => setZoom((prevZoom) => prevZoom + 5)}
-          >
-            <AiOutlineZoomIn size='25' />
-          </button>
-          <p className='text-gray-400  text-center'>{zoom}%</p>
 
-          <button
-            className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg  '
-            onClick={() => setZoom((prevZoom) => prevZoom - 5)}
-            disabled={zoom === 100}
-          >
-            <AiOutlineZoomOut size='25' />
-          </button>
-        </div>
         {imageForm && (
           <div className='bg-[#15121C] rounded-lg w-[300px] absolute h-[80vh] left-36 overflow-hidden '>
             <div className='flex-col p-2 '>
@@ -588,8 +506,6 @@ export default function GraphicEditor() {
                         onSelect={() => {
                           RemoveAllforms();
                           setSelectID(index);
-                          setShapeToBeUpdated(index);
-                          console.log(index);
                           setItemID(index);
                         }}
                         onChange={(newAttrs) => {
@@ -608,7 +524,6 @@ export default function GraphicEditor() {
                         onSelect={() => {
                           RemoveAllforms();
                           setSelectID(index);
-                          setShapeToBeUpdated(index);
                           setItemID(index);
                           console.log(index);
                         }}
@@ -626,6 +541,8 @@ export default function GraphicEditor() {
                         shapeProps={item}
                         isSelected={index === selectedId}
                         onSelect={() => {
+                          RemoveAllforms();
+                          setUpateTextForm(true);
                           setSelectID(index);
                         }}
                         onChange={(newAttrs) => {
@@ -774,86 +691,6 @@ export default function GraphicEditor() {
           <div className='w-[15vw] bg-red-200'></div>
         )}
 
-        {updateTextForm ? (
-          <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw] mt-5'>
-            <div className='flex flex-col justify-center text-gray-500'>
-              <span className=' flex font-bold'>
-                <BsType size={20} className='mr-2 ' /> Update Text
-              </span>
-              <hr className='h-px mb-2 bg-gray-500 border-0 ' />
-              <label htmlFor='' className='flex'>
-                Text
-              </label>
-              <input
-                className='rounded px-2 py-1 bg-[#2a2438]  mb-4'
-                type='text'
-                value={updatedText}
-                onChange={(e) => {
-                  setUpdatedText(e.target.value);
-                }}
-              />
-              <label htmlFor='' className='flex'>
-                Font Family
-              </label>
-              <select
-                className='rounded px-2 py-2 bg-[#2a2438]  mb-4'
-                value={updatedTextFont}
-                onChange={(e) => setUpdatedTextFont(e.target.value)}
-              >
-                <option style={{ fontFamily: 'Arial' }}>Arial</option>
-                <option style={{ fontFamily: 'Brush Script MT' }}>Brush Script MT</option>
-                <option style={{ fontFamily: 'Helvetica' }}>Helvetica</option>
-                <option style={{ fontFamily: 'Georgia' }}>Georgia</option>
-                <option style={{ fontFamily: 'Times New Roman' }}>Times New Roman</option>
-                <option style={{ fontFamily: 'Courier New' }}>Courier New</option>
-                <option style={{ fontFamily: 'Verdana' }}>Verdana</option>
-                <option style={{ fontFamily: 'Impact' }}>Impact</option>
-                <option style={{ fontFamily: 'Comic Sans MS' }}>Comic Sans MS</option>
-                <option style={{ fontFamily: 'Trebuchet MS' }}>Trebuchet MS</option>
-                <option style={{ fontFamily: 'Arial Black' }}>Arial Black</option>
-                <option style={{ fontFamily: 'Palatino Linotype' }}>Palatino Linotype</option>
-                <option style={{ fontFamily: 'Lucida Sans Unicode' }}>Lucida Sans Unicode</option>
-                <option style={{ fontFamily: 'Tahoma' }}>Tahoma</option>
-                <option style={{ fontFamily: 'Courier' }}>Courier</option>
-                <option style={{ fontFamily: 'Lucida Console' }}>Lucida Console</option>
-              </select>
-              <label htmlFor='' className='flex'>
-                Text Size {updatedTextSize}
-              </label>
-
-              <input
-                value={updatedTextSize}
-                type='range'
-                min='10'
-                max='200'
-                className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
-                onChange={(event) => setUpdatedTextSize(Number(event.target.value))}
-              />
-              <label htmlFor='' className='flex'>
-                <span className='pt-1'>Text Color</span>
-                <input
-                  className='rounded px-2 py-1 bg-[#2a2438] ml-2  mb-4'
-                  type='color'
-                  value={updatedTextColor}
-                  onChange={(e) => {
-                    setUpdatedTextColor(e.target.value);
-                  }}
-                />
-              </label>
-
-              <button
-                className=' bg-[#2A2438]   px-2 py-1 w-full rounded-md hover:bg-[#191521]'
-                onClick={() => {
-                  updateTextAction();
-                }}
-              >
-                Update Text
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className='w-[15vw] bg-red-200'></div>
-        )}
         {textForm ? (
           <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw] mt-5'>
             <div className='flex flex-col justify-center text-gray-500'>
@@ -880,37 +717,77 @@ export default function GraphicEditor() {
                 value={newTextFont}
                 onChange={(e) => setNewTextFont(e.target.value)}
               >
-                <option style={{ fontFamily: 'Arial' }}>Arial</option>
-                <option style={{ fontFamily: 'Brush Script MT' }}>Brush Script MT</option>
-                <option style={{ fontFamily: 'Helvetica' }}>Helvetica</option>
-                <option style={{ fontFamily: 'Georgia' }}>Georgia</option>
-                <option style={{ fontFamily: 'Times New Roman' }}>Times New Roman</option>
-                <option style={{ fontFamily: 'Courier New' }}>Courier New</option>
-                <option style={{ fontFamily: 'Verdana' }}>Verdana</option>
-                <option style={{ fontFamily: 'Impact' }}>Impact</option>
-                <option style={{ fontFamily: 'Comic Sans MS' }}>Comic Sans MS</option>
-                <option style={{ fontFamily: 'Trebuchet MS' }}>Trebuchet MS</option>
-                <option style={{ fontFamily: 'Arial Black' }}>Arial Black</option>
-                <option style={{ fontFamily: 'Palatino Linotype' }}>Palatino Linotype</option>
-                <option style={{ fontFamily: 'Lucida Sans Unicode' }}>Lucida Sans Unicode</option>
-                <option style={{ fontFamily: 'Tahoma' }}>Tahoma</option>
-                <option style={{ fontFamily: 'Courier' }}>Courier</option>
-                <option style={{ fontFamily: 'Lucida Console' }}>Lucida Console</option>
+                <option value='' style={{ fontFamily: 'Arial' }}>
+                  Choose Font Please
+                </option>
+                <option value='Arial' style={{ fontFamily: 'Arial' }}>
+                  Arial
+                </option>
+                <option value='Brush Script MT' style={{ fontFamily: 'Brush Script MT' }}>
+                  Brush Script MT
+                </option>
+                <option value='Helvetica' style={{ fontFamily: 'Helvetica' }}>
+                  Helvetica
+                </option>
+                <option value='Georgia' style={{ fontFamily: 'Georgia' }}>
+                  Georgia
+                </option>
+                <option value='Times New Roman' style={{ fontFamily: 'Times New Roman' }}>
+                  Times New Roman
+                </option>
+                <option value='Courier New' style={{ fontFamily: 'Courier New' }}>
+                  Courier New
+                </option>
+                <option value='Verdana' style={{ fontFamily: 'Verdana' }}>
+                  Verdana
+                </option>
+                <option value='Impact' style={{ fontFamily: 'Impact' }}>
+                  Impact
+                </option>
+                <option value='Comic Sans MS' style={{ fontFamily: 'Comic Sans MS' }}>
+                  Comic Sans MS
+                </option>
+                <option value='Trebuchet MS' style={{ fontFamily: 'Trebuchet MS' }}>
+                  Trebuchet MS
+                </option>
+                <option value='Arial Black' style={{ fontFamily: 'Arial Black' }}>
+                  Arial Black
+                </option>
+                <option value='Palatino Linotype' style={{ fontFamily: 'Palatino Linotype' }}>
+                  Palatino Linotype
+                </option>
+                <option value='Lucida Sans Unicode' style={{ fontFamily: 'Lucida Sans Unicode' }}>
+                  Lucida Sans Unicode
+                </option>
+                <option value='Tahoma' style={{ fontFamily: 'Tahoma' }}>
+                  Tahoma
+                </option>
+                <option value='Courier' style={{ fontFamily: 'Courier' }}>
+                  Courier
+                </option>
+                <option value='Lucida Console' style={{ fontFamily: 'Lucida Console' }}>
+                  Lucida Console
+                </option>
               </select>
               <label htmlFor='' className='flex'>
                 Text Size {newTextSize}
               </label>
 
               <input
+                type='text'
                 value={newTextSize}
-                type='range'
-                min='10'
-                max='150'
-                className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
-                onChange={(event) => setNewTextSize(Number(event.target.value))}
+                onChange={(e) => {
+                  const regex = /^\d+(\.\d{0,2})?$/;
+
+                  if (regex.test(e.target.value) || e.target.value === '') {
+                    setNewTextSize(Number(e.target.value));
+                  }
+                }}
+                className='rounded px-2 py-1 bg-[#2a2438]  mb-4'
               />
               <label htmlFor='' className='flex'>
                 <span className='pt-1'>Text Color</span>
+
                 <input
                   className='rounded px-2 py-1 bg-[#2a2438]  mb-4 ml-2'
                   type='color'
@@ -1091,103 +968,6 @@ export default function GraphicEditor() {
                 className=' bg-[#2A2438] px-2 py-1 w-full rounded-md hover:bg-[#191521]'
               >
                 Add Shape
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className='w-[15vw] bg-red-200'></div>
-        )}
-        {updateShapeForm ? (
-          <div className='rounded-lg bg-[#15121c] border-[1px] border-New_Gray p-4 text-black w-[15vw] mt-5'>
-            <div className='flex flex-col justify-center text-gray-500'>
-              {updateShapeType == 'circle' ? (
-                <>
-                  <span className=' flex '>Circle</span>
-                  <hr className='h-px mb-2 bg-gray-500 border-0 ' />
-                  <label htmlFor='' className='flex'>
-                    <span className='pt-1'>Shape Color</span>
-                    <input
-                      className='rounded px-2 py-1 bg-[#2a2438]  mb-4 ml-2'
-                      type='color'
-                      value={updateShapeColor}
-                      onChange={(e) => {
-                        setUpdateShapeColor(e.target.value);
-                      }}
-                    />
-                  </label>
-                  <label htmlFor='' className='flex'>
-                    Raduis [{updateShapeRaduis}]
-                  </label>
-
-                  <input
-                    value={updateShapeRaduis}
-                    type='range'
-                    min='1'
-                    max='150'
-                    className='w-full h-1 mb-6 bg-gray-500 rounded-lg appearance-none cursor-pointer range-sm '
-                    onChange={(event) => setUpdateShapeRaduis(Number(event.target.value))}
-                  />
-                </>
-              ) : updateShapeType == 'rectangle' ? (
-                <>
-                  <span className=' flex '>Rectangle</span>
-                  <hr className='h-px mb-2 bg-gray-500 border-0 ' />
-                  <label htmlFor='' className='flex'>
-                    <span className='pt-1'>Shape Color</span>
-                    <input
-                      className='rounded px-2 py-1 bg-[#2a2438]  mb-4 ml-2'
-                      type='color'
-                      value={updateShapeColor}
-                      onChange={(e) => {
-                        setUpdateShapeColor(e.target.value);
-                      }}
-                    />
-                  </label>
-                  <label htmlFor=''>Width</label>
-                  <input
-                    type='text'
-                    value={updateShapeWidth}
-                    onChange={(e) => {
-                      const regex = /^\d+(\.\d{0,2})?$/;
-
-                      if (regex.test(e.target.value) || e.target.value === '') {
-                        setUpdateShapeWidth(Number(e.target.value));
-                      }
-                    }}
-                    className='rounded px-2 py-1 bg-[#2a2438]  mb-4'
-                  />
-                  <label htmlFor=''>Height</label>
-                  <input
-                    type='text'
-                    value={updateShapeHeight}
-                    onChange={(e) => {
-                      const regex = /^\d+(\.\d{0,2})?$/;
-
-                      if (regex.test(e.target.value) || e.target.value === '') {
-                        setUpdateShapeHeight(Number(e.target.value));
-                      }
-                    }}
-                    className='rounded px-2 py-1 bg-[#2a2438]  mb-4'
-                  />
-                </>
-              ) : (
-                <></>
-              )}
-              <button
-                onClick={() => {
-                  deleteShape(1);
-                }}
-                className=' text-sm mb-2 text-red-500 px-4 w-full rounded-md hover:underline'
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => {
-                  updateShape();
-                }}
-                className=' bg-[#2A2438] px-2 py-1 w-full rounded-md hover:bg-[#191521]'
-              >
-                Update Shape
               </button>
             </div>
           </div>
