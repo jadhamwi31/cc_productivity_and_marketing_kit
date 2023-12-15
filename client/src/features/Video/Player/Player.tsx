@@ -48,7 +48,7 @@ const Player = (props: Props) => {
         });
       }
     };
-    const intervalId = setInterval(timeUpdateHandler, 1);
+    const intervalId = setInterval(timeUpdateHandler, 0);
     return () => {
       clearInterval(intervalId);
     };
@@ -67,9 +67,6 @@ const Player = (props: Props) => {
 
   return (
     <S.Container>
-      <S.UploadProgressElement>
-        {tab.uploadProgress !== null && `Upload Progress : ${tab.uploadProgress}`}
-      </S.UploadProgressElement>
       <S.Video className='blur-2xl rounded-lg ' src={tab.videoUrl ?? ''} ref={blurVideoRef} />
       <S.Video
         className='absolute'

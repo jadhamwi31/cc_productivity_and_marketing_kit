@@ -18,7 +18,7 @@ const Marker = styled.div`
 `;
 
 const Cover = styled.div`
-  background-color: rgba(255, 255, 255, 0.07);
+  background-color: rgba(255, 255, 255, 0.05);
   pointer-events: none;
   position: absolute;
   top: -2.05em;

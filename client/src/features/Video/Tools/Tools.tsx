@@ -9,6 +9,7 @@ import { FiSave } from 'react-icons/fi';
 import { FaPause, FaPlay } from 'react-icons/fa';
 import { TbCut } from 'react-icons/tb';
 import { LiaUndoSolid, LiaRedoSolid } from 'react-icons/lia';
+import { BsBodyText } from 'react-icons/bs';
 type Props = {};
 
 const Tools = (props: Props) => {
@@ -68,6 +69,13 @@ const Tools = (props: Props) => {
           disabled={tab.videoId === null || tab.selectorStart === 0 || tab.selectorEnd === 0}
         >
           <TbCut size='25' />
+        </button>
+        <button
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
+          onClick={cut}
+          disabled={tab.videoId === null || tab.selectorStart === 0 || tab.selectorEnd === 0}
+        >
+          <BsBodyText size='25' />
         </button>
       </div>
     </S.Container>

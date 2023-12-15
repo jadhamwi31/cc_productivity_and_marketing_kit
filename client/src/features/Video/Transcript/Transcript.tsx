@@ -5,8 +5,7 @@ import { useCurrentTab } from '../../../hooks/useCurrentTab';
 type Props = {};
 
 const Transcript = (props: Props) => {
-  const tab = useCurrentTab();
-  return <S.Container>{tab.downloading && 'Downloading...'}</S.Container>;
+  return <S.Container>Transcript</S.Container>;
 };
 
 export default Transcript;

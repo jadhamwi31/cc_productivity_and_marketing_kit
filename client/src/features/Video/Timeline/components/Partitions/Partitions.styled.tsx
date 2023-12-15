@@ -22,7 +22,7 @@ const Connector = styled.div`
   cursor: not-allowed;
   position: absolute;
   top: -2.05em;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.03);
   display: grid;
   place-items: center;
   & > div {

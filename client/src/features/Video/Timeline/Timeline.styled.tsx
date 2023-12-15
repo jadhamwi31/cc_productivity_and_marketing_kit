@@ -7,6 +7,7 @@ const Container = styled.div`
   padding: 2em;
   display: flex;
   flex-direction: column;
+  user-select: none;
 `;
 
 const Wrapper = styled.div`

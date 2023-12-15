@@ -6,6 +6,7 @@ import { axios } from '../lib/axios';
 import { EnVideoPlayback } from '../ts/enums/video.enums';
 import fileDownload from 'js-file-download';
 import { decode as base64_decode, encode as base64_encode } from 'base-64';
+import { Id, toast } from 'react-toastify';
 
 export interface IVideoPartition {
   start: number;
@@ -91,19 +92,33 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     formData.append('video', file);
 
     const newTabs = { ...get().tabs };
+
+    const uploadToastId = toast('Uploading Progress : 0%', { progress: 0 });
     axios
       .post<{}, AxiosResponse<string>>('/videos', formData, {
         onUploadProgress(progressEvent) {
-          if (progressEvent.progress) {
-            const newProgress = progressEvent.progress * 100;
-            newTabs[currentTab].uploadProgress = newProgress;
-            set({ tabs: newTabs });
+          const newProgress = progressEvent.progress! * 100;
+
+          if (newProgress === 100) {
+            toast.update(uploadToastId, {
+              render: `Video Uploaded`,
+            });
+            setTimeout(() => {
+              toast.dismiss(uploadToastId);
+            }, 2000);
+          } else {
+            toast.update(uploadToastId, {
+              render: `Uploading Progress : ${newProgress}%`,
+            });
           }
+          newTabs[currentTab].uploadProgress = newProgress;
+          set({ tabs: newTabs });
         },
       })
       .then(({ data }) => data)
       .then((videoId) => {
         newTabs[currentTab].videoId = videoId;
+
         set({ tabs: newTabs });
       });
 
@@ -167,15 +182,20 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     const currentTab = tabs[get().selectedTab];
     currentTab.downloading = true;
     set({ tabs });
-    axios
-      .post(`/videos/${currentTab.videoId}/export`, currentTab.partitions, { responseType: 'blob' })
-      .then(({ data }) => {
-        fileDownload(data, `${currentTab.videoId}.mp4`);
-      })
-      .finally(() => {
-        currentTab.downloading = false;
-        set({ tabs });
-      });
+    toast.promise(
+      axios
+        .post(`/videos/${currentTab.videoId}/export`, currentTab.partitions, {
+          responseType: 'blob',
+        })
+        .then(({ data }) => {
+          fileDownload(data, `${currentTab.videoId}.mp4`);
+        })
+        .finally(() => {
+          currentTab.downloading = false;
+          set({ tabs });
+        }),
+      { pending: 'Exporting Video...', error: 'An Error Has Occured', success: 'Video Exported' },
+    );
   },
 }));
 
