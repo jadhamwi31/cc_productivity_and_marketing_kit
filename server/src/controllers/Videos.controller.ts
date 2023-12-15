@@ -59,12 +59,16 @@ const exportVideoHandler = async (
 			.join(" ");
 		const newId = uuid();
 
-		execSync(
-			`sh ${path.join(
-				__dirname,
-				"../scripts/export.sh"
-			)} ${userStoragePath} ${videoId} ${newId} ${partitionsAsArgs}`,
-			{ stdio: "inherit" }
+		new Promise((resolve) =>
+			resolve(
+				execSync(
+					`sh ${path.join(
+						__dirname,
+						"../scripts/export.sh"
+					)} ${userStoragePath} ${videoId} ${newId} ${partitionsAsArgs}`,
+					{ stdio: "inherit" }
+				)
+			)
 		);
 
 		const videoStream = fs.createReadStream(

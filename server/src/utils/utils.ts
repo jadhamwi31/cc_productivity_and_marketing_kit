@@ -30,33 +30,35 @@ export function calculateNeededParts(
 		}
 		return a.end - b.end;
 	});
-	if (sortedSkippedParts.length === 1) {
-		const part = sortedSkippedParts[0];
-		return [
-			{ start: 0, end: part.start },
-			{ start: part.end, end: duration },
-		];
+
+	const wantedParts: IVideoPartition[] = [];
+
+	if (sortedSkippedParts.length === 0) {
+		return [{ start: 0, end: duration }];
 	}
 
-	const neededParts: IVideoPartition[] = [];
 	for (let i = 0; i < sortedSkippedParts.length; i++) {
 		const currentPart = sortedSkippedParts[i];
+
 		if (i === 0) {
-			neededParts.push({ start: 0, end: currentPart.start });
-		} else if (i === sortedSkippedParts.length - 1) {
-			neededParts.push({
-				start: currentPart.end,
-				end: duration,
-			});
+			if (currentPart.start > 0) {
+				wantedParts.push({ start: 0, end: currentPart.start });
+			}
+		}
+
+		if (i === sortedSkippedParts.length - 1) {
+			if (currentPart.end < duration) {
+				wantedParts.push({ start: currentPart.end, end: duration });
+			}
 		} else {
-			neededParts.push({
-				start: sortedSkippedParts[i - 1].end,
+			wantedParts.push({
+				start: currentPart.end,
 				end: sortedSkippedParts[i + 1].start,
 			});
 		}
 	}
 
-	return neededParts;
+	return wantedParts;
 }
 export function getVideoDuration(videoPath: string): Promise<number> {
 	return new Promise((resolve, reject) => {
