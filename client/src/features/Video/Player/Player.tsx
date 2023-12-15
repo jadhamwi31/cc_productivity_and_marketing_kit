@@ -11,6 +11,12 @@ const Player = (props: Props) => {
   const { playback, setPlayback, updateTab } = useVideosStore();
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const blurVideoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    if (blurVideoRef.current) {
+      blurVideoRef.current.currentTime = tab.currentTime;
+    }
+  }, [tab.currentTime]);
   useEffect(() => {
     setPlayback(EnVideoPlayback.PAUSED);
     if (videoRef.current) videoRef.current.currentTime = tab.currentTime;
@@ -64,19 +70,7 @@ const Player = (props: Props) => {
       <S.UploadProgressElement>
         {tab.uploadProgress !== null && `Upload Progress : ${tab.uploadProgress}`}
       </S.UploadProgressElement>
-      <S.Video
-        className='blur-3xl rounded-lg '
-        id='video-player'
-        ref={videoRef}
-        onPlay={() => setPlayback(EnVideoPlayback.PLAYING)}
-        onPause={() => {
-          setPlayback(EnVideoPlayback.PAUSED);
-        }}
-        onLoadedMetadata={onLoadHandler}
-        onLoadedData={onLoadHandler}
-        onLoad={onLoadHandler}
-        src={tab.videoUrl ?? ''}
-      />
+      <S.Video className='blur-2xl rounded-lg ' src={tab.videoUrl ?? ''} ref={blurVideoRef} />
       <S.Video
         className='absolute'
         id='video-player'

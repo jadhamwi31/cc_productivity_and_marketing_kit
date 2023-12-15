@@ -133,6 +133,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
   setPlayback: (playback) => set({ playback }),
   updateTab: (values) => {
     const newTabs = { ...get().tabs };
+    console.log(values);
 
     for (const [key, value] of Object.entries(values)) {
       _.update(newTabs, [get().selectedTab, key], () => value);
