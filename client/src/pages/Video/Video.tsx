@@ -4,7 +4,7 @@ import Timeline from '../../features/Video/Timeline/Timeline';
 import Controls from '../../features/Video/Tools/Controls';
 
 import Tools from '../../features/Video/Tools/Tools';
-import Transcript from '../../features/Video/Transcript/Transcript';
+import Transcribe from '../../features/Video/Transcribe/Transcribe';
 import { S } from './Video.styled';
 
 type Props = {};
@@ -15,7 +15,7 @@ const Video = (props: Props) => {
       <Tabs />
       <S.PlayerToolsTranscriptRow>
         <Tools />
-        <Transcript />
+        <Transcribe />
         <Player />
       </S.PlayerToolsTranscriptRow>
       <Controls />

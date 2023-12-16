@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { v4 as uuid } from "uuid";
 import { generateStorageInstance } from "../services/Storage.service";
 import { getStoragePath } from "../utils/utils";
-import { execSync } from "child_process";
+import { exec } from "child_process";
 import path from "path";
 import { calculateNeededParts } from "../utils/utils";
 import { getVideoDuration } from "../utils/utils";
@@ -59,12 +59,21 @@ const exportVideoHandler = async (
 			.join(" ");
 		const newId = uuid();
 
-		execSync(
-			`sh ${path.join(
-				__dirname,
-				"../scripts/export.sh"
-			)} ${userStoragePath} ${videoId} ${newId} ${partitionsAsArgs}`,
-			{ stdio: "inherit" }
+		await new Promise((resolve, reject) =>
+			exec(
+				`sh ${path.join(
+					__dirname,
+					"../scripts/export.sh"
+				)} ${userStoragePath} ${videoId} ${newId} ${partitionsAsArgs}`,
+				(err, stdout, stderr) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(stdout);
+				}
+			)
 		);
 
 		const videoStream = fs.createReadStream(

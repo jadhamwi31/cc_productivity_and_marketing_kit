@@ -72,8 +72,7 @@ const Tools = (props: Props) => {
         </button>
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
-          onClick={cut}
-          disabled={tab.videoId === null || tab.selectorStart === 0 || tab.selectorEnd === 0}
+          disabled={tab.uploadProgress !== 100}
         >
           <BsBodyText size='25' />
         </button>
