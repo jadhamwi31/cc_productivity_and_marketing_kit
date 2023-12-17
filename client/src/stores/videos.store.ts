@@ -15,6 +15,8 @@ export interface IVideoPartition {
 
 type TabHistory = Pick<IVideoTab, 'partitions'>;
 
+type TranscribeElement = unknown;
+
 export interface IVideoTab {
   videoUrl: string | null;
   videoId: string | null;
@@ -31,6 +33,8 @@ export interface IVideoTab {
   uploadProgress: number | null;
   downloading: boolean;
   buffer: ArrayBuffer | null;
+  transcribing: boolean;
+  transcript: TranscribeElement[];
 }
 
 interface IVideosStore {
@@ -46,6 +50,7 @@ interface IVideosStore {
   undo: () => void;
   redo: () => void;
   downloadVideo: () => void;
+  transcribe: () => void;
 }
 
 const INITIAL_TAB_ID = uuid();
@@ -58,6 +63,7 @@ const DEFAULT_TAB_VALUES: IVideoTab = {
   selectorEnd: 0,
   duration: 0,
   lineWidth: 0,
+  transcribing: false,
   isNew: false,
   partitions: [],
   isCursorGrabbed: false,
@@ -66,6 +72,7 @@ const DEFAULT_TAB_VALUES: IVideoTab = {
   uploadProgress: null,
   downloading: false,
   buffer: null,
+  transcript: [],
 };
 
 export const useVideosStore = create<IVideosStore>((set, get) => ({
@@ -194,11 +201,32 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
           set({ tabs });
         }),
       {
-        pending: `Exporting Video of Tab ${get().selectedTab}...`,
+        pending: `Exporting Video`,
         error: 'An Error Has Occured',
-        success: `Tab ${get().selectedTab} Video Exported`,
+        success: `Video Exported`,
       },
     );
+  },
+  transcribe() {
+    const tabs = { ...get().tabs };
+    const currentTab = tabs[get().selectedTab];
+    currentTab.transcribing = true;
+    set({ tabs });
+    axios
+      .post<{}, AxiosResponse<TranscribeElement[]>>(
+        `/videos/${currentTab.videoId}/transcribe`,
+        currentTab.partitions,
+      )
+      .then(({ data }) => {
+        console.log(data);
+
+        currentTab.transcript = data;
+        set({ tabs });
+      })
+      .finally(() => {
+        currentTab.transcribing = false;
+        set(tabs);
+      });
   },
 }));
 

@@ -7,6 +7,7 @@ import path from "path";
 import { calculateNeededParts } from "../utils/utils";
 import { getVideoDuration } from "../utils/utils";
 import fs from "fs";
+import { Transcriber } from "../services/Transcribe.service";
 
 const uploadVideoHandler = async (
 	req: Request,
@@ -86,4 +87,30 @@ const exportVideoHandler = async (
 	}
 };
 
-export const VideosController = { uploadVideoHandler, exportVideoHandler };
+const transcribeVideoHandler = async (
+	req: Request<{ videoId: string }>,
+	res: Response,
+	next: NextFunction
+) => {
+	const { videoId } = req.params;
+	try {
+		const userStoragePath = path.join(
+			getStoragePath(),
+			req.user ? req.user.username : "unknown"
+		);
+
+		const videoPath = path.join(userStoragePath, `./${videoId}`);
+
+		const transcriber = new Transcriber(videoPath);
+		const data = await transcriber.transcribe();
+		return res.status(200).send(data);
+	} catch (e) {
+		return next(e);
+	}
+};
+
+export const VideosController = {
+	uploadVideoHandler,
+	exportVideoHandler,
+	transcribeVideoHandler,
+};
