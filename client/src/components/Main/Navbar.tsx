@@ -5,7 +5,7 @@ import useAuthStore from '../../stores/auth.store';
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
-  const { username, logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   const location = useLocation();
   const [currentURL, setCurrentURL] = useState<string>('');
@@ -71,7 +71,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                         <span className='relative text-white text-xl'>Home</span>
                       </Link>
                     </li>
-                    {!username ? (
+                    {!user ? (
                       <>
                         <li>
                           <Link

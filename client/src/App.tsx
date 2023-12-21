@@ -17,8 +17,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAuthStore from './stores/auth.store';
 
+
 export default function App() {
-  const { username } = useAuthStore();
+  const { user } = useAuthStore();
 
   return (
     <>
@@ -37,20 +38,11 @@ export default function App() {
             <>
               <Route path='/' element={<Main />}>
                 <Route index element={<Home />} />
-                <Route
-                  path='login'
-                  element={!username ? <Login /> : <Navigate to='/dashboard' />}
-                />
-                <Route
-                  path='signup'
-                  element={!username ? <Signup /> : <Navigate to='/dashboard' />}
-                />
+                <Route path='login' element={!user ? <Login /> : <Navigate to='/dashboard' />} />
+                <Route path='signup' element={!user ? <Signup /> : <Navigate to='/dashboard' />} />
               </Route>
 
-              <Route
-                path='/dashboard'
-                element={username ? <Dashboard /> : <Navigate to='/login' />}
-              >
+              <Route path='/dashboard' element={user ? <Dashboard /> : <Navigate to='/login' />}>
                 <Route index element={<DashboardMain />} />
                 <Route path='graphic' element={<GraphicEditor />} />
                 <Route path='video' element={<Video />} />

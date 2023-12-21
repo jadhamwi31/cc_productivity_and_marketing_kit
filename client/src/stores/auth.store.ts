@@ -2,53 +2,71 @@ import { create } from 'zustand';
 import { axios } from '../lib/axios';
 import { AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
+
 interface AuthState {
-  username: string | null;
+  user: User | null;
   token: string | null;
   loading: boolean;
   error: string | null;
-  message: string | null;
 }
-
 interface AuthActions {
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
 }
-
-const useAuthStore = create<AuthState & AuthActions>((set) => ({
-  username: Cookies.get('username') || null,
-  token: null,
-  loading: false,
-  error: null,
-  message: null,
-  login: async (username: string, password: string) => {
-    set((state) => ({ ...state, loading: true, error: null, message: null }));
+interface User {
+  username: string;
+}
+const cookieKey = 'authData';
+const useAuthStore = create<AuthState & AuthActions>((set) => {
+  const loadAuthData = () => {
     try {
-      const response = await axios.post<{}, AxiosResponse<any>>('/auth/login', {
-        username,
-        password,
-      });
-      Cookies.set('username', username);
-      const data = response.data;
-      set((state) => ({ ...state, user: data, loading: false, message: 'Login successful' }));
-    } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.errors) {
-        const errorMessage = error.response.data.errors[0]?.message || 'An error occurred';
-        set((state) => ({ ...state, error: errorMessage, loading: false, message: null }));
-      } else {
+      const storedAuthData = Cookies.get(cookieKey);
+      const parsedAuthData = storedAuthData ? JSON.parse(storedAuthData) : null;
+      return parsedAuthData || { user: null, token: null, loading: false, error: null };
+    } catch (error) {
+      console.error('Error parsing auth data:', error);
+      return { user: null, token: null, loading: false, error: 'Error loading auth data' };
+    }
+  };
+  const initialAuthData: AuthState = loadAuthData();
+  set(initialAuthData);
+  return {
+    user: initialAuthData.user,
+    token: initialAuthData.token,
+    loading: false,
+    error: null,
+    login: async (username: string, password: string) => {
+      set((state) => ({ ...state, loading: true, error: null }));
+      try {
+        const response: AxiosResponse<{ token: string; data: User }> = await axios.post(
+          '/auth/login',
+          {
+            username,
+            password,
+          },
+        );
+
+        const authData: AuthState = {
+          user: { username },
+          token: response.data.token,
+          loading: false,
+          error: null,
+        };
+        Cookies.set(cookieKey, JSON.stringify(authData));
+        set(authData);
+      } catch (error: any) {
         set((state) => ({
           ...state,
           error: error.message || 'An error occurred',
           loading: false,
-          message: null,
         }));
       }
-    }
-  },
-  logout: () => {
-    Cookies.remove('username');
-    set({ username: null, token: null, loading: false, error: null, message: null });
-  },
-}));
+    },
+    logout: () => {
+      Cookies.remove(cookieKey);
+      set({ user: null, token: null, loading: false, error: null });
+    },
+  };
+});
 
 export default useAuthStore;
