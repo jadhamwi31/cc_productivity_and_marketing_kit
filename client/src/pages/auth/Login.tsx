@@ -2,10 +2,26 @@ import { Link } from 'react-router-dom';
 import building from '../../assets/artworks/building.svg';
 import yard from '../../assets/artworks/yard.svg';
 import mountain from '../../assets/artworks/mountain.svg';
+import useAuthStore from '../../stores/auth.store';
+import { useRef } from 'react';
+
 export default function Login() {
+  const { login, error } = useAuthStore();
+
   const images = [building, yard, mountain];
   const randomImage = images[Math.floor(Math.random() * images.length)];
-  console.log(randomImage);
+
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const usernameValue = usernameRef.current?.value || '';
+    const passwordValue = passwordRef.current?.value || '';
+    console.log(usernameValue, passwordValue);
+
+    await login(usernameValue, passwordValue);
+  };
+
   return (
     <div className=' lg:flex lg:justify-between w-screen  h-screen '>
       <div
@@ -13,13 +29,14 @@ export default function Login() {
                   lg:bg-transparent lg:flex p-20 items-center justify-center
                   lg:static'
       >
-        <form className='flex-col '>
+        <form className='flex-col ' onSubmit={handleSubmit}>
           <label htmlFor='' className='text-gray-200 text-md '>
             Email
           </label>
 
           <input
             type='text'
+            ref={usernameRef}
             className='bg-[#262626] appearance-none mb-4  rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500'
           />
 
@@ -28,6 +45,7 @@ export default function Login() {
           </label>
           <input
             type='password'
+            ref={passwordRef}
             className='bg-[#262626] appearance-none mb-4  rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500'
           />
 
@@ -37,7 +55,7 @@ export default function Login() {
 
           <Link to='/signup'>
             <p className='text-gray-500   ml-auto w-full text-right hover:underline hover:text-white'>
-              Don't have account
+              Don't have an account
             </p>
           </Link>
         </form>
