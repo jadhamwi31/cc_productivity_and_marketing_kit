@@ -3,7 +3,7 @@ import building from '../../assets/artworks/building.svg';
 import yard from '../../assets/artworks/yard.svg';
 import mountain from '../../assets/artworks/mountain.svg';
 import useAuthStore from '../../stores/auth.store';
-import {  useRef } from 'react';
+import { useRef } from 'react';
 
 export default function Login() {
   const { login, error } = useAuthStore();
@@ -58,8 +58,10 @@ export default function Login() {
               Don't have an account
             </p>
           </Link>
+          {error ? <pre className='text-red-500 text-center mt-3 absolute'>{error}</pre> : ''}
         </form>
       </div>
+
       <div className='relative'>
         <div
           className='lg:absolute w-screen lg:w-[70vw] h-screen bg-cover lg:z-10'

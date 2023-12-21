@@ -55,11 +55,13 @@ const useAuthStore = create<AuthState & AuthActions>((set) => {
         Cookies.set(cookieKey, JSON.stringify(authData));
         set(authData);
       } catch (error: any) {
-        set((state) => ({
-          ...state,
-          error: error.message || 'An error occurred',
-          loading: false,
-        }));
+        if (error.response && error.response.data && error.response.data.errors) {
+          const firstError = error.response.data.errors[0];
+          const errorMessage = firstError.message || 'An error occurred';
+          set((state) => ({ ...state, error: errorMessage, loading: false }));
+        } else {
+          set((state) => ({ ...state, error: 'An error occurred', loading: false }));
+        }
       }
     },
     logout: () => {
