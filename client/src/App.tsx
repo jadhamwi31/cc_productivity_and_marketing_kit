@@ -1,6 +1,7 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
   Route,
   RouterProvider,
 } from 'react-router-dom';
@@ -14,8 +15,11 @@ import DashboardMain from './pages/Dashboard/DashboardMain';
 import GraphicEditor from './pages/Dashboard/GraphicEditor';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAuthStore from './stores/auth.store';
 
 export default function App() {
+  const { username } = useAuthStore();
+
   return (
     <>
       <ToastContainer
@@ -33,11 +37,20 @@ export default function App() {
             <>
               <Route path='/' element={<Main />}>
                 <Route index element={<Home />} />
-                <Route path='login' element={<Login />} />
-                <Route path='signup' element={<Signup />} />
+                <Route
+                  path='login'
+                  element={!username ? <Login /> : <Navigate to='/dashboard' />}
+                />
+                <Route
+                  path='signup'
+                  element={!username ? <Signup /> : <Navigate to='/dashboard' />}
+                />
               </Route>
 
-              <Route path='/dashboard' element={<Dashboard />}>
+              <Route
+                path='/dashboard'
+                element={!username ? <Dashboard /> : <Navigate to='/login' />}
+              >
                 <Route index element={<DashboardMain />} />
                 <Route path='graphic' element={<GraphicEditor />} />
                 <Route path='video' element={<Video />} />
