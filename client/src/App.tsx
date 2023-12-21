@@ -49,7 +49,7 @@ export default function App() {
 
               <Route
                 path='/dashboard'
-                element={!username ? <Dashboard /> : <Navigate to='/login' />}
+                element={username ? <Dashboard /> : <Navigate to='/login' />}
               >
                 <Route index element={<DashboardMain />} />
                 <Route path='graphic' element={<GraphicEditor />} />

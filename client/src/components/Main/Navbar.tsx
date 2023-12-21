@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import useAuthStore from '../../stores/auth.store';
 
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
+  const { username, logout } = useAuthStore();
+
   const location = useLocation();
   const [currentURL, setCurrentURL] = useState<string>('');
   const closeMenu = () => {
@@ -68,24 +71,40 @@ const Navbar: React.FC<NavbarProps> = () => {
                         <span className='relative text-white text-xl'>Home</span>
                       </Link>
                     </li>
-                    <li>
-                      <Link
-                        onClick={closeMenu}
-                        to='/login'
-                        className='group relative before:inset-x-0 before:bottom-0 '
-                      >
-                        <span className='relative text-white text-xl'>Log in</span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        onClick={closeMenu}
-                        to='/signup'
-                        className='group relative before:inset-x-0 before:bottom-0 '
-                      >
-                        <span className='relative text-white text-xl'>Sign up</span>
-                      </Link>
-                    </li>
+                    {!username ? (
+                      <>
+                        <li>
+                          <Link
+                            onClick={closeMenu}
+                            to='/login'
+                            className='group relative before:inset-x-0 before:bottom-0 '
+                          >
+                            <span className='relative text-white text-xl'>Log in</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            onClick={closeMenu}
+                            to='/signup'
+                            className='group relative before:inset-x-0 before:bottom-0 '
+                          >
+                            <span className='relative text-white text-xl'>Sign up</span>
+                          </Link>
+                        </li>
+                      </>
+                    ) : (
+                      <li>
+                        <span
+                          onClick={() => {
+                            logout();
+                            closeMenu;
+                          }}
+                          className='group relative before:inset-x-0 before:bottom-0 text-white text-xl cursor-pointer '
+                        >
+                          Log out
+                        </span>
+                      </li>
+                    )}
                   </ul>
                 </div>
               </div>
