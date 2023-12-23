@@ -7,7 +7,7 @@ export default class Database {
 		String(process.env.DATABASE_NAME),
 		String(process.env.DATABASE_USERNAME),
 		String(process.env.DATABASE_PASSWORD),
-		{ dialect: "postgres" }
+		{ dialect: "postgres", host: process.env.DATABASE_HOST }
 	);
 	public static async connect() {
 		await this.db.authenticate();

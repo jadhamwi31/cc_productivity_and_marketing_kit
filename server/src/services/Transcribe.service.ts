@@ -20,18 +20,6 @@ export class Transcriber {
 		this.convertToAudio();
 		const data = fs.readFileSync(this.filepath + ".aac");
 
-		const token = process.env.HUGGING_FACE_TOKEN;
-		const response = await fetch(
-			"https://api-inference.huggingface.co/models/Foxasdf/whisper-base-en",
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-				method: "POST",
-				body: data,
-			}
-		);
-		const result = await response.json();
-		return result;
+		return [];
 	}
 }
