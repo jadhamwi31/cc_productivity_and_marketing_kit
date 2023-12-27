@@ -5,18 +5,20 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
-import Video from './pages/Video/Video';
-import Home from './pages/Home';
-import Main from './layout/Main';
-import Signup from './pages/auth/Signup';
-import Login from './pages/auth/Login';
-import Dashboard from './layout/Dashboard';
-import DashboardMain from './pages/Dashboard/DashboardMain';
-import GraphicEditor from './pages/Dashboard/GraphicEditor';
+import { lazy, Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAuthStore from './stores/auth.store';
 
+import Home from './pages/Home';
+import Main from './layout/Main';
+import Loading from './pages/Loading';
+const Signup = lazy(() => import('./pages/auth/Signup'));
+const Video = lazy(() => import('./pages/Video/Video'));
+const Login = lazy(() => import('./pages/auth/Login'));
+const Dashboard = lazy(() => import('./layout/Dashboard'));
+const GraphicEditor = lazy(() => import('./pages/Dashboard/GraphicEditor'));
+const DashboardMain = lazy(() => import('./pages/Dashboard/DashboardMain'));
 
 export default function App() {
   const { user } = useAuthStore();
@@ -38,14 +40,61 @@ export default function App() {
             <>
               <Route path='/' element={<Main />}>
                 <Route index element={<Home />} />
-                <Route path='login' element={!user ? <Login /> : <Navigate to='/dashboard' />} />
-                <Route path='signup' element={!user ? <Signup /> : <Navigate to='/dashboard' />} />
+                <Route
+                  path='login'
+                  element={
+                    !user ? (
+                      <Suspense fallback={<Loading />}>
+                        <Login />
+                      </Suspense>
+                    ) : (
+                      <Navigate to='/dashboard' />
+                    )
+                  }
+                />
+                <Route
+                  path='signup'
+                  element={
+                    !user ? (
+                      <Suspense fallback={<Loading />}>
+                        <Signup />
+                      </Suspense>
+                    ) : (
+                      <Navigate to='/dashboard' />
+                    )
+                  }
+                />
               </Route>
 
-              <Route path='/dashboard' element={user ? <Dashboard /> : <Navigate to='/login' />}>
+              <Route
+                path='/dashboard'
+                element={
+                  user ? (
+                    <Suspense fallback={<Loading />}>
+                      <Dashboard />
+                    </Suspense>
+                  ) : (
+                    <Navigate to='/login' />
+                  )
+                }
+              >
                 <Route index element={<DashboardMain />} />
-                <Route path='graphic' element={<GraphicEditor />} />
-                <Route path='video' element={<Video />} />
+                <Route
+                  path='graphic'
+                  element={
+                    <Suspense fallback={<Loading />}>
+                      <GraphicEditor />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path='video'
+                  element={
+                    <Suspense fallback={<Loading />}>
+                      <Video />
+                    </Suspense>
+                  }
+                />
               </Route>
             </>,
           ),
