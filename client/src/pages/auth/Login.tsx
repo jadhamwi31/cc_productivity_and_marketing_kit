@@ -18,7 +18,7 @@ export default function Login() {
   };
 
   return (
-    <div className=' lg:flex lg:justify-between w-screen  h-screen '>
+    <div className=' lg:flex lg:justify-between w-screen  h-screen grad '>
       <div
         className='absolute h-screen w-screen bg-black/60 backdrop-blur-md lg:w-[30vw] z-20
                   lg:bg-transparent lg:flex p-20 items-center justify-center
