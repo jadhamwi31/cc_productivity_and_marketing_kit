@@ -26,7 +26,7 @@ const Ruler = (props: Props) => {
   return (
     <S.Container>
       {timestamps.map((timestamp) => (
-        <S.Timestamp>{formatTimestamp(timestamp)}</S.Timestamp>
+        <S.Timestamp key={timestamp}>{formatTimestamp(timestamp)}</S.Timestamp>
       ))}
     </S.Container>
   );

@@ -6,6 +6,6 @@ export const VideosRouter = Router();
 VideosRouter.post("/", VideosController.uploadVideoHandler);
 VideosRouter.post("/:videoId/export", VideosController.exportVideoHandler);
 VideosRouter.post(
-	"/:videoId/transcribe",
+	"/:videoId/transcript",
 	VideosController.transcribeVideoHandler
 );

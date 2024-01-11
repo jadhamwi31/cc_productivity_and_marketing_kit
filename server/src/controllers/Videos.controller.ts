@@ -1,13 +1,15 @@
+import { exec } from "child_process";
 import { NextFunction, Request, Response } from "express";
+import fs from "fs";
+import path from "path";
 import { v4 as uuid } from "uuid";
 import { generateStorageInstance } from "../services/Storage.service";
-import { getStoragePath } from "../utils/utils";
-import { exec } from "child_process";
-import path from "path";
-import { calculateNeededParts } from "../utils/utils";
-import { getVideoDuration } from "../utils/utils";
-import fs from "fs";
 import { Transcriber } from "../services/Transcribe.service";
+import {
+	calculateNeededParts,
+	getStoragePath,
+	getVideoDuration,
+} from "../utils/utils";
 
 const uploadVideoHandler = async (
 	req: Request,
@@ -62,7 +64,7 @@ const exportVideoHandler = async (
 
 		await new Promise((resolve, reject) =>
 			exec(
-				`sh ${path.join(
+				`bash ${path.join(
 					__dirname,
 					"../scripts/export.sh"
 				)} ${userStoragePath} ${videoId} ${newId} ${partitionsAsArgs}`,

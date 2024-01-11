@@ -10,7 +10,7 @@ export class Transcriber {
 
 	private convertToAudio() {
 		execSync(
-			`sh ${path.join(__dirname, "../scripts/convert_to_audio.sh")} ${
+			`bash ${path.join(__dirname, "../scripts/convert_to_audio.sh")} ${
 				this.filepath
 			}`
 		);

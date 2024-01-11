@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -5,13 +6,12 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAuthStore from './stores/auth.store';
 
-import Home from './pages/Home';
 import Main from './layout/Main';
+import Home from './pages/Home';
 import Loading from './pages/Loading';
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const Video = lazy(() => import('./pages/Video/Video'));
@@ -69,13 +69,9 @@ export default function App() {
               <Route
                 path='/dashboard'
                 element={
-                  user ? (
-                    <Suspense fallback={<Loading />}>
-                      <Dashboard />
-                    </Suspense>
-                  ) : (
-                    <Navigate to='/login' />
-                  )
+                  <Suspense fallback={<Loading />}>
+                    <Dashboard />
+                  </Suspense>
                 }
               >
                 <Route index element={<DashboardMain />} />
