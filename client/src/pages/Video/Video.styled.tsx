@@ -10,7 +10,7 @@ const Container = styled.div`
 
 const PlayerToolsTranscriptRow = styled.div`
   display: grid;
-  grid-template-columns: 0.1fr 0.4fr 1fr;
+  grid-template-columns: 0.1fr repeat(2, 1fr);
   width: 100%;
   gap: 0.5em;
   padding: 0.5em;

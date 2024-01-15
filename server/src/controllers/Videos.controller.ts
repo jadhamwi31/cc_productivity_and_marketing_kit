@@ -1,4 +1,4 @@
-import { exec } from "child_process";
+import { exec, execSync } from "child_process";
 import { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import path from "path";
@@ -16,12 +16,20 @@ const uploadVideoHandler = async (
 	res: Response,
 	next: NextFunction
 ) => {
+	const name = req.user ? req.user.username : "unknown";
 	try {
 		await new Promise<void>((resolve, reject) => {
 			generateStorageInstance(req.user ? req.user.username : "unknown").single(
 				"video"
 			)(req, res, function (err) {
 				if (err) throw reject(err);
+				// Convert to Audio
+				execSync(
+					`bash ${path.join(
+						__dirname,
+						"../scripts/convert_to_audio.sh"
+					)} ${path.join(getStoragePath(), name, req.file?.filename!)}`
+				);
 				resolve();
 			});
 		});

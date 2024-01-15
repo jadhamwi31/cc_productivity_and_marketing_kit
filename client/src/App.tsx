@@ -43,13 +43,9 @@ export default function App() {
                 <Route
                   path='login'
                   element={
-                    !user ? (
-                      <Suspense fallback={<Loading />}>
-                        <Login />
-                      </Suspense>
-                    ) : (
-                      <Navigate to='/dashboard' />
-                    )
+                    <Suspense fallback={<Loading />}>
+                      <Login />
+                    </Suspense>
                   }
                 />
                 <Route

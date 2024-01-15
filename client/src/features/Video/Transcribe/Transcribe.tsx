@@ -1,4 +1,5 @@
 import { useCurrentTab } from '../../../hooks/useCurrentTab';
+import Chunks from './Chunks/Chunks';
 import { S } from './Transcribe.styled';
 
 type Props = {};
@@ -8,7 +9,11 @@ const Transcribe = (props: Props) => {
 
   return (
     <S.Container>
-      {tab.transcribing ? 'Transcribing' : tab.transcript.length !== 0 ? 'Timestamps...' : null}
+      {tab.transcribing ? (
+        'Transcribing'
+      ) : tab.transcript ? (
+        <Chunks chunks={tab.transcript.chunks} />
+      ) : null}
     </S.Container>
   );
 };

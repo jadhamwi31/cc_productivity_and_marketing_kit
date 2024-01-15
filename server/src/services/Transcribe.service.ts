@@ -1,6 +1,13 @@
-import { execSync } from "child_process";
+import axios, { AxiosResponse } from "axios";
+import FormData from "form-data";
 import fs from "fs";
-import path from "path";
+
+type Chunk = { timestamp: [number, number]; text: string };
+
+type Transcript = {
+	text: string;
+	chunks: Chunk[];
+};
 
 export class Transcriber {
 	private filepath: string;
@@ -8,18 +15,21 @@ export class Transcriber {
 		this.filepath = filepath;
 	}
 
-	private convertToAudio() {
-		execSync(
-			`bash ${path.join(__dirname, "../scripts/convert_to_audio.sh")} ${
-				this.filepath
-			}`
-		);
-	}
-
 	public async transcribe() {
-		this.convertToAudio();
 		const data = fs.readFileSync(this.filepath + ".aac");
+		const formData = new FormData();
 
-		return [];
+		formData.append("file", data, "file");
+
+		let { data: transcript } = await axios.post<
+			void,
+			AxiosResponse<Transcript>
+		>("http://0.0.0.0:8081/transcript", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+
+		return transcript;
 	}
 }

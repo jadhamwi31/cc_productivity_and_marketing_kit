@@ -1,8 +1,7 @@
-import React from 'react';
+import { FaPlus } from 'react-icons/fa6';
+import Button from '../../../components/Button/Button';
 import { useVideosStore } from '../../../stores/videos.store';
 import { S } from './Tabs.styled';
-import Button from '../../../components/Button/Button';
-import { FaPlus } from 'react-icons/fa6';
 type Props = {};
 
 const Tabs = (props: Props) => {

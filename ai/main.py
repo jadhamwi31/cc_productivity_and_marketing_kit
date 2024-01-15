@@ -13,12 +13,12 @@ pipe = pipeline(
 app = FastAPI()
 
 
-@app.get("/transcript")
+@app.post("/transcript")
 async def transcript(file: UploadFile):
     try:
         fileObject = await file.read()
         result = pipe(fileObject)
-    
+        print(result)
         return JSONResponse(content=result, status_code=200)
-    except Exception as e:
+    except Exception as e: 
         return JSONResponse(content={"error": str(e)}, status_code=500)

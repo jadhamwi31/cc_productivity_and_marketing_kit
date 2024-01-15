@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { S } from './Cursor.styled';
-import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
+import { throttle } from 'lodash';
+import { useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
+import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
+import { useVideoElement } from '../../../../../hooks/useVideoElement';
 import { useVideosStore } from '../../../../../stores/videos.store';
 import { EnVideoPlayback } from '../../../../../ts/enums/video.enums';
-import { useVideoElement } from '../../../../../hooks/useVideoElement';
+import { S } from './Cursor.styled';
 
 type Props = { containerHeight: number };
 
@@ -35,13 +36,13 @@ const Cursor = ({ containerHeight }: Props) => {
           if (shouldPlay.current) setPlayback(EnVideoPlayback.PLAYING);
           updateTab({ isCursorGrabbed: false });
         }}
-        onDrag={(_, dragEvent) => {
-          const newTime = (dragEvent.x / tab.lineWidth) * tab.duration;
+        onDrag={throttle((_, dragEvent) => {
+          const newTime = (tab.duration / tab.lineWidth) * dragEvent.x;
           if (videoElement) {
             videoElement.currentTime = newTime;
             updateTab({ currentTime: newTime });
           }
-        }}
+        }, 100)}
       >
         <S.Container $height={containerHeight}>
           <S.Relative>
