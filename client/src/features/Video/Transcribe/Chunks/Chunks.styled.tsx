@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
   gap: 0.5em;
   overflow-y: auto;
-  height: 250px;
+  height: 40vh;
 `;
 
 export const S = { Container, Wrapper };

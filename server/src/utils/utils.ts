@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
-import { SALT } from "../constants/constants";
-import path from "path";
-import { IVideoPartition } from "../controllers/Videos.controller";
 import fluentFfmpeg from "fluent-ffmpeg";
+import path from "path";
+import { SALT } from "../constants/constants";
+import { IVideoPartition } from "../controllers/Videos.controller";
 
 export const hashPassword = async (plainPassword: string) => {
 	const hashedPassword = await bcrypt.hash(plainPassword, SALT);
@@ -24,12 +24,9 @@ export function calculateNeededParts(
 	duration: number
 ): IVideoPartition[] {
 	duration = duration - 1;
-	const sortedSkippedParts = skippedParts.slice().sort((a, b) => {
-		if (a.start !== b.start) {
-			return a.start - b.start;
-		}
-		return a.end - b.end;
-	});
+	const sortedSkippedParts = skippedParts
+		.slice()
+		.sort((a, b) => (a.start !== b.start ? a.start - b.start : a.end - b.end));
 
 	const wantedParts: IVideoPartition[] = [];
 
@@ -40,21 +37,20 @@ export function calculateNeededParts(
 	for (let i = 0; i < sortedSkippedParts.length; i++) {
 		const currentPart = sortedSkippedParts[i];
 
-		if (i === 0) {
-			if (currentPart.start > 0) {
-				wantedParts.push({ start: 0, end: currentPart.start });
-			}
+		if (i === 0 && currentPart.start > 0) {
+			wantedParts.push({ start: 0, end: currentPart.start });
 		}
 
-		if (i === sortedSkippedParts.length - 1) {
-			if (currentPart.end < duration) {
-				wantedParts.push({ start: currentPart.end, end: duration });
+		if (i === sortedSkippedParts.length - 1 && currentPart.end < duration) {
+			wantedParts.push({ start: currentPart.end, end: duration });
+		} else if (i < sortedSkippedParts.length - 1) {
+			const nextPart = sortedSkippedParts[i + 1];
+			if (currentPart.end < nextPart.start) {
+				wantedParts.push({ start: currentPart.end, end: nextPart.start });
+			} else {
+				// Handle overlap: adjust the end time of the current part
+				currentPart.end = Math.min(currentPart.end, nextPart.start);
 			}
-		} else {
-			wantedParts.push({
-				start: currentPart.end,
-				end: sortedSkippedParts[i + 1].start,
-			});
 		}
 	}
 

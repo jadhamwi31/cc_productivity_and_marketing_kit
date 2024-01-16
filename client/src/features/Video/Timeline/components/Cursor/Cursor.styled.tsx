@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Draggable from 'react-draggable';
 
 const Container = styled.div<{ $height: number }>`
   height: ${({ $height }) => $height}px;

@@ -6,4 +6,12 @@ const Container = styled.div`
   background-color: #15121c;
 `;
 
-export const S = { Container };
+const TabContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25em 0.5em;
+`;
+
+export const S = { Container, TabContent };

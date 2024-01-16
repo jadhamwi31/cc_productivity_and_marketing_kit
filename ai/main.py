@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 
 pipe = pipeline(
     "automatic-speech-recognition",
-    model="Subcold/whisper-small-preprocessed-en",return_timestamps=True,batch_size=16
+    model="Subcold/whisper-small-preprocessed-en",chunk_length_s=30
 )
 
 
@@ -17,7 +17,7 @@ app = FastAPI()
 async def transcript(file: UploadFile):
     try:
         fileObject = await file.read()
-        result = pipe(fileObject)
+        result = pipe(fileObject,batch_size=8,return_timestamps=True)
         print(result)
         return JSONResponse(content=result, status_code=200)
     except Exception as e: 

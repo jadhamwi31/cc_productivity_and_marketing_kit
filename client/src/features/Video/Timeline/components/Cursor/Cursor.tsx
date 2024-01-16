@@ -1,4 +1,3 @@
-import { throttle } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
@@ -36,13 +35,17 @@ const Cursor = ({ containerHeight }: Props) => {
           if (shouldPlay.current) setPlayback(EnVideoPlayback.PLAYING);
           updateTab({ isCursorGrabbed: false });
         }}
-        onDrag={throttle((_, dragEvent) => {
-          const newTime = (tab.duration / tab.lineWidth) * dragEvent.x;
+        onDrag={(_, dragEvent) => {
+          // console.log(
+          //   `Current Time : ${tab.currentTime}\nLine Width: ${tab.lineWidth}\nDuration : ${tab.duration}\nX : ${dragEvent.x}`,
+          // );
+
+          const newTime = tab.currentTime + dragEvent.deltaX * (tab.duration / tab.lineWidth);
           if (videoElement) {
             videoElement.currentTime = newTime;
             updateTab({ currentTime: newTime });
           }
-        }, 100)}
+        }}
       >
         <S.Container $height={containerHeight}>
           <S.Relative>

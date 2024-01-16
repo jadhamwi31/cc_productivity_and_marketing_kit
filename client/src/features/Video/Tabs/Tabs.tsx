@@ -5,10 +5,11 @@ import { S } from './Tabs.styled';
 type Props = {};
 
 const Tabs = (props: Props) => {
-  const { tabs, setSelectedTab, selectedTab, addTab } = useVideosStore();
+  const { tabs, setSelectedTab, selectedTab, addTab, deleteTab } = useVideosStore();
+  const tabsToRender = Object.keys(tabs);
   return (
     <S.Container>
-      {Object.keys(tabs).map((tabId, i) => (
+      {tabsToRender.map((tabId, i) => (
         <button
           onClick={() => setSelectedTab(tabId)}
           key={tabId}
@@ -19,7 +20,10 @@ const Tabs = (props: Props) => {
             paddingLeft: '20px',
           }}
         >
-          Tab {i + 1}
+          <S.TabContent>
+            <div>Tab {i + 1}</div>
+            {i !== 0 && <button onClick={() => deleteTab(tabId, tabsToRender[0])}>x</button>}
+          </S.TabContent>
         </button>
       ))}
       <Button onClick={addTab}>

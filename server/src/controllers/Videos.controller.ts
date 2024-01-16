@@ -69,13 +69,13 @@ const exportVideoHandler = async (
 			.map((partition) => partition.start + " " + partition.end)
 			.join(" ");
 		const newId = uuid();
-
+		const inputFileName = uuid();
 		await new Promise((resolve, reject) =>
 			exec(
 				`bash ${path.join(
 					__dirname,
 					"../scripts/export.sh"
-				)} ${userStoragePath} ${videoId} ${newId} ${partitionsAsArgs}`,
+				)} ${userStoragePath} ${videoId} ${newId} ${inputFileName} ${partitionsAsArgs}`,
 				(err, stdout, stderr) => {
 					if (err) {
 						reject(err);

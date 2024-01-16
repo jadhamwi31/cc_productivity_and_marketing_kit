@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
 import { useVideosStore } from '../../../../../stores/videos.store';
 import { S } from './Selector.styled';
@@ -6,12 +6,17 @@ import { S } from './Selector.styled';
 type Props = { containerHeight: number; wrapperWidth: number };
 
 const Selector = ({ containerHeight, wrapperWidth }: Props) => {
+  const { selectedTab } = useVideosStore();
   const tab = useCurrentTab();
   const [markers, setMarkers] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
   const [currentPosition, setCurrentPosition] = useState(0);
   const [coverWidth, setCoverWidth] = useState(0);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const { updateTab } = useVideosStore();
+  useEffect(() => {
+    setMarkers({ start: 0, end: 0 });
+    setCoverWidth(0);
+  }, [selectedTab]);
 
   return (
     <S.Container

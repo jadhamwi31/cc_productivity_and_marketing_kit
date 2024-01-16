@@ -1,8 +1,8 @@
+import { useMeasure } from '@uidotdev/usehooks';
 import { useEffect, useState } from 'react';
 import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
-import { S } from './Line.styled';
-import { useMeasure } from '@uidotdev/usehooks';
 import { useVideosStore } from '../../../../../stores/videos.store';
+import { S } from './Line.styled';
 
 type Props = {};
 

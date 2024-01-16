@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
-import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
-import { S } from './Partitions.styled';
-import { useVideosStore } from '../../../../../stores/videos.store';
+import React from 'react';
 import { MdDelete } from 'react-icons/md';
+import { useCurrentTab } from '../../../../../hooks/useCurrentTab';
+import { useVideosStore } from '../../../../../stores/videos.store';
+import { S } from './Partitions.styled';
 
 type Props = { wrapperWidth: number; containerHeight: number };
 
@@ -31,20 +31,24 @@ const Partitions = ({ wrapperWidth, containerHeight }: Props) => {
                 width: connectorWidth,
               }}
             >
-              <button
-                className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600 z-30'
-                title='Delete'
-                onClick={() => {
-                  updateTab({
-                    partitions: [...tab.partitions].filter(
-                      (partition) => partition.start !== start,
-                    ),
-                  });
-                }}
-                disabled={tab.videoId === null || tab.selectorStart === 0 || tab.selectorEnd === 0}
-              >
-                <MdDelete size='25' />
-              </button>
+              {!partition.fromTranscript && (
+                <button
+                  className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600 z-30'
+                  title='Delete'
+                  onClick={() => {
+                    updateTab({
+                      partitions: [...tab.partitions].filter(
+                        (partition) => partition.start !== start,
+                      ),
+                    });
+                  }}
+                  disabled={
+                    tab.videoId === null || tab.selectorStart === 0 || tab.selectorEnd === 0
+                  }
+                >
+                  <MdDelete size='25' />
+                </button>
+              )}
             </S.Connector>
             <S.PartitionSection
               style={{
