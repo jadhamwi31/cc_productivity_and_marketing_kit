@@ -1,3 +1,9 @@
+import AddChannle from '../../components/Dashboard/Scrapping/Youtube/AddChannle';
+
 export default function SocialMedia() {
-  return <div>SocialMedia</div>;
+  return (
+    <div>
+      <AddChannle />
+    </div>
+  );
 }

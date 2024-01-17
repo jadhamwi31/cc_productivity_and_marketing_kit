@@ -10,7 +10,7 @@ import octopus from '../../assets/Small.webp';
 
 const Navbar = () => {
   const menus = [
-    { name: 'dashboard', link: 'main', icon: MdOutlineDashboard },
+    { name: 'dashboard', link: '', icon: MdOutlineDashboard },
     { name: 'user', link: 'socialmedia', icon: AiOutlineUser },
     { name: 'Graphic', link: 'graphic', icon: MdOutlineAddPhotoAlternate, margin: true },
     { name: 'Video', link: 'video', icon: IoVideocamOutline },
