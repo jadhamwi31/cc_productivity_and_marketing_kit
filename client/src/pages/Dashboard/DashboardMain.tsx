@@ -1,3 +1,9 @@
+import AddChannle from '../../components/Dashboard/Scrapping/Youtube/AddChannle';
+
 export default function DashboardMain() {
-  return <div>DashboardMain</div>;
+  return (
+    <div>
+      <AddChannle />
+    </div>
+  );
 }

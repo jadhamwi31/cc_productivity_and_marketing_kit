@@ -10,18 +10,15 @@ import octopus from '../../assets/Small.webp';
 
 const Navbar = () => {
   const menus = [
-    { name: 'dashboard', link: '', icon: MdOutlineDashboard },
-    { name: 'user', link: '', icon: AiOutlineUser },
-    { name: 'messages', link: '', icon: FiMessageSquare },
+    { name: 'dashboard', link: 'main', icon: MdOutlineDashboard },
+    { name: 'user', link: 'socialmedia', icon: AiOutlineUser },
     { name: 'Graphic', link: 'graphic', icon: MdOutlineAddPhotoAlternate, margin: true },
     { name: 'Video', link: 'video', icon: IoVideocamOutline },
-    { name: 'Cart', link: '', icon: FiShoppingCart },
-    { name: 'Saved', link: '', icon: AiOutlineHeart, margin: true },
-    { name: 'Setting', link: '', icon: RiSettings4Line },
+    { name: 'Setting', link: 'Setting', icon: RiSettings4Line, margin: true },
   ];
 
   return (
-    <section className='flex   gap-6'>
+    <section className='flex   gap-6 dashboard-navbar'>
       <div className='fixed top-0 left-0 h-screen bg-black border-r-[1px] border-New_Gray w-16 text-gray-100'>
         <div className='mt-4 flex flex-col gap-4 relative'>
           <img src={octopus} alt='' className='pl-2 pr-1' />

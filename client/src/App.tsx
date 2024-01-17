@@ -13,6 +13,7 @@ import useAuthStore from './stores/auth.store';
 import Main from './layout/Main';
 import Home from './pages/Home';
 import Loading from './pages/Loading';
+import SocialMedia from './pages/Dashboard/SocialMedia';
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const Video = lazy(() => import('./pages/Video/Video'));
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -76,6 +77,14 @@ export default function App() {
                   element={
                     <Suspense fallback={<Loading />}>
                       <GraphicEditor />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path='socialmedia'
+                  element={
+                    <Suspense fallback={<Loading />}>
+                      <SocialMedia />
                     </Suspense>
                   }
                 />
