@@ -1,8 +1,8 @@
 import { MdOutlineDashboard } from 'react-icons/md';
 import { RiSettings4Line } from 'react-icons/ri';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
-import { AiOutlineUser, AiOutlineHeart } from 'react-icons/ai';
-import { FiMessageSquare, FiFolder, FiShoppingCart } from 'react-icons/fi';
+import { AiOutlineUser } from 'react-icons/ai';
+
 import { IoVideocamOutline } from 'react-icons/io5';
 import { Link, NavLink } from 'react-router-dom';
 import React from 'react';
@@ -10,8 +10,8 @@ import octopus from '../../assets/Small.webp';
 
 const Navbar = () => {
   const menus = [
-    { name: 'dashboard', link: '', icon: MdOutlineDashboard },
-    { name: 'user', link: 'socialmedia', icon: AiOutlineUser },
+    { name: 'Dashboard', link: '', icon: MdOutlineDashboard },
+    { name: 'Accounts', link: 'socialmedia', icon: AiOutlineUser },
     { name: 'Graphic', link: 'graphic', icon: MdOutlineAddPhotoAlternate, margin: true },
     { name: 'Video', link: 'video', icon: IoVideocamOutline },
     { name: 'Setting', link: 'Setting', icon: RiSettings4Line, margin: true },
