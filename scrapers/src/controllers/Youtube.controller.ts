@@ -11,7 +11,7 @@ const channelInfo = async (req: Request<{}, {}, { url: string }>, res: Response)
 
     const data = await page.evaluate(() => {
       const avatarElement = document.querySelector('#img');
-      const channelNameElement = document.querySelector('#channel-name');
+      const channelNameElement = document.title;
       const channelHandleElement = document.querySelector('#channel-handle');
       const subscriberCountElement = document.querySelector('#subscriber-count');
       const videosCountElement = document.querySelector('#videos-count');
@@ -30,7 +30,7 @@ const channelInfo = async (req: Request<{}, {}, { url: string }>, res: Response)
       }
 
       const avatar = avatarElement.getAttribute('src');
-      const channelName = channelNameElement.textContent?.trim();
+      const channelName = channelNameElement.split(' - YouTube')[0];
       const channelHandle = channelHandleElement.textContent;
       const totalSubscribers = subscriberCountElement.textContent;
       const totalVideos = videosCountElement.textContent;
