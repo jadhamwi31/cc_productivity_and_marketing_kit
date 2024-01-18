@@ -45,24 +45,43 @@ export default function AddChannle() {
               >
                 <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
                   <Dialog.Title as='h3' className='text-xlg font-medium leading-6 text-gray-900'>
-                    Edit Artwork
+                    Add Account
                   </Dialog.Title>
                   <div className='mt-2'>
                     <p className='text-sm text-gray-500 mb-2'>You Are Trying to Edit Artwork</p>
 
                     <div className='mb-6'>
                       <label className='text-sm text-gray-500' htmlFor='value'>
-                        Title
+                        Platform
                       </label>
+                      <select className='bg-gray-300 appearance-none border-2 border-gray-300 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-gray-300 focus:border-gray-300'>
+                        <option value=''>Please Select</option>
+                        <option value=''>Youtube</option>
+                      </select>
+                      <label className='text-sm text-gray-500' htmlFor='value'>
+                        Url
+                      </label>
+                      <input
+                        type='text'
+                        className='bg-gray-300 appearance-none border-2 border-gray-300 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-gray-300 focus:border-gray-300'
+                      />
                     </div>
-
-                    <button
-                      type='button'
-                      className='inline-flex justify-center rounded-md border border-transparent bg-gray-200 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2'
-                      onClick={closeModal}
-                    >
-                      Cancel
-                    </button>
+                    <div className=' flex justify-end space-x-2'>
+                      <button
+                        type='button'
+                        className='inline-flex justify-center rounded-md border border-transparent bg-gray-300 w-16 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2'
+                        onClick={closeModal}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type='button'
+                        className='inline-flex justify-center rounded-md border border-transparent bg-purple-900 w-16  text-white hover:bg-purple-800 px-4 py-2 text-sm font-medium  focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2'
+                        onClick={closeModal}
+                      >
+                        Add
+                      </button>
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
