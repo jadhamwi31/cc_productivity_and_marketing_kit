@@ -27,6 +27,7 @@ const Navbar = () => {
             <NavLink
               to={menu?.link}
               key={i}
+              end
               className={` ${
                 menu?.margin && 'mt-5'
               } group flex items-center  p-2 hover:border-l-2 hover:border-[#70358A] hover:pl-1.5 `}
