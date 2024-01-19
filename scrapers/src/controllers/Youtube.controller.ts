@@ -1,6 +1,15 @@
 import { Request, Response } from 'express';
 import * as puppeteer from 'puppeteer';
 import STATUS_CODES from 'http-status-codes';
+
+interface CommentData {
+  commenter: {
+    name: string;
+    youtubePage: string;
+  };
+  comment: string;
+}
+
 async function timeout(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -69,7 +78,7 @@ const channelInfo = async (req: Request<{}, {}, { url: string }>, res: Response)
 };
 const channelVideos = async (req: Request<{}, {}, { url: string }>, res: Response) => {
   const { url } = req.body;
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
   try {
     await page.goto(url, { timeout: 0 });
@@ -142,4 +151,64 @@ const channelVideos = async (req: Request<{}, {}, { url: string }>, res: Respons
       .send({ status: STATUS_CODES.BAD_REQUEST, message: e });
   }
 };
-export const YoutubeController = { channelInfo, channelVideos };
+const videoComments = async (req: Request<{}, {}, { url: string }>, res: Response) => {
+  const { url } = req.body;
+  let browser;
+  try {
+    browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+    await page.goto(url, { timeout: 0 });
+    await page.evaluate(() => {
+      (document.body.style as any).zoom = '0.1';
+    });
+
+    let previousHeight;
+    while (true) {
+      const currentHeight = await page.evaluate('document.documentElement.scrollHeight');
+      if (previousHeight && currentHeight === previousHeight) {
+        break;
+      }
+      await page.evaluate('window.scrollTo(0, document.documentElement.scrollHeight)');
+      previousHeight = currentHeight;
+      await page.waitForTimeout(3000);
+    }
+    const videoComments: CommentData[] = await page.evaluate(() => {
+      const comments: CommentData[] = [];
+      const commentElements = document.querySelectorAll('#content-text');
+
+      commentElements.forEach((commentElement) => {
+        const commenterElement = commentElement.closest('ytd-comment-renderer');
+
+        if (commenterElement) {
+          const commentText = commentElement.textContent?.trim();
+          const commenterName = commenterElement.querySelector('#author-text')?.textContent?.trim();
+          const commenterYouTubePage = commenterElement
+            .querySelector('#author-text')
+            ?.getAttribute('href');
+          if (commentText && commenterName && commenterYouTubePage) {
+            comments.push({
+              commenter: {
+                name: commenterName,
+                youtubePage: `https://www.youtube.com${commenterYouTubePage}`,
+              },
+              comment: commentText,
+            });
+          }
+        }
+      });
+
+      return comments;
+    });
+    await browser.close();
+    return res.status(STATUS_CODES.OK).json({ status: STATUS_CODES.OK, data: videoComments });
+  } catch (e) {
+    if (browser) {
+      await browser.close();
+    }
+    console.error('Error:', e);
+    return res
+      .status(STATUS_CODES.BAD_REQUEST)
+      .json({ status: STATUS_CODES.BAD_REQUEST, message: e });
+  }
+};
+export const YoutubeController = { channelInfo, channelVideos, videoComments };
