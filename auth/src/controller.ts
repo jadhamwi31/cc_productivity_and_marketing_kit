@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import STATUS_CODES from "http-status-codes";
-import { AuthService } from "../services/Auth.service";
+import { AuthService } from "./services/Auth.service";
 
 const signupHandler = async (
 	req: Request,

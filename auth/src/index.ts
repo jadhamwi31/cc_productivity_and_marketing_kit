@@ -3,9 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
+import { AuthController } from "./controller";
 import { ErrorMiddleware } from "./middlewares/Error.middleware";
+import { validate } from "./middlewares/Validator.middleware";
 import Database from "./models";
-import { AuthRouter } from "./routers/Auth.router";
+import { LOGIN_SCHEMA, SIGNUP_SCHEMA } from "./schemas/Auth.schemas";
 
 dotenv.config();
 
@@ -18,7 +20,13 @@ dotenv.config();
 	app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 	app.use(morgan("dev"));
-	app.use("/auth", AuthRouter);
+
+	app.post(
+		"/auth/signup",
+		validate(SIGNUP_SCHEMA),
+		AuthController.signupHandler
+	);
+	app.post("/auth/login", validate(LOGIN_SCHEMA), AuthController.loginHandler);
 
 	app.use(ErrorMiddleware);
 
