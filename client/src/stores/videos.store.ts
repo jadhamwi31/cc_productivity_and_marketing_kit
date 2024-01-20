@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import fileDownload from 'js-file-download';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
@@ -108,7 +108,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
 
     const uploadToastId = toast('Uploading Progress : 0%', { progress: 0 });
     axios
-      .post<void, AxiosResponse<string>>('/videos', formData, {
+      .post<void, AxiosResponse<string>>('/videos/', formData, {
         onUploadProgress(progressEvent) {
           const newProgress = progressEvent.progress! * 100;
 
@@ -134,6 +134,13 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
         newTabs[currentTab].videoName = file.name;
 
         set({ tabs: newTabs });
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) {
+          if (err.status === 413) {
+            toast.error('File too Large', { toastId: uploadToastId });
+          }
+        }
       });
 
     newTabs[currentTab].videoUrl = URL.createObjectURL(file);

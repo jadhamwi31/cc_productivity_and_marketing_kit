@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import building from '../../assets/artworks/building.svg';
 
-import { useState } from 'react';
-import { axios } from '../../lib/axios';
 import { AxiosResponse } from 'axios';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { axios } from '../../lib/axios';
 
 export default function Signup() {
   const [email, setEmail] = useState<string>('');
@@ -17,7 +17,7 @@ export default function Signup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password != confirmPassword) {
-      toast.error('Passowrds not Matchinchg');
+      toast.error('Passowrds not Matching');
     } else {
       try {
         const response: AxiosResponse = await axios.post('/auth/signup', {

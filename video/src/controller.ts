@@ -3,13 +3,13 @@ import { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import { v4 as uuid } from "uuid";
-import { generateStorageInstance } from "../services/Storage.service";
-import { Transcriber } from "../services/Transcribe.service";
+import { Transcriber } from "./services/Transcriber";
 import {
 	calculateNeededParts,
+	generateStorageInstance,
 	getStoragePath,
 	getVideoDuration,
-} from "../utils/utils";
+} from "./utils/utils";
 
 const uploadVideoHandler = async (
 	req: Request,
@@ -27,7 +27,7 @@ const uploadVideoHandler = async (
 				execSync(
 					`bash ${path.join(
 						__dirname,
-						"../scripts/convert_to_audio.sh"
+						"./scripts/convert_to_audio.sh"
 					)} ${path.join(getStoragePath(), name, req.file?.filename!)}`
 				);
 				resolve();
@@ -74,7 +74,7 @@ const exportVideoHandler = async (
 			exec(
 				`bash ${path.join(
 					__dirname,
-					"../scripts/export.sh"
+					"./scripts/export.sh"
 				)} ${userStoragePath} ${videoId} ${newId} ${inputFileName} ${partitionsAsArgs}`,
 				(err, stdout, stderr) => {
 					if (err) {

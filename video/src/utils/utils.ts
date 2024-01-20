@@ -1,21 +1,21 @@
-import bcrypt from "bcrypt";
 import fluentFfmpeg from "fluent-ffmpeg";
+import multer from "multer";
 import path from "path";
-import { SALT } from "../constants/constants";
-import { IVideoPartition } from "../controllers/Videos.controller";
 
-export const hashPassword = async (plainPassword: string) => {
-	const hashedPassword = await bcrypt.hash(plainPassword, SALT);
+export interface IVideoPartition {
+	start: number;
+	end: number;
+}
 
-	return hashedPassword;
-};
-
-export const compare = async (
-	plainPassword: string,
-	hashedPassword: string
-) => {
-	const match = await bcrypt.compare(plainPassword, hashedPassword);
-	return match;
+export const generateStorageInstance = (username: string) => {
+	const diskStorage = multer.diskStorage({
+		destination: path.join(getStoragePath(), username),
+	});
+	const storage = multer({
+		storage: diskStorage,
+		limits: { fileSize: 1024 * 1024 * 1024 * 2 },
+	});
+	return storage;
 };
 
 export const getStoragePath = () => path.resolve(process.env.STORAGE_PATH!);

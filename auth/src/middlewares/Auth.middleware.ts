@@ -7,9 +7,9 @@ export const AuthMiddleware = (
 	res: Response,
 	next: NextFunction
 ) => {
-	const authHeader = req.headers.authorization;
-	if (authHeader && authHeader.startsWith("Bearer ")) {
-		const token = authHeader.substring(7, authHeader.length);
+	const token = req.cookies["jwt"];
+
+	if (token) {
 		try {
 			const payload = jwt.verify(token, String(process.env.SECRET_KEY));
 

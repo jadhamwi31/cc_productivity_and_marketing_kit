@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  auth:
+    build:
+      context: ./auth
+    environment:
+      DATABASE_PASSWORD: creatorsyard
+      DATABASE_USERNAME: creatorsyard
+      DATABASE_NAME: creatorsyard
+      DATABASE_HOST: db
+      SECRET_KEY: 94d15ae4e75814170203eec4e8e735e1
+      PORT: 8080
+      CLIENT_URL: http://client:3000
+    volumes:
+      - creatorsyard_auth_db:/var/lib/postgresql
+    depends_on:
+      - db
+    networks:
+      - creatorsyard_network
+
+  client:
+    build:
+      context: ./client
+    ports:
+      - "80:80"
+    networks:
+      - creatorsyard_network
+    depends_on:
+      - auth
+      - video
+      - db
+
+  videos:
+    build:
+      context: ./video
+    environment:
+      PORT: 8081
+      CLIENT_URL: http://localhost:3000
+      SECRET_KEY: 94d15ae4e75814170203eec4e8e735e1
+      STORAGE_PATH: /storage
+    networks:
+      - creatorsyard_network
+
+  db:
+    image: postgres:16.0-alpine3.18
+    environment:
+      POSTGRES_PASSWORD: creatorsyard
+      POSTGRES_USER: creatorsyard
+      POSTGRES_DB: creatorsyard
+    networks:
+      - creatorsyard_network
+
+networks:
+  creatorsyard_network:
+    name: creatorsyard_network
+
+volumes:
+  creatorsyard_auth_db:
