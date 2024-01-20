@@ -28,7 +28,7 @@ services:
       - creatorsyard_network
     depends_on:
       - auth
-      - video
+      - videos
       - db
 
   videos:
