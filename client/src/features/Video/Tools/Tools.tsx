@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { BsBodyText } from 'react-icons/bs';
 import { FiSave } from 'react-icons/fi';
 import { HiOutlineUpload } from 'react-icons/hi';

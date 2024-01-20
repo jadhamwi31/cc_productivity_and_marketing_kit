@@ -4,9 +4,10 @@ import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { AiOutlineUser } from 'react-icons/ai';
 
 import { IoVideocamOutline } from 'react-icons/io5';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import React from 'react';
 import octopus from '../../assets/Small.webp';
+
 
 const Navbar = () => {
   const menus = [

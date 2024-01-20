@@ -2,6 +2,7 @@ import Player from '../../features/Video/Player/Player';
 import Tabs from '../../features/Video/Tabs/Tabs';
 import Timeline from '../../features/Video/Timeline/Timeline';
 import Controls from '../../features/Video/Tools/Controls';
+import React from 'react';
 
 import Tools from '../../features/Video/Tools/Tools';
 import Transcribe from '../../features/Video/Transcribe/Transcribe';

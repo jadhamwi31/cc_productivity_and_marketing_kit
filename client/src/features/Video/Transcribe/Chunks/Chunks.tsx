@@ -2,6 +2,7 @@ import { useCurrentTab } from '../../../../hooks/useCurrentTab';
 import { useVideosStore } from '../../../../stores/videos.store';
 import { Chunk } from '../../../../ts/types/video.types';
 import { S } from './Chunks.styled';
+import React from "react";
 
 type Props = { chunks: Chunk[] };
 

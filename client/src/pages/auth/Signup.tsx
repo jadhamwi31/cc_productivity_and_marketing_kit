@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import building from '../../assets/artworks/building.svg';
 
 import { AxiosResponse } from 'axios';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { axios } from '../../lib/axios';
 

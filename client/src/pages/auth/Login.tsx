@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import yard from '../../assets/artworks/yard.svg';
 
 import useAuthStore from '../../stores/auth.store';
-import { useRef } from 'react';
+import React,{ useRef } from 'react';
 
 export default function Login() {
   const { login, error, loading } = useAuthStore();

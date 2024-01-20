@@ -5,6 +5,7 @@ import Line from './components/Line/Line';
 import Ruler from './components/Ruler/Ruler';
 import Selector from './components/Selector/Selector';
 import Partitions from './components/Partitions/Partitions';
+import React from "react";
 
 type Props = {};
 

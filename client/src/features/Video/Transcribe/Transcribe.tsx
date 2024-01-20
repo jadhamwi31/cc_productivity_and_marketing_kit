@@ -1,6 +1,7 @@
 import { useCurrentTab } from '../../../hooks/useCurrentTab';
 import Chunks from './Chunks/Chunks';
 import { S } from './Transcribe.styled';
+import React from "react";
 
 type Props = {};
 

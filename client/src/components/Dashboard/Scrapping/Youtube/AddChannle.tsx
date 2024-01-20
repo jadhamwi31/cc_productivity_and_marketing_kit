@@ -1,6 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
+import React,{ Fragment, useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa6';
+
 export default function AddChannle() {
   function closeModal() {
     setIsOpen(false);

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import Button from '../../../components/Button/Button';
 import { useCurrentTab } from '../../../hooks/useCurrentTab';
 import { useVideosStore } from '../../../stores/videos.store';

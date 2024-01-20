@@ -1,7 +1,6 @@
 import React from 'react';
 import octupos from '../assets/octopus.webp';
 import eye from '../assets/eye.png';
-import { useEffect } from 'react';
 import Logo from '../components/Main/Logo';
 
 const Home: React.FC = () => {

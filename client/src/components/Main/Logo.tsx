@@ -1,6 +1,6 @@
 import octupos from '../../assets/octopus.webp';
 import eye from '../../assets/eye.png';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const Logo: React.FC = () => {
   useEffect(() => {
