@@ -93,6 +93,8 @@ const exportVideoHandler = async (
 
 		videoStream.pipe(res);
 	} catch (e) {
+		console.log(e);
+
 		return next(e);
 	}
 };
