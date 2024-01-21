@@ -32,7 +32,7 @@ services:
       context: ./video
     environment:
       PORT: 8081
-      AI_URL: http://ai:8080
+      AI_URL: http://185.177.126.71:8080
       CLIENT_URL: http://localhost:3000
       SECRET_KEY: 94d15ae4e75814170203eec4e8e735e1
       STORAGE_PATH: /storage
@@ -43,15 +43,6 @@ services:
       POSTGRES_PASSWORD: creatorsyard
       POSTGRES_USER: creatorsyard
       POSTGRES_DB: creatorsyard
-
-  ai:
-    build:
-      context: ./ai
-    volumes:
-      - pip_cache:/root/.cache/pip
-
-    environment:
-      PORT: 8083
 
 volumes:
   creatorsyard_auth_db:
