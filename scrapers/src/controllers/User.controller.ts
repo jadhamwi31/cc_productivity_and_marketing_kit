@@ -6,7 +6,7 @@ import channelInfo from '../services/ChannelInfo';
 const addChannel = async (req: Request<{}, {}, { url: string }>, res: Response) => {
   try {
     const { url } = req.body;
-    const username = req.user?.username || 'unknown';
+    const username = req.user.username;
 
     try {
       const data = await channelInfo(url);
@@ -56,4 +56,14 @@ const addChannel = async (req: Request<{}, {}, { url: string }>, res: Response) 
   }
 };
 
-export const UserController = { addChannel };
+const getChannel = async (req: Request<{}, {}, { url: string }>, res: Response) => {
+  const username = req.user.username;
+  try {
+    let user = await ChannelModel.find({ username });
+    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ data: user });
+  } catch (e) {
+    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: e });
+  }
+};
+
+export const UserController = { addChannel, getChannel };
