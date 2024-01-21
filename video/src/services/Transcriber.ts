@@ -24,7 +24,7 @@ export class Transcriber {
 		let { data: transcript } = await axios.post<
 			void,
 			AxiosResponse<Transcript>
-		>("http://0.0.0.0:8081/transcript", formData, {
+		>(process.env.AI_URL!, formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},
