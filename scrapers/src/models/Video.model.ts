@@ -18,13 +18,11 @@ export interface UserDocument extends Document {
 const videoSchema = new Schema<UserDocument>({
   username: {
     type: String,
-    required: [true, 'Please enter a username'],
-    unique: true,
+    required: false,
   },
   channel: {
     type: String,
     required: true,
-    unique: true,
   },
   videos: {
     type: [

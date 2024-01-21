@@ -3,21 +3,47 @@ import VideoModel from '../models/Video.model';
 import STATUS_CODES from 'http-status-codes';
 import channelVideos from '../services/ChannelVideos';
 
-const getVideos = async (req: Request<{ channel: string }, {}, {}>, res: Response) => {
+const scrapeVideos = async (req: Request<{ channel: string }, {}, {}>, res: Response) => {
   try {
     const username = req.user.username;
     const { channel } = req.params;
     const videoDetails = await channelVideos(channel);
-    const userData: any = {
-      username,
-      channel,
-      videos: videoDetails,
-    };
-    const savedData = await VideoModel.create(userData);
-    res.status(STATUS_CODES.OK).json(savedData);
+
+    let existingRecord = await VideoModel.findOne({ username, channel });
+
+    if (existingRecord) {
+      existingRecord.videos = videoDetails;
+      existingRecord = await existingRecord.save();
+    } else {
+      const newRecord = new VideoModel({
+        username,
+        channel,
+        videos: videoDetails,
+      });
+      existingRecord = await newRecord.save();
+    }
+
+    res.status(STATUS_CODES.OK).json(existingRecord);
   } catch (error) {
-    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error });
   }
 };
 
-export const ChannelController = { getVideos };
+const getChannelVideos = async (req: Request<{ channel: string }, {}, {}>, res: Response) => {
+  try {
+    const username = req.user.username;
+    const { channel } = req.params;
+
+    let existingRecord = await VideoModel.findOne({ username, channel });
+
+    if (existingRecord) {
+      res.status(STATUS_CODES.OK).json(existingRecord);
+    } else {
+      res.status(STATUS_CODES.NOT_FOUND).json({ message: 'not found' });
+    }
+  } catch (error) {
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error });
+  }
+};
+
+export const ChannelController = { scrapeVideos, getChannelVideos };

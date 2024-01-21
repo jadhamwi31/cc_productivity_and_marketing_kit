@@ -18,7 +18,6 @@ const channelSchema = new Schema<UserDocument>({
   username: {
     type: String,
     required: [true, 'Please enter a username'],
-    unique: true,
   },
   channels: {
     type: [

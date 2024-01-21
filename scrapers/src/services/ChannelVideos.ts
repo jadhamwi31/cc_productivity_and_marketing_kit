@@ -5,10 +5,10 @@ async function timeout(ms: number): Promise<void> {
 }
 
 const channelVideos = async (channelUsername: string): Promise<any> => {
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   try {
-    await page.goto(`https://www.youtube.com/videos/${channelUsername}`, { timeout: 0 });
+    await page.goto(`https://www.youtube.com/${channelUsername}/videos`, { timeout: 0 });
     await page.evaluate(() => {
       (document.body.style as any).zoom = '0.1';
     });
