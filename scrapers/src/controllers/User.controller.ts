@@ -74,5 +74,28 @@ const getChannel = async (req: Request<{}, {}, { url: string }>, res: Response) 
     return res.status(STATUS_CODES.BAD_REQUEST).json({ error: e });
   }
 };
+const deleteChannel = async (req: Request<{}, {}, { channelHandle: string }>, res: Response) => {
+  const username = req.user.username;
+  const channelHandle = req.body.channelHandle;
 
-export const UserController = { addChannel, getChannel };
+  try {
+    const user = await ChannelModel.findOneAndUpdate(
+      { username },
+      {
+        $pull: {
+          channels: { channelHandle },
+        },
+      },
+      { new: true },
+    );
+
+    if (!user) {
+      return res.status(STATUS_CODES.NOT_FOUND).json({ message: 'user not found' });
+    }
+    const video = await VideoModel.findOneAndDelete({ username, channel: channelHandle });
+    return res.status(STATUS_CODES.OK).json({ message: 'Channel Deleted Successfully' });
+  } catch (error) {
+    return res.status(STATUS_CODES.BAD_REQUEST).json({ error });
+  }
+};
+export const UserController = { addChannel, getChannel, deleteChannel };

@@ -11,6 +11,7 @@ YoutubeRouter.post('/comments', YoutubeController.videoComments);
 
 YoutubeRouter.post('/addChannel', UserController.addChannel);
 YoutubeRouter.get('/myChannels', UserController.getChannel);
+YoutubeRouter.delete('/deleteChannel', UserController.deleteChannel);
 
 YoutubeRouter.get('/videos/:channel', ChannelController.scrapeVideos);
 YoutubeRouter.get('/getChannelVideos/:channel', ChannelController.getChannelVideos);
