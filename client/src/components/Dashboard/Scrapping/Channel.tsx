@@ -1,5 +1,6 @@
 import React from 'react';
-import { IoSync, IoClose } from 'react-icons/io5';
+import { IoSync } from 'react-icons/io5';
+import DeleteChannel from './DeleteChannel';
 interface ChannelProps {
   channel: {
     avatar: string;
@@ -61,11 +62,9 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
         </div>
         <div className='flex items-end'>
           <button>
-            <IoSync size={20} className='hover:text-blue-500' />
+            <IoSync size={20} className='hover:text-blue-500 mb-2' />
           </button>
-          <button>
-            <IoClose size={20} className='hover:text-red-500' />
-          </button>
+          <DeleteChannel id={channel.channelHandle} />
         </div>
       </div>
     </div>
