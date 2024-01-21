@@ -41,15 +41,17 @@ const SocialMedia: React.FC = () => {
   }
 
   return (
-    <div>
-      <AddChannle />
+    <div className='p-5'>
       {data ? (
         data.data.map((userData) => (
-          <div key={userData._id}>
-            <h3>{userData.username}</h3>
+          <div
+            key={userData._id}
+            className=' grid grid-cols-1 sm:grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'
+          >
             {userData.channels.map((channel) => (
               <Channel key={channel._id} channel={channel} />
             ))}
+            <AddChannle />
           </div>
         ))
       ) : (
