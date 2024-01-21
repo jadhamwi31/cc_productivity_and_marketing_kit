@@ -32,6 +32,7 @@ services:
       context: ./video
     environment:
       PORT: 8081
+      AI_URL: http://ai:8080
       CLIENT_URL: http://localhost:3000
       SECRET_KEY: 94d15ae4e75814170203eec4e8e735e1
       STORAGE_PATH: /storage
