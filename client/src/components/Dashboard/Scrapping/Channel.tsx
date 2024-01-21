@@ -1,6 +1,8 @@
-import React from 'react';
 import { IoSync } from 'react-icons/io5';
 import DeleteChannel from './DeleteChannel';
+import { toast } from 'react-toastify';
+import { mutate } from 'swr';
+import React, { useState } from 'react';
 interface ChannelProps {
   channel: {
     avatar: string;
@@ -14,6 +16,30 @@ interface ChannelProps {
 }
 
 const Channel: React.FC<ChannelProps> = ({ channel }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const RefreshChannel = async (id: string) => {
+    setIsLoading(true);
+    const response = await fetch('/youtube/addChannel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        credentials: 'include',
+      },
+      body: JSON.stringify({
+        url: `https://www.youtube.com/${id}`,
+      }),
+    });
+    setIsLoading(false);
+    const json = await response.json();
+    if (response.ok) {
+      toast.success('Channel Refreshed Successfully');
+      mutate('/youtube/myChannels');
+    } else {
+      toast.error('try again ');
+    }
+  };
+
   return (
     <div key={channel._id} className='rounded-lg border-2 border-New_Gray  '>
       <div className='relative mb-14'>
@@ -61,7 +87,13 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
           </p>
         </div>
         <div className='flex items-end'>
-          <button>
+          <button
+            disabled={isLoading}
+            className='disabled:text-New_Gray disabled:cursor-not-allowed disabled:text-New_Gray'
+            onClick={() => {
+              RefreshChannel(channel.channelHandle);
+            }}
+          >
             <IoSync size={20} className='hover:text-blue-500 mb-2' />
           </button>
           <DeleteChannel id={channel.channelHandle} />
