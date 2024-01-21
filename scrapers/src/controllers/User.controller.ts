@@ -26,9 +26,15 @@ const addChannel = async (req: Request<{}, {}, { url: string }>, res: Response) 
           totalVideos: data.totalVideos,
           backgroundImageUrl: data.backgroundImageUrl,
         };
+        const existingChannelIndex = user.channels.findIndex(
+          (channel) => channel.channelHandle === channelData.channelHandle,
+        );
 
-        user.channels.push(channelData);
-
+        if (existingChannelIndex !== -1) {
+          user.channels[existingChannelIndex] = channelData;
+        } else {
+          user.channels.push(channelData);
+        }
         const updatedUser = await user.save();
         return res
           .status(STATUS_CODES.OK)
