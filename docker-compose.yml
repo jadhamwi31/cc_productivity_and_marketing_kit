@@ -44,14 +44,14 @@ services:
       POSTGRES_USER: creatorsyard
       POSTGRES_DB: creatorsyard
 
-  ai:
-    build:
-      context: ./ai
-    volumes:
-      - pip_cache:/root/.cache/pip
+  # ai:
+  #   build:
+  #     context: ./ai
+  #   volumes:
+  #     - pip_cache:/root/.cache/pip
 
-    environment:
-      PORT: 8083
+  #   environment:
+  #     PORT: 8083
 
 volumes:
   creatorsyard_auth_db:

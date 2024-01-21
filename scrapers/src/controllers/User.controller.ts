@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import ChannelModel, { Channel } from '../models/Channel.model';
+import VideoModel from '../models/Video.model';
 import STATUS_CODES from 'http-status-codes';
 import channelInfo from '../services/ChannelInfo';
 
@@ -34,8 +35,16 @@ const addChannel = async (req: Request<{}, {}, { url: string }>, res: Response) 
           user.channels[existingChannelIndex] = channelData;
         } else {
           user.channels.push(channelData);
+
+          const newRecord = new VideoModel({
+            username,
+            channel: data.channelHandle,
+            videos: [],
+          });
+          await newRecord.save();
         }
         const updatedUser = await user.save();
+
         return res
           .status(STATUS_CODES.OK)
           .json({ status: STATUS_CODES.OK, message: updatedUser.channels });
@@ -60,9 +69,9 @@ const getChannel = async (req: Request<{}, {}, { url: string }>, res: Response) 
   const username = req.user.username;
   try {
     let user = await ChannelModel.find({ username });
-    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ data: user });
+    return res.status(STATUS_CODES.OK).json({ data: user });
   } catch (e) {
-    return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: e });
+    return res.status(STATUS_CODES.BAD_REQUEST).json({ error: e });
   }
 };
 
