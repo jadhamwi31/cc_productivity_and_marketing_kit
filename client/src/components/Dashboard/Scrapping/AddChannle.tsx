@@ -47,15 +47,13 @@ export default function AddChannle() {
   }
   let [isOpen, setIsOpen] = useState(false);
   return (
-    <>
-      <div>
-        <button type='button' onClick={openModal}>
-          <FaPlus size={100} className='text-New_Gray hover:text-zinc-900' />
-        </button>
-      </div>
+    <div className='rounded-lg border-2 border-New_Gray hover:border-zinc-900 flex justify-center items-center'>
+      <button type='button' onClick={openModal}>
+        <FaPlus size={200} className='text-New_Gray hover:text-zinc-900' />
+      </button>
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as='div' className='relative z-10' onClose={closeModal}>
+        <Dialog as='div' className='relative z-30' onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter='ease-out duration-300'
@@ -120,7 +118,7 @@ export default function AddChannle() {
                         className='inline-flex justify-center rounded-md border border-transparent bg-purple-900 w-16  text-white hover:bg-purple-800 px-4 py-2 text-sm font-medium  focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2'
                         onClick={handleAddChannel}
                       >
-                        {isLoading ? 'Loading' : 'ss'}
+                        {isLoading ? 'Loading' : 'Add'}
                       </button>
                     </div>
                   </div>
@@ -130,6 +128,6 @@ export default function AddChannle() {
           </div>
         </Dialog>
       </Transition>
-    </>
+    </div>
   );
 }

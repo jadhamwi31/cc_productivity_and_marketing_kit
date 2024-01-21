@@ -2,6 +2,7 @@ import AddChannle from '../../components/Dashboard/Scrapping/AddChannle';
 import React from 'react';
 import useSWR from 'swr';
 import Channel from '../../components/Dashboard/Scrapping/Channel';
+import Loading from '../Loading';
 
 interface ChannelData {
   avatar: string;
@@ -33,7 +34,11 @@ const SocialMedia: React.FC = () => {
   const { data, error, isValidating } = useSWR<ApiResponse>('/youtube/myChannels', fetcher);
 
   if (isValidating) {
-    return <p>Loading</p>;
+    return (
+      <p>
+        <Loading />
+      </p>
+    );
   }
 
   if (error) {
@@ -41,12 +46,13 @@ const SocialMedia: React.FC = () => {
   }
 
   return (
-    <div className='p-5'>
+    <div className='px-8 min-h-screen'>
+      <h1 className='text-4xl my-10 mb-14 font-bold'>All Social Media Accounts</h1>
       {data ? (
         data.data.map((userData) => (
           <div
             key={userData._id}
-            className=' grid grid-cols-1 sm:grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'
+            className=' grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-4'
           >
             {userData.channels.map((channel) => (
               <Channel key={channel._id} channel={channel} />

@@ -35,7 +35,7 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
           className='h-32 rounded-t-lg blur-md object-cover w-full'
         />
         <img
-          src={channel.avatar}
+          src={channel.avatar ? channel.avatar : 'https://placehold.co/100x100?text=Avatar'}
           alt='Avatar'
           className='rounded-full object-cover w-28 absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2'
         />
@@ -45,6 +45,10 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
           <p>
             <span className='text-zinc-700 mr-2 '>Channel Name :</span>
             {channel.channelName}
+          </p>
+          <p>
+            <span className='text-zinc-700 mr-2 '>Username</span>
+            {channel.channelHandle}
           </p>
           <p>
             <span className='text-zinc-700  mr-2 '>Subscribers :</span>
