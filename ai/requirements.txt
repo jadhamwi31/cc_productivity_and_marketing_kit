@@ -34,3 +34,8 @@ typing_extensions==4.9.0
 urllib3==2.1.0
 uvicorn==0.25.0
 zope.interface==6.1
+
+--extra-index-url https://download.pytorch.org/whl/cu116
+torch
+torchvision
+torchaudio
