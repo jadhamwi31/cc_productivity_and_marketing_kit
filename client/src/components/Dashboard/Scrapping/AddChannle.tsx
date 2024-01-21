@@ -1,8 +1,43 @@
 import { Dialog, Transition } from '@headlessui/react';
-import React,{ Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { mutate } from 'swr';
 import { FaPlus } from 'react-icons/fa6';
 
 export default function AddChannle() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [url, setUrl] = useState('');
+  const handleAddChannel = async () => {
+    if (!url) {
+      toast.error('Please fill in all fields.');
+      closeModal();
+      return;
+    }
+    setIsLoading(true);
+    const response = await fetch('/youtube/addChannel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        credentials: 'include',
+      },
+      body: JSON.stringify({
+        url,
+      }),
+    });
+
+    setIsLoading(false);
+
+    const json = await response.json();
+    if (response.ok) {
+      toast.success('Account Added Successfully');
+      mutate('/youtube/myChannels');
+      closeModal();
+    } else {
+      toast.error('Error: please try again or check url');
+      closeModal();
+    }
+  };
+
   function closeModal() {
     setIsOpen(false);
   }
@@ -49,7 +84,7 @@ export default function AddChannle() {
                     Add Account
                   </Dialog.Title>
                   <div className='mt-2'>
-                    <p className='text-sm text-gray-500 mb-2'>You Are Trying to Edit Artwork</p>
+                    <p className='text-sm text-gray-500 mb-2'>You Are Trying to Add Account</p>
 
                     <div className='mb-6'>
                       <label className='text-sm text-gray-500' htmlFor='value'>
@@ -63,6 +98,10 @@ export default function AddChannle() {
                         Url
                       </label>
                       <input
+                        value={url}
+                        onChange={(e) => {
+                          setUrl(e.target.value);
+                        }}
                         type='text'
                         className='bg-gray-300 appearance-none border-2 border-gray-300 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-gray-300 focus:border-gray-300'
                       />
@@ -76,11 +115,12 @@ export default function AddChannle() {
                         Cancel
                       </button>
                       <button
+                        disabled={isLoading}
                         type='button'
                         className='inline-flex justify-center rounded-md border border-transparent bg-purple-900 w-16  text-white hover:bg-purple-800 px-4 py-2 text-sm font-medium  focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2'
-                        onClick={closeModal}
+                        onClick={handleAddChannel}
                       >
-                        Add
+                        {isLoading ? 'Loading' : 'ss'}
                       </button>
                     </div>
                   </div>
