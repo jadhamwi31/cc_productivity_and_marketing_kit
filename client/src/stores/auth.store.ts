@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { axios } from '../lib/axios';
 
 interface AuthState {
-  user: User | null;
+  user: String | null;
   loading: boolean;
   error: string | null;
 }
@@ -11,28 +11,27 @@ interface AuthActions {
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
 }
-interface User {
-  username: string;
-}
+
 const cookieKey = 'authData';
 const useAuthStore = create<AuthState & AuthActions>((set) => ({
-  user: null,
+  user: Cookies.get(cookieKey) || null,
   loading: false,
   error: null,
   login: async (username: string, password: string) => {
     set((state) => ({ ...state, loading: true, error: null }));
     try {
-      await axios.post('/auth/login', {
+      const response = await axios.post('/auth/login', {
         username,
         password,
       });
 
       const authData: AuthState = {
-        user: { username },
+        user: response.data.username,
         loading: false,
         error: null,
       };
-
+      Cookies.set(cookieKey, JSON.stringify(authData));
+      
       set(authData);
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.errors) {

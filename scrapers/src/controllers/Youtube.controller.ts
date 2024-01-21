@@ -17,7 +17,7 @@ async function timeout(ms: number): Promise<void> {
 const channelInfo = async (req: Request<{}, {}, { url: string }>, res: Response) => {
   const { url } = req.body;
   try {
-    const browser = await puppeteer.launch({ headless: 'new' });
+    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.goto(`${url}`, { timeout: 0 });
     const data = await page.evaluate(() => {
