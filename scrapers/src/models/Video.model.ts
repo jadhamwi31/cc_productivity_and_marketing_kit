@@ -12,6 +12,9 @@ export interface Video {
 export interface UserDocument extends Document {
   username: string;
   channel: string;
+  banner: string;
+  avatar: string;
+  count: string;
   videos: Video[];
 }
 
@@ -21,6 +24,18 @@ const videoSchema = new Schema<UserDocument>({
     required: false,
   },
   channel: {
+    type: String,
+    required: true,
+  },
+  banner: {
+    type: String,
+    required: true,
+  },
+  avatar: {
+    type: String,
+    required: true,
+  },
+  count: {
     type: String,
     required: true,
   },

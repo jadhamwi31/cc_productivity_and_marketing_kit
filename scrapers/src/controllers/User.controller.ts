@@ -39,6 +39,9 @@ const addChannel = async (req: Request<{}, {}, { url: string }>, res: Response) 
           const newRecord = new VideoModel({
             username,
             channel: data.channelHandle,
+            banner: data.backgroundImageUrl,
+            avatar: data.avatar,
+            count: data.totalVideos,
             videos: [],
           });
           await newRecord.save();

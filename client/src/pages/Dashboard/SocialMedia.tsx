@@ -46,24 +46,26 @@ const SocialMedia: React.FC = () => {
   }
 
   return (
-    <div className='px-8 min-h-screen'>
-      <h1 className='text-4xl my-10 mb-14 font-bold'>All Social Media Accounts</h1>
-      {data ? (
-        data.data.map((userData) => (
-          <div
-            key={userData._id}
-            className=' grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-4'
-          >
-            {userData.channels.map((channel) => (
-              <Channel key={channel._id} channel={channel} />
-            ))}
-            <AddChannle />
-          </div>
-        ))
-      ) : (
-        <p>No data available</p>
-      )}
-    </div>
+    <>
+      <div className='px-8 min-h-screen'>
+        <h1 className='text-4xl my-10 mb-14 font-bold'>All Social Media Accounts</h1>
+        <AddChannle />
+        {data ? (
+          data.data.map((userData) => (
+            <div
+              key={userData._id}
+              className=' grid grid-cols-1 sm:grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-4'
+            >
+              {userData.channels.map((channel) => (
+                <Channel key={channel._id} channel={channel} />
+              ))}
+            </div>
+          ))
+        ) : (
+          <p>No data available</p>
+        )}
+      </div>
+    </>
   );
 };
 
