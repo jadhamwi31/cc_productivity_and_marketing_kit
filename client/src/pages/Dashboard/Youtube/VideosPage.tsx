@@ -5,21 +5,26 @@ import VideoCard from '../../../components/Dashboard/Scrapping/VideoCard';
 import { IoSync } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
+
 const fetcher = async (...args: Parameters<typeof fetch>) => {
   const response = await fetch(...args);
   return response.json();
 };
-export default function Videos() {
+
+export default function VideosPage() {
   const navigate = useNavigate();
   let { id } = useParams();
   const { data, error, isValidating } = useSWR<any>(`/youtube/getChannelVideos/${id}`, fetcher);
 
   if (!data) {
-    return;
+    return null;
   }
-  if (!data && data?.message === 'not found') {
-    return navigate('/');
+
+  if (data && data?.message === 'not found') {
+    navigate('/');
+    return null;
   }
+
   const refreshVideos = async (id: string) => {
     const response = await fetch(`/youtube/videos/${id}`, {
       method: 'GET',
@@ -37,6 +42,7 @@ export default function Videos() {
       toast.error('Try again ');
     }
   };
+
   return (
     <div className=' pt-20'>
       <div className=' w-[90%] lg:w-[75%] mx-auto border-2 border-New_Gray rounded-lg '>

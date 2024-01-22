@@ -14,8 +14,10 @@ import Main from './layout/Main';
 import Home from './pages/Home';
 import Loading from './pages/Loading';
 import SocialMedia from './pages/Dashboard/SocialMedia';
-import Videos from './pages/Dashboard/Youtube/Videos';
+import VideosPage from './pages/Dashboard/Youtube/VideosPage';
+import ReportPage from './pages/Dashboard/Youtube/ReportPage';
 import EmptyLayout from './layout/EmptyLayout';
+import DahsboardCahnnelLayout from './layout/DahsboardCahnnelLayout';
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const Video = lazy(() => import('./pages/Video/Video'));
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -73,7 +75,11 @@ export default function App() {
                   </Suspense>
                 }
               >
-                <Route index element={<DashboardMain />} />
+                <Route index={false} element={<DahsboardCahnnelLayout />}>
+                  <Route index element={<DashboardMain />} />
+                  <Route path='report/:id' element={<ReportPage />} />
+                </Route>
+
                 <Route
                   path='graphic'
                   element={
@@ -84,7 +90,7 @@ export default function App() {
                 />
                 <Route path='socialmedia' element={<EmptyLayout />}>
                   <Route index element={<SocialMedia />} />
-                  <Route path=':id' element={<Videos />} />
+                  <Route path=':id' element={<VideosPage />} />
                 </Route>
 
                 <Route
