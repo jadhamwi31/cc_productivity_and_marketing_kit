@@ -1,11 +1,20 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import useSWR from 'swr';
+import VideoCard from '../../../components/Dashboard/Scrapping/VideoCard';
+
+const fetcher = async (...args: Parameters<typeof fetch>) => {
+  const response = await fetch(...args);
+  return response.json();
+};
 export default function Videos() {
   let { id } = useParams();
+  const { data, error, isValidating } = useSWR<any>(`/youtube/getChannelVideos/${id}`, fetcher);
+
   return (
     <div className=' pt-20'>
-      <div className=' w-[90%] lg:w-[75%] mx-auto border-2 border-New_Gray rounded-lg'>
-        <div className='relative'>
+      <div className=' w-[90%] lg:w-[75%] mx-auto border-2 border-New_Gray rounded-lg '>
+        <div className='relative mb-40'>
           <img
             className='absolute  w-full  rounded-t-lg z-10  object-cover'
             style={{ viewTransitionName: `image${id}`, contain: 'layout' }}
@@ -25,98 +34,12 @@ export default function Videos() {
             className='rounded-full w-[20%] lg:w-[13%] object-cover absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2'
           />
         </div>
-        <div className='mx-auto text-2xl  '>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit esse culpa
-          sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit, quam
-          dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis labore sit
-          esse culpa sapiente quae. Architecto ipsam nesciunt voluptatum ipsum, delectus magni odit,
-          quam dolore, ratione provident voluptas hic est? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Reiciendis labore sit esse culpa sapiente quae. Architecto ipsam
-          nesciunt voluptatum ipsum, delectus magni odit, quam dolore, ratione provident voluptas
-          hic est?
+        <div className='mx-auto text-2xl min-h-screen grid  grid-cols-1 lg:grid-cols-4 gap-7 p-5 lg:p-10 '>
+          {data.videos.map((video: any, index: number) => (
+            <>
+              <VideoCard video={video} key={index} />
+            </>
+          ))}
         </div>
       </div>
     </div>
