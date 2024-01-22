@@ -1,4 +1,4 @@
-import AddChannle from '../../components/Dashboard/Scrapping/Youtube/AddChannle';
+import AddChannle from '../../components/Dashboard/Scrapping/AddChannle';
 import React from 'react';
 
 export default function DashboardMain() {
