@@ -46,7 +46,7 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
     <div key={channel._id} className={`rounded-lg ${isLoading ? '' : 'border-2 border-New_Gray'}`}>
       <div className='relative mb-14'>
         {isLoading ? (
-          <SkeletonTheme baseColor='#202020' highlightColor='#444'>
+          <SkeletonTheme baseColor='#0e0e0e' highlightColor='#202020'>
             <Skeleton height={127} />
           </SkeletonTheme>
         ) : (
@@ -72,7 +72,7 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
           </>
         )}
         {isLoading ? (
-          <SkeletonTheme baseColor='#202020' highlightColor='#444'>
+          <SkeletonTheme baseColor='#0e0e0e' highlightColor='#202020'>
             <Skeleton
               circle
               width={110}
@@ -91,8 +91,12 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
       <div className='p-2 flex justify-between'>
         <div>
           {isLoading ? (
-            <SkeletonTheme baseColor='#202020' highlightColor='#444'>
-              <Skeleton width={400} count={4} height={10} /> <span className='hidden'>.</span>
+            <SkeletonTheme baseColor='#0e0e0e' highlightColor='#202020'>
+              <Skeleton width={400} count={1} height={10} />
+              <Skeleton width={300} count={1} height={10} />
+              <Skeleton width={300} count={1} height={10} />
+              <Skeleton width={200} count={1} height={10} />
+              <span className='hidden'>.</span>
             </SkeletonTheme>
           ) : (
             <>
