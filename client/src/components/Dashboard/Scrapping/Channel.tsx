@@ -5,6 +5,7 @@ import { mutate } from 'swr';
 import React, { useState } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { Link } from 'react-router-dom';
 interface ChannelProps {
   channel: {
     avatar: string;
@@ -51,24 +52,27 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
           </SkeletonTheme>
         ) : (
           <>
-            <img
-              src={
-                channel.backgroundImageUrl
-                  ? channel.backgroundImageUrl
-                  : 'https://placehold.co/100x100?text=Channel+Banner'
-              }
-              alt='Background'
-              className='absolute h-32 rounded-t-lg z-10 w-full object-cover'
-            />
-            <img
-              src={
-                channel.backgroundImageUrl
-                  ? channel.backgroundImageUrl
-                  : 'https://placehold.co/100x100?text=Channel+Banner'
-              }
-              alt='Background'
-              className='h-32 rounded-t-lg blur-md object-cover w-full'
-            />
+            {' '}
+            <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>
+              <img
+                src={
+                  channel.backgroundImageUrl
+                    ? channel.backgroundImageUrl
+                    : 'https://placehold.co/100x100?text=Channel+Banner'
+                }
+                alt='Background'
+                className='absolute h-32 rounded-t-lg z-10 w-full object-cover'
+              />
+              <img
+                src={
+                  channel.backgroundImageUrl
+                    ? channel.backgroundImageUrl
+                    : 'https://placehold.co/100x100?text=Channel+Banner'
+                }
+                alt='Background'
+                className='h-32 rounded-t-lg blur-md object-cover w-full'
+              />
+            </Link>
           </>
         )}
         {isLoading ? (
@@ -81,11 +85,13 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
             />
           </SkeletonTheme>
         ) : (
-          <img
-            src={channel.avatar ? channel.avatar : 'https://placehold.co/100x100?text=Avatar'}
-            alt='Avatar'
-            className='rounded-full object-cover w-28 absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2'
-          />
+          <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>
+            <img
+              src={channel.avatar ? channel.avatar : 'https://placehold.co/100x100?text=Avatar'}
+              alt='Avatar'
+              className='rounded-full object-cover w-28 absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2'
+            />
+          </Link>
         )}
       </div>
       <div className='p-2 flex justify-between'>
@@ -101,20 +107,27 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
           ) : (
             <>
               <p>
-                <span className='text-zinc-700 mr-2 '>Channel Name :</span>
-                {channel.channelName}
+                <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>
+                  <span className='text-zinc-700 mr-2 '>Channel Name :</span>
+                  {channel.channelName}
+                </Link>
               </p>
               <p>
-                <span className='text-zinc-700 mr-2 '>Username</span>
-                {channel.channelHandle}
+                <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>
+                  <span className='text-zinc-700 mr-2 '>Username :</span> {channel.channelHandle}
+                </Link>
               </p>
               <p>
-                <span className='text-zinc-700  mr-2 '>Subscribers :</span>
-                {channel.totalSubscribers}
+                <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>
+                  <span className='text-zinc-700  mr-2 '>Subscribers :</span>
+                  {channel.totalSubscribers}
+                </Link>
               </p>
               <p>
-                <span className='text-zinc-700  mr-2 '>Videos :</span>
-                {channel.totalVideos}
+                <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>
+                  <span className='text-zinc-700  mr-2 '>Videos :</span>
+                  {channel.totalVideos}
+                </Link>
               </p>
             </>
           )}
