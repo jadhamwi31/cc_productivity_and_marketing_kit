@@ -3,6 +3,7 @@ import { YoutubeController } from '../controllers/Youtube.controller';
 import { UserController } from '../controllers/User.controller';
 import { ChannelController } from '../controllers/Channel.controller';
 import { VideoController } from '../controllers/Video.controller';
+import { ReportController } from '../controllers/Report.controller';
 export const YoutubeRouter = Router();
 
 YoutubeRouter.post('/channel', YoutubeController.channelInfo);
@@ -17,3 +18,5 @@ YoutubeRouter.get('/videos/:channel', ChannelController.scrapeVideos);
 YoutubeRouter.get('/getChannelVideos/:channel', ChannelController.getChannelVideos);
 
 YoutubeRouter.post('/getComments', VideoController.scrapeVideoComments);
+
+YoutubeRouter.get('/report/:channelId', ReportController.getChannelReport);
