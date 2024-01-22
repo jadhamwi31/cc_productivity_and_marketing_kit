@@ -89,7 +89,7 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
         <div className='flex items-end'>
           <button
             disabled={isLoading}
-            className='disabled:text-New_Gray disabled:cursor-not-allowed disabled:text-New_Gray'
+            className='disabled:text-New_Gray disabled:cursor-not-allowed'
             onClick={() => {
               RefreshChannel(channel.channelHandle);
             }}
