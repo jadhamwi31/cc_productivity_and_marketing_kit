@@ -29,11 +29,9 @@ const videoSchema = new Schema<UserDocument>({
   },
   banner: {
     type: String,
-    required: true,
   },
   avatar: {
     type: String,
-    required: true,
   },
   count: {
     type: String,

@@ -22,9 +22,9 @@ const VideoCard: React.FC<VidooProps> = ({ video }) => {
         <img src={video.thumbnailUrl} className='absolute w-full z-10 rounded-t-md ' alt='' />
         <img src={video.thumbnailUrl} className='rounded-t-md w-full blur-md' alt='' />
       </div>
-      <div className='text-sm p-2'>
+      <div className='text-sm p-2 '>
         <p>{video.title}</p>
-        <span className='flex justify-between text-zinc-700'>
+        <span className='flex justify-between text-zinc-700 '>
           <p>{video.views}</p>
           <p>{video.date}</p>
         </span>

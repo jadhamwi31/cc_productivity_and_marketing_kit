@@ -44,8 +44,6 @@ export default function GraphicEditor() {
   const [backgroundRec, setBackgroundRec] = useState(false);
   const [layerForm, setLayerForm] = useState(false);
   const [itemID, setItemID] = useState();
-  const [undo, setUndo] = useState<any>([]);
-  const [redo, setRedo] = useState<any>([]);
 
   useEffect(() => {
     if (shapeType == 'circle') {
@@ -271,7 +269,6 @@ export default function GraphicEditor() {
 
   const deleteItem = (): void => {
     if (selectedId !== null) {
-      setUndo(undo.push(items));
       setItems((prevItems: any) =>
         prevItems.filter((item: any, index: number) => index !== selectedId),
       );

@@ -48,8 +48,11 @@ const SocialMedia: React.FC = () => {
   return (
     <>
       <div className='px-8 min-h-screen'>
-        <h1 className='text-4xl my-10 mb-14 font-bold'>All Social Media Accounts</h1>
-        <AddChannle />
+        <div className='flex justify-between'>
+          <h1 className='text-4xl my-10 mb-14 font-bold'>All Social Media Accounts</h1>
+          <AddChannle />
+        </div>
+
         {data ? (
           data.data.map((userData) => (
             <div

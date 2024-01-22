@@ -52,7 +52,7 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
       toast.success('Channel Refreshed Successfully');
       mutate('/youtube/myChannels');
     } else {
-      toast.error('try again ');
+      toast.error('Try again ');
     }
   };
 

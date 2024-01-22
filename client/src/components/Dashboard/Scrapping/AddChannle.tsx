@@ -7,6 +7,7 @@ import { FaPlus } from 'react-icons/fa6';
 export default function AddChannle() {
   const [isLoading, setIsLoading] = useState(false);
   const [url, setUrl] = useState('');
+
   const handleAddChannel = async () => {
     if (!url) {
       toast.error('Please fill in all fields.');
@@ -31,6 +32,7 @@ export default function AddChannle() {
     if (response.ok) {
       toast.success('Account Added Successfully');
       mutate('/youtube/myChannels');
+
       closeModal();
     } else {
       toast.error('Error: please try again or check url');
@@ -47,9 +49,9 @@ export default function AddChannle() {
   }
   let [isOpen, setIsOpen] = useState(false);
   return (
-    <div className='rounded-lg border-2 border-New_Gray hover:border-zinc-900 flex justify-center items-center'>
+    <div className=' flex justify-center items-center bg-[#581C87] hover:bg-[#A149FA] h-10 w-10 rounded-full self-center'>
       <button type='button' onClick={openModal}>
-        <FaPlus size={200} className='text-New_Gray hover:text-zinc-900' />
+        <FaPlus size={30} className='text-gray-200 hover ' />
       </button>
 
       <Transition appear show={isOpen} as={Fragment}>
