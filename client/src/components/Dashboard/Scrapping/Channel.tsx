@@ -3,9 +3,10 @@ import DeleteChannel from './DeleteChannel';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 import React, { useState } from 'react';
+import { flushSync } from 'react-dom';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 interface ChannelProps {
   channel: {
     avatar: string;
@@ -20,6 +21,18 @@ interface ChannelProps {
 
 const Channel: React.FC<ChannelProps> = ({ channel }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const navigateToVideos = (id: string) => {
+    if (!document.startViewTransition) {
+      navigate(`/dashboard/socialmedia/${id}`);
+    } else {
+      document.startViewTransition(() => {
+        flushSync(() => {
+          navigate(`/dashboard/socialmedia/${id}`);
+        });
+      });
+    }
+  };
 
   const RefreshChannel = async (id: string) => {
     setIsLoading(true);
@@ -52,27 +65,28 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
           </SkeletonTheme>
         ) : (
           <>
-            {' '}
-            <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>
-              <img
-                src={
-                  channel.backgroundImageUrl
-                    ? channel.backgroundImageUrl
-                    : 'https://placehold.co/100x100?text=Channel+Banner'
-                }
-                alt='Background'
-                className='absolute h-32 rounded-t-lg z-10 w-full object-cover'
-              />
-              <img
-                src={
-                  channel.backgroundImageUrl
-                    ? channel.backgroundImageUrl
-                    : 'https://placehold.co/100x100?text=Channel+Banner'
-                }
-                alt='Background'
-                className='h-32 rounded-t-lg blur-md object-cover w-full'
-              />
-            </Link>
+            <img
+              onClick={() => {
+                navigateToVideos(channel.channelHandle);
+              }}
+              style={{ viewTransitionName: `image${channel.channelHandle}`, contain: 'paint' }}
+              src={
+                channel.backgroundImageUrl
+                  ? channel.backgroundImageUrl
+                  : 'https://placehold.co/100x100?text=Channel+Banner'
+              }
+              alt='Background'
+              className='absolute h-32 rounded-t-lg z-10 w-full object-cover'
+            />
+            <img
+              src={
+                channel.backgroundImageUrl
+                  ? channel.backgroundImageUrl
+                  : 'https://placehold.co/100x100?text=Channel+Banner'
+              }
+              alt='Background'
+              className='h-32 rounded-t-lg blur-md object-cover w-full'
+            />
           </>
         )}
         {isLoading ? (
@@ -85,13 +99,15 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
             />
           </SkeletonTheme>
         ) : (
-          <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>
-            <img
-              src={channel.avatar ? channel.avatar : 'https://placehold.co/100x100?text=Avatar'}
-              alt='Avatar'
-              className='rounded-full object-cover w-28 absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2'
-            />
-          </Link>
+          <img
+            onClick={() => {
+              navigateToVideos(channel.channelHandle);
+            }}
+            style={{ viewTransitionName: `image${channel.channelHandle}`, contain: 'layout' }}
+            src={channel.avatar ? channel.avatar : 'https://placehold.co/100x100?text=Avatar'}
+            alt='Avatar'
+            className='rounded-full object-cover w-28 absolute z-20 bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2'
+          />
         )}
       </div>
       <div className='p-2 flex justify-between'>
@@ -106,11 +122,14 @@ const Channel: React.FC<ChannelProps> = ({ channel }) => {
             </SkeletonTheme>
           ) : (
             <>
-              <p>
-                <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>
-                  <span className='text-zinc-700 mr-2 '>Channel Name :</span>
-                  {channel.channelName}
-                </Link>
+              <p
+                onClick={() => {
+                  navigateToVideos(channel.channelHandle);
+                }}
+                className='hover:cursor-pointer'
+              >
+                <span className='text-zinc-700 mr-2 '>Channel Name :</span>
+                {channel.channelName}
               </p>
               <p>
                 <Link to={`/dashboard/socialmedia/${channel.channelHandle}`}>

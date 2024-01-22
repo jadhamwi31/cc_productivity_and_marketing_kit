@@ -295,3 +295,8 @@ a.active {
   border-left: solid 2px #70358a;
   padding-left: 0.375rem;
 }
+
+.pic-one {
+  view-transition-name: pic-one;
+  contain: paint;
+}
