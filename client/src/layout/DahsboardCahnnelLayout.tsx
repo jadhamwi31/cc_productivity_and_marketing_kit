@@ -21,7 +21,11 @@ export default function DahsboardCahnnelLayout() {
             data.data.map((userData) => (
               <div key={userData._id} className='flex-col gap-20'>
                 {userData.channels.map((channel) => (
-                  <NavLink to={`/dashboard/report/${channel.channelHandle}`}>
+                  <NavLink
+                    className='channelLink'
+                    end
+                    to={`/dashboard/report/${channel.channelHandle}`}
+                  >
                     <div className='flex gap-4 p-2  border-t border-zinc-900  items-center self'>
                       <img
                         src={channel.avatar}
