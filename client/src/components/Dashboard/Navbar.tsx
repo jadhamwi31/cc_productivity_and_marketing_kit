@@ -20,7 +20,7 @@ const Navbar = () => {
   return (
     <section className='flex z-50  gap-6 dashboard-navbar'>
       <div className='fixed top-0 left-0 h-screen bg-black border-r-[1px] border-New_Gray w-16 text-gray-100'>
-        <div className='mt-4 flex flex-col gap-4 relative'>
+        <div className='mt-4 flex flex-col gap-4 relative' id='main-nav'>
           <img src={octopus} alt='' className='pl-2 pr-1' />
 
           {menus?.map((menu, i) => (

@@ -291,7 +291,10 @@ body {
 .grad {
   background: radial-gradient(circle at 50% 25%, #2d0d32, #000);
 }
-a.active {
+#main-nav a.active {
   border-left: solid 2px #70358a;
   padding-left: 0.375rem;
+}
+#reportPage a.active {
+  color: #70358a;
 }
