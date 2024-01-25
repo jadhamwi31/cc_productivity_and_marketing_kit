@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node ./build/index.js",
-    "build": "tsc --build && cp -r ./src/scripts ./build/scripts"
+    "build": "tsc --build"
   },
   "author": "Ahmad Abo Elzahab",
   "license": "ISC",

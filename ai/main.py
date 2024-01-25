@@ -32,10 +32,7 @@ class Comments(BaseModel):
     comments:List[str]
 
 def get_reactions_for_comment(comment: str):
-    # Model Run
-    
     [[positive,neutral,negative]] = reactionsPipeline(comment)
-
     return {
         "positive": positive["score"],
         "neutral": neutral["score"],
