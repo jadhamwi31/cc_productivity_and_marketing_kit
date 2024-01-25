@@ -20,6 +20,7 @@ const channelVideos = async (channelUsername: string): Promise<any> => {
       }
       await page.evaluate('window.scrollTo(0, document.documentElement.scrollHeight)');
       previousHeight = currentHeight;
+      await timeout(3000);
     }
     const videoDetails = await page.evaluate(async () => {
       const details = [];

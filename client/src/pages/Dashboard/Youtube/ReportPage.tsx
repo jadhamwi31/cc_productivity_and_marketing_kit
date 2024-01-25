@@ -27,9 +27,12 @@ export default function ReportPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/youtube/report/${id}`, { cache: 'force-cache' });
+        const response = await fetch(`/youtube/report/${id}`, { cache: 'no-store' });
         const result: ChannelInfoData = await response.json();
         setData(result);
+        if (data?.uploads == null) {
+          fetchData;
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -43,7 +46,7 @@ export default function ReportPage() {
     <div>
       {loading ? (
         <div>
-          <div className='relative mb-20'>
+          <div className='relative mb-20 p-0'>
             <SkeletonTheme baseColor='#0e0e0e' highlightColor='#202020'>
               <Skeleton height={176} />
 

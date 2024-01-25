@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import VideoCard from '../../../components/Dashboard/Scrapping/VideoCard';
 import { IoSync } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
+import { MdOutlineVideoSettings } from 'react-icons/md';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const fetcher = async (...args: Parameters<typeof fetch>) => {
   const response = await fetch(...args);
@@ -12,20 +15,8 @@ const fetcher = async (...args: Parameters<typeof fetch>) => {
 };
 
 export default function VideosPage() {
-  const navigate = useNavigate();
-  let { id } = useParams();
-  const { data, error, isValidating } = useSWR<any>(`/youtube/getChannelVideos/${id}`, fetcher);
-
-  if (!data) {
-    return null;
-  }
-
-  if (data && data?.message === 'not found') {
-    navigate('/');
-    return null;
-  }
-
   const refreshVideos = async (id: string) => {
+    setLoading(true);
     const response = await fetch(`/youtube/videos/${id}`, {
       method: 'GET',
       headers: {
@@ -33,7 +24,7 @@ export default function VideosPage() {
         credentials: 'include',
       },
     });
-
+    setLoading(false);
     const json = await response.json();
     if (response.ok) {
       toast.success('Videos Refreshed Successfully');
@@ -42,6 +33,18 @@ export default function VideosPage() {
       toast.error('Try again ');
     }
   };
+  const [Loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  let { id } = useParams();
+  const { data, error, isValidating } = useSWR<any>(`/youtube/getChannelVideos/${id}`, fetcher);
+
+  if (!data) {
+    return null;
+  }
+
+  if (error) {
+    return <>{error}</>;
+  }
 
   return (
     <div className=' pt-20'>
@@ -71,23 +74,44 @@ export default function VideosPage() {
             <p>{data.channel}</p>
             <p>{data.count}</p>
           </div>
-          <button
-            className='disabled:text-New_Gray disabled:cursor-not-allowed'
-            onClick={() => {
-              refreshVideos(data.channel);
-            }}
-          >
-            <IoSync size={40} className='hover:text-blue-500 mb-2' />
-          </button>
+          {data.videos.length == 0 ? (
+            <button
+              disabled={Loading}
+              className='disabled:text-New_Gray text-center  text-sm disabled:cursor-not-allowed hover:text-[#70358a]'
+              onClick={() => {
+                refreshVideos(data.channel);
+              }}
+            >
+              <MdOutlineVideoSettings size={40} className=' mb-2 mx-auto' />
+              Get Vidoes
+            </button>
+          ) : (
+            <button
+              className='disabled:text-New_Gray disabled:cursor-not-allowed'
+              onClick={() => {
+                refreshVideos(data.channel);
+              }}
+            >
+              <IoSync size={40} className='hover:text-blue-500 mb-2' />
+            </button>
+          )}
         </div>
-        <div className='mx-auto text-2xl min-h-screen grid  grid-cols-1 lg:grid-cols-4 gap-7 p-5 lg:p-10 '>
-          {data &&
-            data.videos.map((video: any, index: number) => (
-              <>
-                <VideoCard video={video} key={index} />
-              </>
-            ))}
-        </div>
+        {Loading ? (
+          <div className='flex-col items-center text-center w-full justify-center py-10'>
+            <SkeletonTheme baseColor='#0e0e0e' highlightColor='#202020'>
+              <Skeleton width={1100} count={3} height={20} />
+            </SkeletonTheme>
+          </div>
+        ) : (
+          <div className='mx-auto text-2xl min-h-full grid  grid-cols-1 lg:grid-cols-4 gap-7 p-5 lg:p-10 '>
+            {data &&
+              data.videos.map((video: any, index: number) => (
+                <>
+                  <VideoCard video={video} key={index} />
+                </>
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );
