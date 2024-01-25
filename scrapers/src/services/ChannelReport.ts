@@ -17,7 +17,7 @@ export interface ChannelInfoData {
 
 const channelInfo = async (channelId: string): Promise<ChannelInfoData | string> => {
   try {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({ headless: 'new' });
     const page = await browser.newPage();
 
     await page.goto(`https://socialblade.com/youtube/user/${channelId}`, {

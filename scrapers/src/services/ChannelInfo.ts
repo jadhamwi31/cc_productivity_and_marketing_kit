@@ -11,7 +11,7 @@ export interface ChannelInfoData {
 
 const channelInfo = async (url: string): Promise<ChannelInfoData | string> => {
   try {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({ headless: 'new' });
     const page = await browser.newPage();
     await page.goto(url, { timeout: 0 });
 

@@ -5,7 +5,7 @@ async function timeout(ms: number): Promise<void> {
 }
 
 const channelVideos = async (channelUsername: string): Promise<any> => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
   try {
     await page.goto(`https://www.youtube.com/${channelUsername}/videos`, { timeout: 0 });
@@ -20,7 +20,6 @@ const channelVideos = async (channelUsername: string): Promise<any> => {
       }
       await page.evaluate('window.scrollTo(0, document.documentElement.scrollHeight)');
       previousHeight = currentHeight;
-      await timeout(3000);
     }
     const videoDetails = await page.evaluate(async () => {
       const details = [];
