@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import Card from './Card';
 import { HiOutlinePhoto } from 'react-icons/hi2';
 import { BsSoundwave } from 'react-icons/bs';
-import { LuListMusic } from 'react-icons/lu';
+import { IoVideocamOutline, IoAnalytics } from 'react-icons/io5';
+
 export default function CategoryCards() {
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -35,34 +36,31 @@ export default function CategoryCards() {
       className='text-white flex flex-wrap gap-4 w-full place-content-center mx-auto p-10  animate-fade-right animate-once animate-ease-in-out'
     >
       <Card>
-        <BsSoundwave className='text-gray-400 mx-auto' size='200' />
+        <IoAnalytics className='text-gray-400 mx-auto' size='200' />
         <h1 className='text-5xl mx-auto text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600'>
-          Beats
+          All Numbers
         </h1>
         <p className='mx-auto text-center mt-10'>
-          Get The Latest and Most Amazing
-          <br /> Beats Here..
+          Socialmedia analytics are in your hands
+          <br />
         </p>
       </Card>
       <Card>
-        <HiOutlinePhoto className='text-gray-400 mx-auto' size='200' />
+        <IoVideocamOutline className='text-gray-400 mx-auto' size='200' />
         <h1 className='text-5xl mx-auto text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-yellow-200'>
-          Artwork
+          Video Editor
         </h1>
         <p className='mx-auto text-center mt-10'>
-          Get The Latest and Most Amazing
+          Simplest Operation ,Easier and Faster
           <br /> Artworks Here..
         </p>
       </Card>
       <Card>
-        <LuListMusic className='text-gray-400 mx-auto' size='200' />
+        <HiOutlinePhoto className='text-gray-400 mx-auto' size='200' />
         <h1 className='text-5xl mx-auto text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500'>
-          Lyrics
+          Graphic Editor
         </h1>
-        <p className='mx-auto text-center mt-10'>
-          Get The Latest and Most Amazing
-          <br /> Lyrics Here..
-        </p>
+        <p className='mx-auto text-center mt-10'>easy to create designs and to share them</p>
       </Card>
     </div>
   );
