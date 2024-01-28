@@ -18,6 +18,7 @@ import VideosPage from './pages/Dashboard/Youtube/VideosPage';
 import ReportPage from './pages/Dashboard/Youtube/ReportPage';
 import EmptyLayout from './layout/EmptyLayout';
 import DahsboardCahnnelLayout from './layout/DahsboardCahnnelLayout';
+import VideoDetails from './pages/Dashboard/Youtube/VideoDetails';
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const Video = lazy(() => import('./pages/Video/Video'));
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -98,6 +99,14 @@ export default function App() {
                   element={
                     <Suspense fallback={<Loading />}>
                       <Video />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path='VideoDetails/:id'
+                  element={
+                    <Suspense fallback={<Loading />}>
+                      <VideoDetails />
                     </Suspense>
                   }
                 />
