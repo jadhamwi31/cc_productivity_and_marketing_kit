@@ -3,7 +3,7 @@ import * as puppeteer from 'puppeteer';
 const VideoComments = async (url: string): Promise<any> => {
   let browser;
   try {
-    browser = await puppeteer.launch({ headless: 'new' });
+    browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.goto(url, { timeout: 0 });
     await page.evaluate(() => {

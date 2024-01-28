@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BarChart, Bar, Cell, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
 
@@ -10,6 +10,39 @@ interface ChartData {
 
 export default function VideoDetails() {
   const { id } = useParams();
+  const [comments, setComments] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const getTrends = async () => {
+      console.log('ad');
+      try {
+        setLoading(true);
+        const response = await fetch('/youtube/getComments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            credentials: 'include',
+          },
+          body: JSON.stringify({
+            url: `https://www.youtube.com/watch?v=${id}`,
+          }),
+        });
+
+        setLoading(false);
+        if (response.ok) {
+          const fetchedData: string[] = await response.json();
+          setComments(fetchedData);
+        } else {
+          setComments([]);
+          console.error('Failed to fetch trends');
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+      }
+    };
+    getTrends();
+  }, []);
   const data = {
     positive: 0.6478115717569987,
     neutral: 0.04075773743291696,
@@ -55,6 +88,14 @@ export default function VideoDetails() {
       <p>Negative :{(data.negative * 100).toFixed(2)}%</p>
       <p>Neutral : {(data.neutral * 100).toFixed(2)}%</p>
       <p>Positive : {(data.positive * 100).toFixed(2)}%</p>
+      <div>
+        {loading
+          ? 'Loading'
+          : comments &&
+            comments.map((d: string, index: number) => {
+              <p key={index}>{d}</p>;
+            })}
+      </div>
     </div>
   );
 }
