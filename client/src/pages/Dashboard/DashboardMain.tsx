@@ -275,39 +275,43 @@ export default function DashboardMain() {
           </div>
         ))
       ) : (
-        <div className='p-2 '>
-          {data.map((article, index) => (
-            <div
-              key={index}
-              className='flex flex-col lg:flex-row mb-2 w-full justify-between border-b border-zinc-900 '
-            >
-              <div className='flex items-center'>
-                <h1 className='text-4xl text-zinc-600 text-center w-14'>{index}</h1>
-                <div className='flex-col'>
-                  <h3 className='text-base text-wrap'>{article.titleArray.join(' | ')}</h3>
-                  <p className='text-zinc-600'>
-                    {article.summary}{' '}
-                    <Link
-                      to={article.articleLink}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='hover:underline'
-                    >
-                      Read More
-                    </Link>
-                  </p>
+        <div className='p-2'>
+          {Array.isArray(data) && data.length > 0 ? (
+            data.map((article, index) => (
+              <div
+                key={index}
+                className='flex flex-col lg:flex-row mb-2 w-full justify-between border-b border-zinc-900 '
+              >
+                <div className='flex items-center'>
+                  <h1 className='text-4xl text-zinc-600 text-center w-14'>{index}</h1>
+                  <div className='flex-col'>
+                    <h3 className='text-base text-wrap'>{article.titleArray.join(' | ')}</h3>
+                    <p className='text-zinc-600'>
+                      {article.summary}{' '}
+                      <Link
+                        to={article.articleLink}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='hover:underline'
+                      >
+                        Read More
+                      </Link>
+                    </p>
+                  </div>
+                </div>
+                <div className='flex justify-between'>
+                  <div dangerouslySetInnerHTML={{ __html: article.svg }} className='mr-2' />
+                  <img
+                    src={article.imageURL}
+                    className='w-[120px] h-[60px] rounded-md mb-2'
+                    alt={`News ${index}`}
+                  />
                 </div>
               </div>
-              <div className='flex justify-between'>
-                <div dangerouslySetInnerHTML={{ __html: article.svg }} className='mr-2' />
-                <img
-                  src={article.imageURL}
-                  className='w-[120px] h-[60px] rounded-md mb-2'
-                  alt={`News ${index}`}
-                />
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>No data available.</p>
+          )}
         </div>
       )}
     </div>
