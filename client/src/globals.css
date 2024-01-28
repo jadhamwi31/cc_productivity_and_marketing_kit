@@ -14,12 +14,7 @@
 }
 
 .bg_grd {
-  background: linear-gradient(180deg, #2e1741, #0e0210);
-  background-size: 400% 400%;
-
-  -webkit-animation: AnimationName 6s ease infinite;
-  -moz-animation: AnimationName 6s ease infinite;
-  animation: AnimationName 6s ease infinite;
+  background-image: url('src/assets/grid.svg');
 }
 
 @-webkit-keyframes AnimationName {

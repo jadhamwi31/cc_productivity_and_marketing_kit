@@ -7,7 +7,7 @@ import Marquee from '../components/Main/Marquee';
 
 const Home: React.FC = () => {
   return (
-    <div className='bg_grd '>
+    <div className='bg_grd grad '>
       <div className=' relative pl-52 pt-40'>
         <Logo />
       </div>

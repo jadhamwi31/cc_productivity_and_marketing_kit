@@ -21,7 +21,7 @@ const channelInfo = async (channelId: string): Promise<ChannelInfoData | string>
     const page = await browser.newPage();
 
     await page.goto(`https://socialblade.com/youtube/user/${channelId}`, {
-      waitUntil: 'domcontentloaded',
+      timeout: 0,
     });
 
     const data = await page.evaluate(() => {

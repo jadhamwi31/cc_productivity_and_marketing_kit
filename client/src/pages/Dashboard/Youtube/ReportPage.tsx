@@ -27,7 +27,7 @@ export default function ReportPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/youtube/report/${id}`, { cache: 'no-store' });
+        const response = await fetch(`/youtube/report/${id}`);
         const result: ChannelInfoData = await response.json();
         setData(result);
         if (data?.uploads == null) {
