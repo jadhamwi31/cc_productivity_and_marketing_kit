@@ -69,7 +69,7 @@ export default function DashboardMain() {
     }
   };
   useEffect(() => {
-    // getTrends();
+    getTrends();
   }, []);
 
   return (
@@ -256,7 +256,7 @@ export default function DashboardMain() {
         </div>
 
         <button
-          className='w-56 bg-[#581C87] ml-auto hover:bg-[#A149FA] rounded disabled:cursor-not-allowed text-gray-500'
+          className='w-56 text-white bg-[#581C87] ml-auto hover:bg-[#A149FA] rounded disabled:cursor-not-allowed disabled:text-gray-500'
           onClick={getTrends}
           disabled={loading}
         >
@@ -284,7 +284,7 @@ export default function DashboardMain() {
               >
                 <div className='flex items-center'>
                   <h1 className='text-4xl text-zinc-600 text-center w-14'>{index}</h1>
-                  <div className='flex-col'>
+                  <div className='flex-col lg:w-[50vw] '>
                     <h3 className='text-base text-wrap'>{article.titleArray.join(' | ')}</h3>
                     <p className='text-zinc-600'>
                       {article.summary}{' '}
@@ -292,14 +292,15 @@ export default function DashboardMain() {
                         to={article.articleLink}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='hover:underline'
+                        className='underline'
                       >
                         Read More
                       </Link>
                     </p>
                   </div>
                 </div>
-                <div className='flex justify-between'>
+                <div className='flex   relative'>
+                  <p className='absolute text-xs bottom-0 text-gray-400'>Past 24 Hours</p>
                   <div dangerouslySetInnerHTML={{ __html: article.svg }} className='mr-2' />
                   <img
                     src={article.imageURL}

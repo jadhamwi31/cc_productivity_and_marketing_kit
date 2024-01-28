@@ -2,7 +2,7 @@ import * as puppeteer from 'puppeteer';
 
 const Trends = async (geo: string, cat: string): Promise<any> => {
   try {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({ headless: 'new' });
     const page = await browser.newPage();
 
     await page.setViewport({ width: 1920, height: 1080 });

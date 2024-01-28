@@ -19,10 +19,11 @@ const channelInfo = async (channelId: string): Promise<ChannelInfoData | string>
   try {
     const browser = await puppeteer.launch({ headless: 'new' });
     const page = await browser.newPage();
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    );
 
-    await page.goto(`https://socialblade.com/youtube/user/${channelId}`, {
-      timeout: 0,
-    });
+    await page.goto(`https://socialblade.com/youtube/user/${channelId}`);
 
     const data = await page.evaluate(() => {
       const getInfoValue = (label: string) => {
