@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { AxiosResponse } from 'axios';
+import { isEmpty } from 'lodash';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BarChart, Bar, Cell, XAxis, YAxis, ResponsiveContainer, LabelList } from 'recharts';
+import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { axios } from '../../../lib/axios';
 
 interface ChartData {
   label: string;
@@ -8,11 +11,18 @@ interface ChartData {
   percentage: number;
 }
 
+interface SentimentData {
+  positive: number;
+  negative: number;
+  neutral: number;
+}
+
 export default function VideoDetails() {
   const { id } = useParams();
-  const [comments, setComments] = useState<any>([]);
+  const [comments, setComments] = useState<string[]>([]);
+
   const [loading, setLoading] = useState(false);
-  const [sentimentState, setSentimentState] = useState(false);
+  const [sentimentState, setSentimentState] = useState<SentimentData>({} as SentimentData);
 
   useEffect(() => {
     const getComments = async () => {
@@ -43,38 +53,59 @@ export default function VideoDetails() {
     };
     getComments();
   }, []);
-  const data = {
-    positive: 0.6478115717569987,
-    neutral: 0.04075773743291696,
-    negative: 0.3114306926727295,
-  };
 
-  const labels = Object.keys(data);
-  const values = Object.values(data);
+  const chartData: ChartData[] = useMemo(() => {
+    if (sentimentState) {
+      const data = sentimentState;
 
-  const total = values.reduce((acc, value) => acc + value, 0);
-  const percentages = values.map((value) => (value / total) * 100);
+      const labels = Object.keys(data);
+      const values = Object.values(data);
 
-  const chartData: ChartData[] = labels.map((label, index) => ({
-    label,
-    value: values[index],
-    percentage: percentages[index],
-  }));
+      const total = values.reduce((acc, value) => acc + value, 0);
+      const percentages = values.map((value) => (value / total) * 100);
+
+      return labels.map((label, index) => ({
+        label,
+        value: values[index],
+        percentage: percentages[index],
+      }));
+    } else {
+      return [];
+    }
+  }, [sentimentState]);
+
+  const [showSentiment, setShowSentiment] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
 
   return (
     <div className='p-5'>
       <div className='mx-auto text-white text-lg w-[70vw]'>
         {comments && (
           <div className='flex justify-between'>
-            <p className='text-white text-lg'> {comments.size} Comments</p>
+            <p className='text-white text-lg'> {comments.length} Comments</p>
             <button
-              disabled={sentimentState}
               className='w-56 text-white bg-[#581C87] ml-auto hover:bg-[#A149FA] rounded disabled:cursor-not-allowed disabled:text-gray-500'
-              onClick={() => {
-                setSentimentState(true);
+              onClick={async () => {
+                if (isEmpty(sentimentState)) {
+                  setAnalyzing(true);
+                  const { data: sentiment } = await axios
+                    .post<void, AxiosResponse<SentimentData>>('/ai/reactions', {
+                      comments,
+                    })
+                    .finally(() => {
+                      setAnalyzing(false);
+                    });
+                  setSentimentState(sentiment);
+                } else {
+                  setShowSentiment(true);
+                }
               }}
             >
-              Analyze Comments
+              {analyzing
+                ? 'Analyzing...'
+                : isEmpty(sentimentState)
+                ? 'Analyze Comments'
+                : 'View Analysis Results'}
             </button>
           </div>
         )}
@@ -88,9 +119,12 @@ export default function VideoDetails() {
             ))}
       </div>
 
-      {sentimentState && (
+      {showSentiment && chartData && (
         <>
-          <div className='w-[300px] border border-zinc-900 rounded-lg'>
+          <div
+            className='w-[300px] border border-zinc-900 rounded-lg'
+            onClick={() => setShowSentiment(false)}
+          >
             <ResponsiveContainer height={400}>
               <BarChart data={chartData} margin={{ top: 20, right: 0, left: 0, bottom: 5 }}>
                 <XAxis dataKey='label' />
@@ -111,9 +145,9 @@ export default function VideoDetails() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <p>Negative :{(data.negative * 100).toFixed(2)}%</p>
-          <p>Neutral : {(data.neutral * 100).toFixed(2)}%</p>
-          <p>Positive : {(data.positive * 100).toFixed(2)}%</p>
+          <p>Negative :{(sentimentState.negative * 100).toFixed(2)}%</p>
+          <p>Neutral : {(sentimentState.neutral * 100).toFixed(2)}%</p>
+          <p>Positive : {(sentimentState.positive * 100).toFixed(2)}%</p>
         </>
       )}
     </div>

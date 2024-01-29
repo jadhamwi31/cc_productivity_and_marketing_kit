@@ -21,12 +21,15 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - auth
       - videos
+      - auth
       - auth-db
       - analysis
+      - analysis-db
 
   videos:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     build:
       context: ./video
     environment:
@@ -42,6 +45,7 @@ services:
       CLIENT_URL: http://client:3000
       DB_CONNECT: mongodb://analysis-db:27017/analysis
       SECRET_KEY: 94d15ae4e75814170203eec4e8e735e1
+      PORT: 8082
     depends_on:
       - analysis-db
   analysis-db:
