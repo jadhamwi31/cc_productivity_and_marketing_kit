@@ -49,9 +49,13 @@ export default function App() {
                 <Route
                   path='login'
                   element={
-                    <Suspense fallback={<Loading />}>
-                      <Login />
-                    </Suspense>
+                    !user ? (
+                      <Suspense fallback={<Loading />}>
+                        <Login />
+                      </Suspense>
+                    ) : (
+                      <Navigate to='/dashboard' />
+                    )
                   }
                 />
                 <Route
@@ -71,9 +75,13 @@ export default function App() {
               <Route
                 path='/dashboard'
                 element={
-                  <Suspense fallback={<Loading />}>
-                    <Dashboard />
-                  </Suspense>
+                  user ? (
+                    <Suspense fallback={<Loading />}>
+                      <Dashboard />
+                    </Suspense>
+                  ) : (
+                    <Navigate to='/login' />
+                  )
                 }
               >
                 <Route index={false} element={<DahsboardCahnnelLayout />}>

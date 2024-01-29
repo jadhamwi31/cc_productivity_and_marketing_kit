@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { axios } from '../lib/axios';
 import { AxiosResponse } from 'axios';
-import Cookies from 'js-cookie';
 
 interface AuthState {
   user: User | null;
@@ -9,27 +8,42 @@ interface AuthState {
   loading: boolean;
   error: string | null;
 }
+
 interface AuthActions {
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
 }
+
 interface User {
   username: string;
 }
+
 const cookieKey = 'authData';
+
 const useAuthStore = create<AuthState & AuthActions>((set) => {
   const loadAuthData = () => {
     try {
-      const storedAuthData = Cookies.get(cookieKey);
+      const storedAuthData = localStorage.getItem(cookieKey);
       const parsedAuthData = storedAuthData ? JSON.parse(storedAuthData) : null;
-      return (
-        parsedAuthData || {
-          user: null,
-          token: null,
+
+      if (parsedAuthData) {
+        const { user, token } = parsedAuthData;
+        const authData: AuthState = {
+          user,
+          token,
           loading: false,
           error: null,
-        }
-      );
+        };
+        set(authData);
+        return authData;
+      }
+
+      return {
+        user: null,
+        token: null,
+        loading: false,
+        error: null,
+      };
     } catch (error) {
       console.error('Error parsing auth data:', error);
       return {
@@ -40,13 +54,20 @@ const useAuthStore = create<AuthState & AuthActions>((set) => {
       };
     }
   };
+
   const initialAuthData: AuthState = loadAuthData();
   set(initialAuthData);
+
+  const persistToLocalStorage = (newState: AuthState) => {
+    localStorage.setItem(cookieKey, JSON.stringify({ user: newState.user, token: newState.token }));
+  };
+
   return {
     user: initialAuthData.user,
     token: initialAuthData.token,
     loading: false,
     error: null,
+
     login: async (username: string, password: string) => {
       set((state) => ({ ...state, loading: true, error: null }));
       try {
@@ -64,7 +85,8 @@ const useAuthStore = create<AuthState & AuthActions>((set) => {
           loading: false,
           error: null,
         };
-        Cookies.set(cookieKey, JSON.stringify(authData.user));
+
+        persistToLocalStorage(authData); 
         set(authData);
       } catch (error: any) {
         if (error.response && error.response.data && error.response.data.errors) {
@@ -80,8 +102,9 @@ const useAuthStore = create<AuthState & AuthActions>((set) => {
         }
       }
     },
+
     logout: () => {
-      Cookies.remove(cookieKey);
+      localStorage.removeItem(cookieKey); 
       set({ user: null, token: null, loading: false, error: null });
     },
   };

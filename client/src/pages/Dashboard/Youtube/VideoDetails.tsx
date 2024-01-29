@@ -14,7 +14,7 @@ export default function VideoDetails() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const getTrends = async () => {
+    const getComments = async () => {
       console.log('ad');
       try {
         setLoading(true);
@@ -28,20 +28,19 @@ export default function VideoDetails() {
             url: `https://www.youtube.com/watch?v=${id}`,
           }),
         });
-
+        const fetchedComments = await response.json();
         setLoading(false);
         if (response.ok) {
-          const fetchedData: string[] = await response.json();
-          setComments(fetchedData);
+          setComments(fetchedComments);
         } else {
           setComments([]);
-          console.error('Failed to fetch trends');
+          console.error('Failed to fetch Commenst');
         }
       } catch (error) {
         console.error('Error during fetch:', error);
       }
     };
-    getTrends();
+    getComments();
   }, []);
   const data = {
     positive: 0.6478115717569987,
