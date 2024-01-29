@@ -6,7 +6,10 @@ const getChannelReport = async (req: Request<{ channelId: string }, {}, {}>, res
   const { channelId } = req.params;
 
   try {
+    console.log('ahmad');
+
     const report = await channelReport(channelId);
+    console.log(report);
     res.status(STATUS_CODES.OK).json(report);
   } catch (e) {
     res.status(STATUS_CODES.BAD_REQUEST).json({ error: 'Failed to retrieve channel report.' });
