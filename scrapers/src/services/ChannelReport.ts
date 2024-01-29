@@ -18,7 +18,7 @@ export interface ChannelInfoData {
 const channelInfo = async (channelId: string): Promise<ChannelInfoData | string> => {
   try {
     const browser = await puppeteer.launch({
-      headless: 'new',
+      headless: false,
       executablePath: '/usr/bin/google-chrome',
       args: [
         '--disable-gpu',
@@ -87,7 +87,7 @@ const channelInfo = async (channelId: string): Promise<ChannelInfoData | string>
       const headerBackgroundUrl = headerBackgroundUrlStyle
         ? headerBackgroundUrlStyle.match(/url\(['"]?(.*?)['"]?\)/)?.[1] || null
         : null;
-
+      console.log('ahmad');
       return {
         uploads: getInfoValue('Uploads'),
         subscribers: getInfoValue('Subscribers'),
