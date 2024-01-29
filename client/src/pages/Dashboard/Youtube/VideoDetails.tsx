@@ -12,6 +12,7 @@ export default function VideoDetails() {
   const { id } = useParams();
   const [comments, setComments] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [sentimentState, setSentimentState] = useState(false);
 
   useEffect(() => {
     const getComments = async () => {
@@ -62,39 +63,59 @@ export default function VideoDetails() {
 
   return (
     <div className='p-5'>
-      <h2>Video Details</h2>
-      <p>Video ID: {id}</p>
-      <div className='w-[300px] border border-zinc-900 rounded-lg'>
-        <ResponsiveContainer height={400}>
-          <BarChart data={chartData} margin={{ top: 20, right: 0, left: 0, bottom: 5 }}>
-            <XAxis dataKey='label' />
-            <YAxis />
-
-            <Bar dataKey='percentage' name='Sentiment Analysis'>
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={getSentimentColor(entry.label)} />
-              ))}
-              <LabelList
-                dataKey='percentage'
-                position='insideTop'
-                content={({ value }) => (typeof value === 'number' ? `${value.toFixed(2)}%` : '')}
-              />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-      <div></div>
-      <p>Negative :{(data.negative * 100).toFixed(2)}%</p>
-      <p>Neutral : {(data.neutral * 100).toFixed(2)}%</p>
-      <p>Positive : {(data.positive * 100).toFixed(2)}%</p>
-      <div>
+      <div className='mx-auto text-white text-lg w-[70vw]'>
+        {comments && (
+          <div className='flex justify-between'>
+            <p className='text-white text-lg'> {comments.size} Comments</p>
+            <button
+              disabled={sentimentState}
+              className='w-56 text-white bg-[#581C87] ml-auto hover:bg-[#A149FA] rounded disabled:cursor-not-allowed disabled:text-gray-500'
+              onClick={() => {
+                setSentimentState(true);
+              }}
+            >
+              Analyze Comments
+            </button>
+          </div>
+        )}
         {loading
           ? 'Loading'
           : comments &&
-            comments.map((d: string, index: number) => {
-              <p key={index}>{d}</p>;
-            })}
+            comments.map((d: string, index: number) => (
+              <p className='border-b border-zinc-900  pb-2' key={index}>
+                {d}
+              </p>
+            ))}
       </div>
+
+      {sentimentState && (
+        <>
+          <div className='w-[300px] border border-zinc-900 rounded-lg'>
+            <ResponsiveContainer height={400}>
+              <BarChart data={chartData} margin={{ top: 20, right: 0, left: 0, bottom: 5 }}>
+                <XAxis dataKey='label' />
+                <YAxis />
+
+                <Bar dataKey='percentage' name='Sentiment Analysis'>
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={getSentimentColor(entry.label)} />
+                  ))}
+                  <LabelList
+                    dataKey='percentage'
+                    position='insideTop'
+                    content={({ value }) =>
+                      typeof value === 'number' ? `${value.toFixed(2)}%` : ''
+                    }
+                  />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p>Negative :{(data.negative * 100).toFixed(2)}%</p>
+          <p>Neutral : {(data.neutral * 100).toFixed(2)}%</p>
+          <p>Positive : {(data.positive * 100).toFixed(2)}%</p>
+        </>
+      )}
     </div>
   );
 }
