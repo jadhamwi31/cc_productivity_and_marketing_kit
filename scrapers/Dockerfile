@@ -1,4 +1,4 @@
-FROM node:21-alpine3.18
+FROM ghcr.io/puppeteer/puppeteer:21.6.1
 
 WORKDIR /app
 

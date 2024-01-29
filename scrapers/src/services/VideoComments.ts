@@ -3,7 +3,16 @@ import * as puppeteer from 'puppeteer';
 const VideoComments = async (url: string): Promise<any> => {
   let browser;
   try {
-    browser = await puppeteer.launch({ headless: false });
+    browser = await puppeteer.launch({
+      headless: 'new',
+      executablePath: '/usr/bin/google-chrome',
+      args: [
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--disable-setuid-sandbox',
+        '--no-sandbox',
+      ],
+    });
     const page = await browser.newPage();
     await page.goto(url, { timeout: 0 });
     await page.evaluate(() => {

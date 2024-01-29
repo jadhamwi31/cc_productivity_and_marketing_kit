@@ -11,7 +11,16 @@ export interface ChannelInfoData {
 
 const channelInfo = async (url: string): Promise<ChannelInfoData | string> => {
   try {
-    const browser = await puppeteer.launch({ headless: 'new' });
+    const browser = await puppeteer.launch({
+      headless: 'new',
+      executablePath: '/usr/bin/google-chrome',
+      args: [
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--disable-setuid-sandbox',
+        '--no-sandbox',
+      ],
+    });
     const page = await browser.newPage();
     await page.goto(url, { timeout: 0 });
 

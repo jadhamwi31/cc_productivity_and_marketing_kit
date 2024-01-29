@@ -24,7 +24,13 @@ dotenv.config();
   mongoose.set('strictQuery', false);
 
   try {
-    await mongoose.connect('mongodb://localhost:27017/scrapperDb');
+    const dbConnectString = process.env.DB_CONNECT;
+
+    if (!dbConnectString) {
+      throw new Error('DB_CONNECT environment variable is not set');
+    }
+
+    await mongoose.connect(dbConnectString);
     app.listen(PORT, () => {
       console.log(`Connected on http://localhost:${PORT}/`);
     });

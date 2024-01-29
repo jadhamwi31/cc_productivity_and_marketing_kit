@@ -2,7 +2,16 @@ import * as puppeteer from 'puppeteer';
 
 const Trends = async (geo: string, cat: string): Promise<any> => {
   try {
-    const browser = await puppeteer.launch({ headless: 'new' });
+    const browser = await puppeteer.launch({
+      headless: 'new',
+      executablePath: '/usr/bin/google-chrome',
+      args: [
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--disable-setuid-sandbox',
+        '--no-sandbox',
+      ],
+    });
     const page = await browser.newPage();
 
     await page.setViewport({ width: 1920, height: 1080 });
