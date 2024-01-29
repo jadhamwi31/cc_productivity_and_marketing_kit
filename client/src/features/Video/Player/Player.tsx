@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useCurrentTab as useCurrentTab } from '../../../hooks/useCurrentTab';
+import { useCurrentTab } from '../../../hooks/useCurrentTab';
 import { useVideosStore } from '../../../stores/videos.store';
 import { EnVideoPlayback } from '../../../ts/enums/video.enums';
 import { S } from './Player.styled';

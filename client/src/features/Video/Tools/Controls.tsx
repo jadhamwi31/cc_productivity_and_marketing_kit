@@ -1,14 +1,9 @@
 import React, { useRef } from 'react';
-import Button from '../../../components/Button/Button';
+import { FaPause, FaPlay } from 'react-icons/fa';
+import { LiaRedoSolid, LiaUndoSolid } from 'react-icons/lia';
 import { useCurrentTab } from '../../../hooks/useCurrentTab';
 import { useVideosStore } from '../../../stores/videos.store';
 import { EnVideoPlayback } from '../../../ts/enums/video.enums';
-import { S } from './Tools.styled';
-import { HiOutlineUpload } from 'react-icons/hi';
-import { FiSave } from 'react-icons/fi';
-import { FaPause, FaPlay } from 'react-icons/fa';
-import { TbCut } from 'react-icons/tb';
-import { LiaUndoSolid, LiaRedoSolid } from 'react-icons/lia';
 type Props = {};
 
 const Controls = (props: Props) => {
@@ -57,7 +52,7 @@ const Controls = (props: Props) => {
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={playbackHandler}
-          disabled={tab.videoId === null}
+          disabled={tab.videoUrl === null}
         >
           {playback === EnVideoPlayback.PAUSED ? <FaPlay size={25} /> : <FaPause size={25} />}
         </button>
