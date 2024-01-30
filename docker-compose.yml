@@ -4,6 +4,8 @@ services:
   auth:
     build:
       context: ./auth
+    deploy:
+      replicas: 2
     environment:
       DATABASE_PASSWORD: creatorsyard
       DATABASE_USERNAME: creatorsyard
@@ -32,6 +34,8 @@ services:
       - "host.docker.internal:host-gateway"
     build:
       context: ./video
+    deploy:
+      replicas: 3
     environment:
       PORT: 8081
       AI_URL: http://host.docker.internal:8083
@@ -39,6 +43,8 @@ services:
       SECRET_KEY: 94d15ae4e75814170203eec4e8e735e1
       STORAGE_PATH: /storage
   analysis:
+    deploy:
+      replicas: 3
     build:
       context: ./scrapers
     environment:
@@ -46,6 +52,7 @@ services:
       DB_CONNECT: mongodb://analysis-db:27017/analysis
       SECRET_KEY: 94d15ae4e75814170203eec4e8e735e1
       PORT: 8082
+
     depends_on:
       - analysis-db
   analysis-db:
@@ -63,7 +70,7 @@ services:
       POSTGRES_USER: creatorsyard
       POSTGRES_DB: creatorsyard
     volumes:
-      - creatorsyard_auth_db:/var/lib/postgresql
+      - creatorsyard_auth_db:/var/lib/postgresql/data/pgdata
 volumes:
   creatorsyard_auth_db:
   creatorsyard_analysis_db:
