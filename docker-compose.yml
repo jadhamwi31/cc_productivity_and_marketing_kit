@@ -70,7 +70,7 @@ services:
       POSTGRES_USER: creatorsyard
       POSTGRES_DB: creatorsyard
     volumes:
-      - creatorsyard_auth_db:/var/lib/postgresql/data/pgdata
+      - creatorsyard_auth_db:/var/lib/postgresql/data
 volumes:
   creatorsyard_auth_db:
   creatorsyard_analysis_db:

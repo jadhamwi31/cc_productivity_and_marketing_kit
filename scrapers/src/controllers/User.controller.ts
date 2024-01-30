@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
+import STATUS_CODES from 'http-status-codes';
 import ChannelModel, { Channel } from '../models/Channel.model';
 import VideoModel from '../models/Video.model';
-import STATUS_CODES from 'http-status-codes';
 import channelInfo from '../services/ChannelInfo';
 
 const addChannel = async (req: Request<{}, {}, { url: string }>, res: Response) => {
@@ -11,7 +11,8 @@ const addChannel = async (req: Request<{}, {}, { url: string }>, res: Response) 
 
     try {
       const data = await channelInfo(url);
-
+      console.log(data);
+      
       if (typeof data !== 'string') {
         let user = await ChannelModel.findOne({ username });
 

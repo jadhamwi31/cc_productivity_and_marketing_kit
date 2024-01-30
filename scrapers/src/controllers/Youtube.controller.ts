@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import * as puppeteer from 'puppeteer';
 import STATUS_CODES from 'http-status-codes';
+import * as puppeteer from 'puppeteer';
 
 interface CommentData {
   commenter: {
@@ -17,7 +17,16 @@ async function timeout(ms: number): Promise<void> {
 const channelInfo = async (req: Request<{}, {}, { url: string }>, res: Response) => {
   const { url } = req.body;
   try {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({
+      headless: false,
+      executablePath: '/usr/bin/google-chrome',
+      args: [
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--disable-setuid-sandbox',
+        '--no-sandbox',
+      ],
+    });
     const page = await browser.newPage();
     await page.goto(`${url}`, { timeout: 0 });
     const data = await page.evaluate(() => {
@@ -78,7 +87,11 @@ const channelInfo = async (req: Request<{}, {}, { url: string }>, res: Response)
 };
 const channelVideos = async (req: Request<{}, {}, { url: string }>, res: Response) => {
   const { url } = req.body;
-  const browser = await puppeteer.launch({ headless: 'new' });
+  const browser = await puppeteer.launch({
+    headless: 'new',
+    executablePath: '/usr/bin/google-chrome',
+    args: ['--disable-gpu', '--disable-dev-shm-usage', '--disable-setuid-sandbox', '--no-sandbox'],
+  });
   const page = await browser.newPage();
   try {
     await page.goto(url, { timeout: 0 });
@@ -156,7 +169,16 @@ const videoComments = async (req: Request<{}, {}, { url: string }>, res: Respons
   const { url } = req.body;
   let browser;
   try {
-    browser = await puppeteer.launch({ headless: false });
+    browser = await puppeteer.launch({
+      headless: false,
+      executablePath: '/usr/bin/google-chrome',
+      args: [
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--disable-setuid-sandbox',
+        '--no-sandbox',
+      ],
+    });
     const page = await browser.newPage();
     await page.goto(url, { timeout: 0 });
     await page.evaluate(() => {

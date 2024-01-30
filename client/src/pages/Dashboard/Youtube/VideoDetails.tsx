@@ -84,6 +84,7 @@ export default function VideoDetails() {
           <div className='flex justify-between'>
             <p className='text-white text-lg'> {comments.length} Comments</p>
             <button
+              disabled={!comments}
               className='w-56 text-white bg-[#581C87] ml-auto hover:bg-[#A149FA] rounded disabled:cursor-not-allowed disabled:text-gray-500'
               onClick={async () => {
                 if (isEmpty(sentimentState)) {
