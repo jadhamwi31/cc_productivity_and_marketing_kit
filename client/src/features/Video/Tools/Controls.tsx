@@ -37,6 +37,7 @@ const Controls = (props: Props) => {
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-l-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={undo}
           disabled={tab.undo.length === 1}
+          title='Undo'
         >
           <LiaUndoSolid size='25' />
         </button>
@@ -44,6 +45,7 @@ const Controls = (props: Props) => {
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-r-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={redo}
           disabled={tab.redo.length === 1}
+          title='Redo'
         >
           <LiaRedoSolid size='25' />
         </button>
@@ -53,6 +55,7 @@ const Controls = (props: Props) => {
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={playbackHandler}
           disabled={tab.videoUrl === null}
+          title={playback === EnVideoPlayback.PAUSED ? 'Play' : 'Pause'}
         >
           {playback === EnVideoPlayback.PAUSED ? <FaPlay size={25} /> : <FaPause size={25} />}
         </button>

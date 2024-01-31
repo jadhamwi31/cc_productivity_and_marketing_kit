@@ -13,13 +13,13 @@ import useAuthStore from './stores/auth.store';
 import DahsboardCahnnelLayout from './layout/DahsboardCahnnelLayout';
 import EmptyLayout from './layout/EmptyLayout';
 import Main from './layout/Main';
+import Settings from './pages/Dashboard/Settings';
 import SocialMedia from './pages/Dashboard/SocialMedia';
 import ReportPage from './pages/Dashboard/Youtube/ReportPage';
 import VideoDetails from './pages/Dashboard/Youtube/VideoDetails';
 import VideosPage from './pages/Dashboard/Youtube/VideosPage';
 import Home from './pages/Home';
 import Loading from './pages/Loading';
-import Settings from './pages/Dashboard/Settings';
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const Video = lazy(() => import('./pages/Video/Video'));
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -76,13 +76,9 @@ export default function App() {
               <Route
                 path='/dashboard'
                 element={
-                  user ? (
-                    <Suspense fallback={<Loading />}>
-                      <Dashboard />
-                    </Suspense>
-                  ) : (
-                    <Navigate to='/login' />
-                  )
+                  <Suspense fallback={<Loading />}>
+                    <Dashboard />
+                  </Suspense>
                 }
               >
                 <Route index={false} element={<DahsboardCahnnelLayout />}>

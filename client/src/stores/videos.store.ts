@@ -16,6 +16,11 @@ export interface IVideoPartition {
 
 type TabHistory = Pick<IVideoTab, 'partitions'>;
 
+export enum EnLanguage {
+  ENGLISH = 'english',
+  ARABIC = 'arabic',
+}
+
 export interface IVideoTab {
   videoUrl: string | null;
   videoId: string | null;
@@ -36,6 +41,7 @@ export interface IVideoTab {
   transcribing: boolean;
   transcript: Transcript | null;
   transcriptsUsed: string[];
+  language: EnLanguage;
 }
 
 interface IVideosStore {
@@ -54,6 +60,8 @@ interface IVideosStore {
   transcribe: () => void;
   cutFromTo: (from: number, to: number) => void;
   uncutFromTo: (from: number, to: number) => void;
+  setEnglishLanguage: () => void;
+  setArabicLanguage: () => void;
 }
 
 const INITIAL_TAB_ID = uuid();
@@ -78,13 +86,23 @@ const DEFAULT_TAB_VALUES: IVideoTab = {
   transcriptsUsed: [],
   transcript: null,
   videoName: '',
+  language: EnLanguage.ENGLISH,
 };
 
 export const useVideosStore = create<IVideosStore>((set, get) => ({
   tabs: {
     [INITIAL_TAB_ID]: { ...DEFAULT_TAB_VALUES },
   },
-
+  setEnglishLanguage: () => {
+    const newTabs = { ...get().tabs };
+    const currentTab = get().selectedTab;
+    newTabs[currentTab].language = EnLanguage.ENGLISH;
+  },
+  setArabicLanguage: () => {
+    const newTabs = { ...get().tabs };
+    const currentTab = get().selectedTab;
+    newTabs[currentTab].language = EnLanguage.ARABIC;
+  },
   addTab: () => {
     const newTabs = { ...get().tabs };
     const tabId = uuid();
@@ -94,6 +112,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
 
     set({ tabs: newTabs, selectedTab: tabId });
   },
+
   selectedTab: INITIAL_TAB_ID,
   setSelectedTab: (tabId) => {
     set({ selectedTab: tabId });
@@ -227,7 +246,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     currentTab.transcribing = true;
     set({ tabs });
     axios
-      .get(`/videos/${currentTab.videoId}/transcript`)
+      .get(`/videos/${currentTab.videoId}/transcript?lang=${currentTab.language}`)
       .then(({ data }) => {
         currentTab.transcript = data;
         set({ tabs });

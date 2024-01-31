@@ -4,14 +4,22 @@ import { FiSave } from 'react-icons/fi';
 import { HiOutlineUpload } from 'react-icons/hi';
 import { TbCut } from 'react-icons/tb';
 import { useCurrentTab } from '../../../hooks/useCurrentTab';
-import { useVideosStore } from '../../../stores/videos.store';
+import { EnLanguage, useVideosStore } from '../../../stores/videos.store';
 import { EnVideoPlayback } from '../../../ts/enums/video.enums';
 import { S } from './Tools.styled';
 type Props = {};
 
 const Tools = (props: Props) => {
-  const { uploadFile, playback, setPlayback, cut, undo, redo, downloadVideo, transcribe } =
-    useVideosStore();
+  const {
+    uploadFile,
+    playback,
+    setPlayback,
+    cut,
+    setEnglishLanguage,
+    setArabicLanguage,
+    downloadVideo,
+    transcribe,
+  } = useVideosStore();
   const uploadRef = useRef<HTMLInputElement>(null);
 
   const uploadHandler: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
@@ -43,6 +51,7 @@ const Tools = (props: Props) => {
             if (uploadRef.current?.value) uploadRef.current.value = '';
             uploadRef.current?.click();
           }}
+          title='Upload'
         >
           <HiOutlineUpload size={25} />
         </button>
@@ -51,6 +60,7 @@ const Tools = (props: Props) => {
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f]   rounded-lg disabled:bg-transparent disabled:text-gray-600'
           disabled={tab.uploadProgress !== 100 || tab.videoUrl === null}
           onClick={downloadVideo}
+          title='Save'
         >
           <FiSave size='25' />
         </button>
@@ -64,6 +74,7 @@ const Tools = (props: Props) => {
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={cut}
+          title='Cut'
           disabled={tab.videoId === null || tab.selectorStart === 0 || tab.selectorEnd === 0}
         >
           <TbCut size='25' />
@@ -72,8 +83,25 @@ const Tools = (props: Props) => {
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
           disabled={tab.uploadProgress !== 100}
           onClick={transcribe}
+          title='Transcribe'
         >
           <BsBodyText size='25' />
+        </button>
+        <button
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
+          onClick={setEnglishLanguage}
+          disabled={tab.language === EnLanguage.ENGLISH}
+          title='English Language'
+        >
+          E
+        </button>
+        <button
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
+          disabled={tab.language === EnLanguage.ARABIC}
+          onClick={setArabicLanguage}
+          title='Arabic Language'
+        >
+          A
         </button>
       </div>
     </S.Container>
