@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import { v4 as uuid } from "uuid";
-import { Transcriber } from "./services/Transcriber";
+import { EnLanguage, Transcriber } from "./services/Transcriber";
 import {
 	calculateNeededParts,
 	generateStorageInstance,
@@ -100,12 +100,16 @@ const exportVideoHandler = async (
 };
 
 const transcribeVideoHandler = async (
-	req: Request<{ videoId: string }>,
+	req: Request<{ videoId: string }, {}, {}, { lang: EnLanguage }>,
 	res: Response,
 	next: NextFunction
 ) => {
 	const { videoId } = req.params;
+	const { lang } = req.query;
 	try {
+		if (lang !== EnLanguage.ENGLISH && lang !== EnLanguage.ARABIC) {
+			throw new Error("unavailable language");
+		}
 		const userStoragePath = path.join(
 			getStoragePath(),
 			req.user ? req.user.username : "unknown"
@@ -113,7 +117,7 @@ const transcribeVideoHandler = async (
 
 		const videoPath = path.join(userStoragePath, `./${videoId}`);
 
-		const transcriber = new Transcriber(videoPath);
+		const transcriber = new Transcriber(videoPath, lang);
 		const data = await transcriber.transcribe();
 		return res.status(200).send(data);
 	} catch (e) {

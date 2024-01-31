@@ -6,10 +6,15 @@ from fastapi import FastAPI,File, UploadFile
 from fastapi.responses import JSONResponse
 from typing import List
 
-transcriptPipeline = pipeline(
+englishTranscriptPipeline = pipeline(
     "automatic-speech-recognition",
     model="Subcold/whisper-small-preprocessed-en",chunk_length_s=30
 )
+arabicTranscriptPipeline = pipeline(
+    "automatic-speech-recognition",
+    model="Foxasdf/whisper-base-ar",chunk_length_s=30
+)
+
 reactionsPipeline = pipeline(
     model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
     return_all_scores=True
@@ -18,15 +23,26 @@ reactionsPipeline = pipeline(
 app = FastAPI()
 
 
-@app.post("/transcript")
+@app.post("/transcript/arabic")
 async def transcript(file: UploadFile):
     try:
         fileObject = await file.read()
-        result = transcriptPipeline(fileObject,batch_size=8,return_timestamps=True)
+        result = arabicTranscriptPipeline(fileObject,batch_size=8,return_timestamps=True)
         print(result)
         return JSONResponse(content=result, status_code=200)
     except Exception as e: 
         return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@app.post("/transcript/english")
+async def transcript(file: UploadFile):
+    try:
+        fileObject = await file.read()
+        result = englishTranscriptPipeline(fileObject,batch_size=8,return_timestamps=True)
+        print(result)
+        return JSONResponse(content=result, status_code=200)
+    except Exception as e: 
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+    
     
 class Comments(BaseModel):
     comments:List[str]

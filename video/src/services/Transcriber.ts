@@ -9,10 +9,17 @@ type Transcript = {
 	chunks: Chunk[];
 };
 
+export enum EnLanguage {
+	ENGLISH = "english",
+	ARABIC = "arabic",
+}
+
 export class Transcriber {
 	private filepath: string;
-	constructor(filepath: string) {
+	private language: EnLanguage;
+	constructor(filepath: string, lang: EnLanguage) {
 		this.filepath = filepath;
+		this.language = lang;
 	}
 
 	public async transcribe() {
@@ -24,7 +31,7 @@ export class Transcriber {
 		let { data: transcript } = await axios.post<
 			void,
 			AxiosResponse<Transcript>
-		>(`${process.env.AI_URL!}/transcript`, formData, {
+		>(`${process.env.AI_URL!}/transcript/${this.language}`, formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",
 			},

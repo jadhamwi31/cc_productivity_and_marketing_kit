@@ -36,6 +36,8 @@ services:
       context: ./video
     deploy:
       replicas: 3
+    volumes:
+      - creatorsyard_video_volume:/storage
     environment:
       PORT: 8081
       AI_URL: http://host.docker.internal:8083
@@ -75,3 +77,4 @@ services:
 volumes:
   creatorsyard_auth_db:
   creatorsyard_analysis_db:
+  creatorsyard_video_volume:
