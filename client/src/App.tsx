@@ -76,7 +76,7 @@ export default function App() {
               <Route
                 path='/dashboard'
                 element={
-                  true ? (
+                  user ? (
                     <Suspense fallback={<Loading />}>
                       <Dashboard />
                     </Suspense>
