@@ -19,6 +19,7 @@ import VideoDetails from './pages/Dashboard/Youtube/VideoDetails';
 import VideosPage from './pages/Dashboard/Youtube/VideosPage';
 import Home from './pages/Home';
 import Loading from './pages/Loading';
+import Settings from './pages/Dashboard/Settings';
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const Video = lazy(() => import('./pages/Video/Video'));
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -75,7 +76,7 @@ export default function App() {
               <Route
                 path='/dashboard'
                 element={
-                  user ? (
+                  true ? (
                     <Suspense fallback={<Loading />}>
                       <Dashboard />
                     </Suspense>
@@ -107,6 +108,15 @@ export default function App() {
                   element={
                     <Suspense fallback={<Loading />}>
                       <Video />
+                    </Suspense>
+                  }
+                />
+
+                <Route
+                  path='settings'
+                  element={
+                    <Suspense fallback={<Loading />}>
+                      <Settings />
                     </Suspense>
                   }
                 />

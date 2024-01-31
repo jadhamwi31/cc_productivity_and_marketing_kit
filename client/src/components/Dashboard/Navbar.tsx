@@ -2,19 +2,22 @@ import { MdOutlineDashboard } from 'react-icons/md';
 import { RiSettings4Line } from 'react-icons/ri';
 import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { AiOutlineUser } from 'react-icons/ai';
+import { FiLogOut } from 'react-icons/fi';
 
 import { IoVideocamOutline } from 'react-icons/io5';
 import { NavLink } from 'react-router-dom';
 import React from 'react';
 import octopus from '../../assets/Small.webp';
+import useAuthStore from '../../stores/auth.store';
 
 const Navbar = () => {
+  const { logout } = useAuthStore();
   const menus = [
     { name: 'Dashboard', link: '', icon: MdOutlineDashboard },
     { name: 'Accounts', link: 'socialmedia', icon: AiOutlineUser },
     { name: 'Graphic', link: 'graphic', icon: MdOutlineAddPhotoAlternate, margin: true },
     { name: 'Video', link: 'video', icon: IoVideocamOutline },
-    { name: 'Setting', link: 'Setting', icon: RiSettings4Line, margin: true },
+    { name: 'Setting', link: 'settings', icon: RiSettings4Line, margin: true },
   ];
 
   return (
@@ -39,6 +42,16 @@ const Navbar = () => {
             </NavLink>
           ))}
         </div>
+
+        <button
+          className=' hover:text-[#70358A] absolute bottom-1 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+'
+          onClick={() => {
+            logout();
+          }}
+        >
+          <FiLogOut size='20' />
+        </button>
       </div>
     </section>
   );
