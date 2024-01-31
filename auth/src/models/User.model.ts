@@ -1,11 +1,10 @@
-import sequelize from "sequelize/types/sequelize";
-import Database from ".";
 import {
 	DataTypes,
 	InferAttributes,
 	InferCreationAttributes,
 	Model,
 } from "sequelize";
+import Database from ".";
 import { hashPassword } from "../utils/utils";
 
 export class User extends Model<

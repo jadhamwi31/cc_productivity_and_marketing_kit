@@ -1,4 +1,4 @@
-import z, { ZodError, ZodIssue } from "zod";
+import z from "zod";
 import { User } from "../models/User.model";
 import { compare } from "../utils/utils";
 
@@ -9,7 +9,7 @@ export const SIGNUP_SCHEMA = z.object({
 				invalid_type_error: "Type should be string",
 				required_error: "Username is required",
 			})
-			.min(8, "Usernamme characters should be at least 8")
+			.min(8, "Username characters should be at least 8")
 			.refine(async (username) => {
 				const user = await User.findOne({ where: { username } });
 
@@ -72,4 +72,20 @@ export const LOGIN_SCHEMA = z.object({
 				}
 			}
 		}),
+});
+
+export const CHANGEPASSWORD_SCHEMA = z.object({
+	body: z.object({
+		oldPassword: z.string({
+			invalid_type_error: "Type should be string",
+			required_error: "Old Password is required",
+		}),
+		newPassword: z
+			.string({
+				invalid_type_error: "Type should be string",
+				required_error: "New Password is required",
+			})
+			.min(8, "Password characters should be at least 8")
+			.max(20, "Password max characters is 20"),
+	}),
 });

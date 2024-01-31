@@ -69,6 +69,7 @@ services:
       POSTGRES_PASSWORD: creatorsyard
       POSTGRES_USER: creatorsyard
       POSTGRES_DB: creatorsyard
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - creatorsyard_auth_db:/var/lib/postgresql/data
 volumes:

@@ -1,6 +1,6 @@
+import { AxiosResponse } from 'axios';
 import { create } from 'zustand';
 import { axios } from '../lib/axios';
-import { AxiosResponse } from 'axios';
 
 interface AuthState {
   user: User | null;
@@ -20,7 +20,7 @@ interface User {
 
 const cookieKey = 'authData';
 
-const useAuthStore = create<AuthState & AuthActions>((set) => {
+export const useAuthStore = create<AuthState & AuthActions>((set) => {
   const loadAuthData = () => {
     try {
       const storedAuthData = localStorage.getItem(cookieKey);
@@ -86,7 +86,7 @@ const useAuthStore = create<AuthState & AuthActions>((set) => {
           error: null,
         };
 
-        persistToLocalStorage(authData); 
+        persistToLocalStorage(authData);
         set(authData);
       } catch (error: any) {
         if (error.response && error.response.data && error.response.data.errors) {
@@ -103,8 +103,9 @@ const useAuthStore = create<AuthState & AuthActions>((set) => {
       }
     },
 
-    logout: () => {
-      localStorage.removeItem(cookieKey); 
+    logout: async () => {
+      localStorage.removeItem(cookieKey);
+      await axios.post('/auth/logout');
       set({ user: null, token: null, loading: false, error: null });
     },
   };

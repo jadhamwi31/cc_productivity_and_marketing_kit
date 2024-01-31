@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
 import { AuthController } from "./controller";
+import { AuthMiddleware } from "./middlewares/Auth.middleware";
 import { ErrorMiddleware } from "./middlewares/Error.middleware";
 import { validate } from "./middlewares/Validator.middleware";
 import Database from "./models";
@@ -27,6 +28,12 @@ dotenv.config();
 		AuthController.signupHandler
 	);
 	app.post("/auth/login", validate(LOGIN_SCHEMA), AuthController.loginHandler);
+	app.post("/auth/logout", AuthMiddleware, AuthController.logoutHandler);
+	app.post(
+		"/auth/change-password",
+		AuthMiddleware,
+		AuthController.changePasswordHandler
+	);
 
 	app.use(ErrorMiddleware);
 

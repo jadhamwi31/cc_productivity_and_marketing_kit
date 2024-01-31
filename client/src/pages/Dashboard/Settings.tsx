@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 export default function Settings() {
-  
-
   const [loading, setLoading] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -32,11 +30,11 @@ export default function Settings() {
     });
 
     setLoading(false);
-    const json = await response.json();
+    const data = await response.json();
     if (response.ok) {
-      toast.success('Passwords Has Been Changed Successfully');
+      toast.success(data?.message);
     } else {
-      toast.error('Error: please try again ');
+      toast.error(data.message);
     }
   };
   return (

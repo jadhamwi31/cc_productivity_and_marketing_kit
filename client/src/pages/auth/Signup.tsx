@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import building from '../../assets/artworks/building.svg';
 
-import { AxiosResponse } from 'axios';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { axios } from '../../lib/axios';
@@ -20,7 +19,7 @@ export default function Signup() {
       toast.error('Passowrds not Matching');
     } else {
       try {
-        const response: AxiosResponse = await axios.post('/auth/signup', {
+        await axios.post('/auth/signup', {
           username: userName,
           password: password,
           firstname: firstName,
@@ -35,10 +34,8 @@ export default function Signup() {
         setPassword('');
         toast.success('New Account has been Created!');
       } catch (error: any) {
-        if (error.response && error.response.data && error.response.data.errors) {
-          const firstError = error.response.data.errors[0];
-          const errorMessage = firstError.message || 'An error occurred';
-        } else {
+        if (Array.isArray(error?.response?.data?.errors)) {
+          error.response.data.errors.forEach((err) => toast.error(err.message));
         }
       }
     }
@@ -99,10 +96,8 @@ export default function Signup() {
           </label>
 
           <input
-            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            type='email'
             className='bg-[#262626] appearance-none mb-4  rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-[#262626] focus:border-2 border-2  border-[#262626] focus:border-purple-500'
           />
           <label htmlFor='' className='text-gray-200 text-md '>

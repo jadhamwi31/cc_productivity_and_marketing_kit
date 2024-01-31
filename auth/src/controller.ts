@@ -27,11 +27,49 @@ const loginHandler = async (
 		const { token, data } = await AuthService.login(username);
 		return res
 			.status(STATUS_CODES.OK)
-			.cookie("jwt", token)
+			.cookie("jwt", token, { secure: true, httpOnly: true })
 			.send({ status: STATUS_CODES.OK, data, token });
 	} catch (e) {
 		return next(e);
 	}
 };
 
-export const AuthController = { signupHandler, loginHandler };
+const logoutHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		return res
+			.status(STATUS_CODES.OK)
+			.clearCookie("jwt")
+			.send({ status: STATUS_CODES.OK });
+	} catch (e) {
+		return next(e);
+	}
+};
+
+const changePasswordHandler = async (
+	req: Request<{}, {}, { oldPassword: string; newPassword: string }>,
+	res: Response,
+	next: NextFunction
+) => {
+	const username = req.user.username;
+	try {
+		const { oldPassword, newPassword } = req.body;
+		await AuthService.changePassword(username, oldPassword, newPassword);
+		return res.status(STATUS_CODES.OK).send({
+			status: STATUS_CODES.OK,
+			message: "password changed successfully",
+		});
+	} catch (e) {
+		return next(e);
+	}
+};
+
+export const AuthController = {
+	signupHandler,
+	loginHandler,
+	logoutHandler,
+	changePasswordHandler,
+};

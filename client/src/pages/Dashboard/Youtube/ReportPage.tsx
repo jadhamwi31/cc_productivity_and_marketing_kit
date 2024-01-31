@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import { useParams } from 'react-router-dom';
 import Flag from 'react-world-flags';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 interface ChannelInfoData {
   uploads: string;
