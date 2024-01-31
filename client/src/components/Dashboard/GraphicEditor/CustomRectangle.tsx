@@ -49,6 +49,7 @@ const CustomRectangle: React.FC<CusProps> = ({ shapeProps, isSelected, onSelect,
           node.scaleY(1);
           onChange({
             ...shapeProps,
+            rotation: node.rotation(),
             x: node.x(),
             y: node.y(),
             // set minimal value

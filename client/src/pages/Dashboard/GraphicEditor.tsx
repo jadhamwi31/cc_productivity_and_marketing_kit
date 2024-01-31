@@ -29,6 +29,7 @@ type Shape = {
   y: any;
   fill: string;
   type: any;
+  rotation: number;
   radius?: number;
   height?: number;
   width?: number;
@@ -242,6 +243,7 @@ export default function GraphicEditor() {
       y: 100,
       fill: shapeColor,
       type: shapeType,
+      rotation: 0,
     };
 
     if (shapeType == 'rectangle') {

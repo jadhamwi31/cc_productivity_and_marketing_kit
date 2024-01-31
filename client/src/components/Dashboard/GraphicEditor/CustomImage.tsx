@@ -54,6 +54,7 @@ const CustomImage: React.FC<CusProps> = ({ shapeProps, isSelected, onSelect, onC
               ...shapeProps,
               x: node.x(),
               y: node.y(),
+              rotation: node.rotation(),
               // set minimal value
               width: Math.max(5, node.width() * scaleX),
               height: Math.max(node.height() * scaleY),
