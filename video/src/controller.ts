@@ -45,8 +45,6 @@ export interface IVideoPartition {
 	end: number;
 }
 
-const VideosGettingExported = new Set();
-
 const exportVideoHandler = async (
 	req: Request<{ videoId: string }, {}, IVideoPartition[]>,
 	res: Response,
@@ -55,9 +53,6 @@ const exportVideoHandler = async (
 	const partitions = req.body;
 	const { videoId } = req.params;
 	try {
-		if (VideosGettingExported.has(videoId)) {
-			throw new Error("video is already exporting, please wait...");
-		}
 		const userStoragePath = path.join(getStoragePath(), req.user.username);
 
 		const duration = await getVideoDuration(
@@ -93,9 +88,7 @@ const exportVideoHandler = async (
 			path.join(userStoragePath, `./${newId}.mp4`)
 		);
 
-		videoStream.pipe(res).on("finish", () => {
-			VideosGettingExported.delete(videoId);
-		});
+		videoStream.pipe(res);
 	} catch (e) {
 		console.log(e);
 
