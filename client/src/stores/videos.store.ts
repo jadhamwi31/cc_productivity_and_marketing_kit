@@ -1,5 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import fileDownload from 'js-file-download';
+import JSZip from 'jszip';
 import _ from 'lodash';
 import { toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
@@ -7,6 +8,11 @@ import { create } from 'zustand';
 import { axios } from '../lib/axios';
 import { EnVideoPlayback } from '../ts/enums/video.enums';
 import { Transcript } from '../ts/types/video.types';
+
+export type SavedTab = Pick<
+  IVideoTab,
+  'partitions' | 'videoName' | 'transcript' | 'transcriptsUsed'
+>;
 
 export interface IVideoPartition {
   start: number;
@@ -37,11 +43,11 @@ export interface IVideoTab {
   redo: TabHistory[];
   uploadProgress: number | null;
   downloading: boolean;
-  buffer: ArrayBuffer | null;
   transcribing: boolean;
   transcript: Transcript | null;
   transcriptsUsed: string[];
   language: EnLanguage;
+  file: File | null;
 }
 
 interface IVideosStore {
@@ -49,7 +55,7 @@ interface IVideosStore {
   addTab: () => void;
   selectedTab: string;
   setSelectedTab: (tabId: string) => void;
-  uploadFile: (file: File) => Promise<void>;
+  uploadFile: (file: File) => Promise<IVideoTab>;
   playback: EnVideoPlayback;
   setPlayback: (playback: EnVideoPlayback) => void;
   cut: () => Promise<void>;
@@ -62,6 +68,8 @@ interface IVideosStore {
   uncutFromTo: (from: number, to: number) => void;
   setEnglishLanguage: () => void;
   setArabicLanguage: () => void;
+  saveTab: () => Promise<void>;
+  importSavedTab: (file: File) => Promise<void>;
 }
 
 const INITIAL_TAB_ID = uuid();
@@ -82,11 +90,11 @@ const DEFAULT_TAB_VALUES: IVideoTab = {
   redo: [{ partitions: [] }],
   uploadProgress: null,
   downloading: false,
-  buffer: null,
   transcriptsUsed: [],
   transcript: null,
   videoName: '',
   language: EnLanguage.ENGLISH,
+  file: null,
 };
 
 export const useVideosStore = create<IVideosStore>((set, get) => ({
@@ -119,6 +127,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
   },
   uploadFile: async (file) => {
     const formData = new FormData();
+    console.log(file);
 
     const currentTab = get().selectedTab;
     formData.append('video', file);
@@ -127,7 +136,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
 
     const uploadToastId = toast('Uploading Progress : 0%', { progress: 0 });
     axios
-      .post<void, AxiosResponse<string>>('/videos/', formData, {
+      .post<void, AxiosResponse<string>>('/videos', formData, {
         onUploadProgress(progressEvent) {
           const newProgress = progressEvent.progress! * 100;
 
@@ -165,9 +174,10 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
     newTabs[currentTab].videoUrl = URL.createObjectURL(file);
     newTabs[currentTab].currentTime = 0;
     newTabs[currentTab].isNew = true;
-    newTabs[currentTab].buffer = await file.arrayBuffer();
+    newTabs[currentTab].file = file;
 
     set({ tabs: newTabs });
+    return newTabs[currentTab];
   },
   cut: async () => {
     const currentTab = get().selectedTab;
@@ -280,6 +290,68 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
       (partition) => partition.start !== from && partition.end !== to,
     );
     set({ tabs: newTabs });
+  },
+  saveTab: async () => {
+    const tab = get().tabs[get().selectedTab];
+    if (!tab.file) return;
+    // Video
+    const buffer = await tab.file.arrayBuffer();
+    const videoBlob = new Blob([buffer]);
+
+    // Project
+    const savedTab: SavedTab = _.pick(tab, [
+      'partitions',
+      'transcript',
+      'transcriptsUsed',
+      'videoName',
+    ]);
+
+    const name = tab.videoName.replace('.mp4', '');
+    const zip = new JSZip();
+    const folder = zip.folder(name);
+    folder?.file('project.json', JSON.stringify(savedTab));
+    folder?.file('video.bin', videoBlob);
+    const zipped = await folder?.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(zipped!);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${name}.rar`;
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  },
+  importSavedTab: async (file) => {
+    const zip = new JSZip();
+    const buffer = await file.arrayBuffer();
+    const blob = new Blob([buffer]);
+
+    zip.loadAsync(blob).then(async function (zip) {
+      const folder = zip.folder(file.name);
+      if (folder) {
+        const projectFile = folder.files['project.json'];
+        const videoFile = folder.files['video.bin'];
+
+        if (projectFile && videoFile) {
+          const projectJsonData = JSON.parse(await projectFile.async('text')) as SavedTab;
+          const videoData = await videoFile.async('arraybuffer');
+          const videoBlob = new Blob([videoData], { type: 'video/mp4' });
+          const videoFileObject = new File([videoBlob], projectJsonData.videoName);
+          const newTabs = { ...get().tabs };
+
+          get()
+            .uploadFile(videoFileObject)
+            .then(async () => {
+              newTabs[get().selectedTab].partitions = projectJsonData.partitions;
+
+              newTabs[get().selectedTab].videoName = projectJsonData.videoName;
+              newTabs[get().selectedTab].transcript = projectJsonData.transcript;
+              newTabs[get().selectedTab].transcriptsUsed = projectJsonData.transcriptsUsed;
+              set({ tabs: newTabs });
+            });
+        }
+      }
+    });
   },
 }));
 

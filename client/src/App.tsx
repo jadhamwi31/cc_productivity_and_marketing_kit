@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -13,6 +13,7 @@ import useAuthStore from './stores/auth.store';
 import DahsboardCahnnelLayout from './layout/DahsboardCahnnelLayout';
 import EmptyLayout from './layout/EmptyLayout';
 import Main from './layout/Main';
+import { axios } from './lib/axios';
 import Settings from './pages/Dashboard/Settings';
 import SocialMedia from './pages/Dashboard/SocialMedia';
 import ReportPage from './pages/Dashboard/Youtube/ReportPage';
@@ -20,6 +21,7 @@ import VideoDetails from './pages/Dashboard/Youtube/VideoDetails';
 import VideosPage from './pages/Dashboard/Youtube/VideosPage';
 import Home from './pages/Home';
 import Loading from './pages/Loading';
+
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const Video = lazy(() => import('./pages/Video/Video'));
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -29,7 +31,11 @@ const DashboardMain = lazy(() => import('./pages/Dashboard/DashboardMain'));
 
 export default function App() {
   const { user } = useAuthStore();
-
+  useEffect(() => {
+    window.addEventListener("beforeunload",() => {
+      axios.delete("/videos")
+    })
+  },[])
   return (
     <>
       <ToastContainer

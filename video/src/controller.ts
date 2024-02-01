@@ -45,6 +45,8 @@ export interface IVideoPartition {
 	end: number;
 }
 
+const VideosGettingExported = new Set();
+
 const exportVideoHandler = async (
 	req: Request<{ videoId: string }, {}, IVideoPartition[]>,
 	res: Response,
@@ -53,10 +55,10 @@ const exportVideoHandler = async (
 	const partitions = req.body;
 	const { videoId } = req.params;
 	try {
-		const userStoragePath = path.join(
-			getStoragePath(),
-			req.user ? req.user.username : "unknown"
-		);
+		if (VideosGettingExported.has(videoId)) {
+			throw new Error("video is already exporting, please wait...");
+		}
+		const userStoragePath = path.join(getStoragePath(), req.user.username);
 
 		const duration = await getVideoDuration(
 			path.join(userStoragePath, `./${videoId}`)
@@ -91,7 +93,9 @@ const exportVideoHandler = async (
 			path.join(userStoragePath, `./${newId}.mp4`)
 		);
 
-		videoStream.pipe(res);
+		videoStream.pipe(res).on("finish", () => {
+			VideosGettingExported.delete(videoId);
+		});
 	} catch (e) {
 		console.log(e);
 
@@ -110,10 +114,7 @@ const transcribeVideoHandler = async (
 		if (lang !== EnLanguage.ENGLISH && lang !== EnLanguage.ARABIC) {
 			throw new Error("unavailable language");
 		}
-		const userStoragePath = path.join(
-			getStoragePath(),
-			req.user ? req.user.username : "unknown"
-		);
+		const userStoragePath = path.join(getStoragePath(), req.user.username);
 
 		const videoPath = path.join(userStoragePath, `./${videoId}`);
 
@@ -125,8 +126,28 @@ const transcribeVideoHandler = async (
 	}
 };
 
+const cleanupVideos = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const userDirectory = path.join(getStoragePath(), req.user.username);
+		const files = fs.readdirSync(userDirectory);
+
+		for (const file of files) {
+			const filePath = path.join(userDirectory, file);
+			fs.unlinkSync(filePath);
+		}
+		return res.status(200).send({ message: "videos removed", status: 200 });
+	} catch (e) {
+		return next(e);
+	}
+};
+
 export const VideosController = {
 	uploadVideoHandler,
 	exportVideoHandler,
 	transcribeVideoHandler,
+	cleanupVideos,
 };

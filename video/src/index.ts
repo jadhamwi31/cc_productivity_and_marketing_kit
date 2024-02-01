@@ -13,7 +13,7 @@ dotenv.config();
 	app.use(express.json());
 	app.use(cookieParser());
 	app.use(morgan("dev"));
-	app.use(cors({ origin: process.env.CLIENT_URL }));
+	app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 	app.use(AuthMiddleware);
 
 	app.post("/videos", VideosController.uploadVideoHandler);
@@ -22,6 +22,7 @@ dotenv.config();
 		"/videos/:videoId/transcript",
 		VideosController.transcribeVideoHandler
 	);
+	app.delete("/videos", VideosController.cleanupVideos);
 
 	const PORT = process.env.PORT || 8081;
 	app.listen(PORT, () => {

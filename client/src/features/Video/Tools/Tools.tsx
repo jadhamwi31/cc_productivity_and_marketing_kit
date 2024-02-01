@@ -5,25 +5,25 @@ import { HiOutlineUpload } from 'react-icons/hi';
 import { TbCut } from 'react-icons/tb';
 import { useCurrentTab } from '../../../hooks/useCurrentTab';
 import { EnLanguage, useVideosStore } from '../../../stores/videos.store';
-import { EnVideoPlayback } from '../../../ts/enums/video.enums';
 import { S } from './Tools.styled';
 type Props = {};
 
 const Tools = (props: Props) => {
   const {
     uploadFile,
-    playback,
-    setPlayback,
     cut,
     setEnglishLanguage,
     setArabicLanguage,
     downloadVideo,
     transcribe,
+    saveTab,
+    importSavedTab,
   } = useVideosStore();
-  const uploadRef = useRef<HTMLInputElement>(null);
+  const videoUploadRef = useRef<HTMLInputElement>(null);
+  const importRef = useRef<HTMLInputElement>(null);
 
-  const uploadHandler: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
-    if (uploadRef.current && uploadRef.current.value !== '') {
+  const videoUploadHandler: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
+    if (videoUploadRef.current && videoUploadRef.current.value !== '') {
       const files = e.target.files;
 
       if (files && files[0]) {
@@ -32,11 +32,13 @@ const Tools = (props: Props) => {
     }
   };
 
-  const playbackHandler = () => {
-    if (playback === EnVideoPlayback.PAUSED) {
-      setPlayback(EnVideoPlayback.PLAYING);
-    } else {
-      setPlayback(EnVideoPlayback.PAUSED);
+  const importHandler: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
+    if (importRef.current && importRef.current.value !== '') {
+      const files = e.target.files;
+
+      if (files && files[0]) {
+        importSavedTab(files[0]);
+      }
     }
   };
 
@@ -48,8 +50,8 @@ const Tools = (props: Props) => {
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] rounded-t-lg hover:rounded-t-lg disabled:bg-transparent disabled:text-gray-600'
           onClick={() => {
-            if (uploadRef.current?.value) uploadRef.current.value = '';
-            uploadRef.current?.click();
+            if (videoUploadRef.current?.value) videoUploadRef.current.value = '';
+            videoUploadRef.current?.click();
           }}
           title='Upload'
         >
@@ -58,7 +60,7 @@ const Tools = (props: Props) => {
 
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f]   rounded-lg disabled:bg-transparent disabled:text-gray-600'
-          disabled={tab.uploadProgress !== 100 || tab.videoUrl === null}
+          disabled={tab.uploadProgress !== 100 || tab.videoUrl === null || tab.downloading}
           onClick={downloadVideo}
           title='Save'
         >
@@ -66,9 +68,9 @@ const Tools = (props: Props) => {
         </button>
         <S.UploadHidden
           type='file'
-          accept='video/*, audio/*'
-          ref={uploadRef}
-          onChange={uploadHandler}
+          accept='video/mp4'
+          ref={videoUploadRef}
+          onChange={videoUploadHandler}
         />
 
         <button
@@ -103,6 +105,26 @@ const Tools = (props: Props) => {
         >
           A
         </button>
+        <button
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
+          disabled={tab.language === EnLanguage.ARABIC}
+          onClick={saveTab}
+          title='Save'
+        >
+          Save
+        </button>
+        <button
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
+          disabled={tab.language === EnLanguage.ARABIC}
+          onClick={() => {
+            if (importRef.current?.value) importRef.current.value = '';
+            importRef.current?.click();
+          }}
+          title='Save'
+        >
+          Import
+        </button>
+        <S.UploadHidden type='file' accept='text/json' ref={importRef} onChange={importHandler} />
       </div>
     </S.Container>
   );
