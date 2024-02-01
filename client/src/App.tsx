@@ -13,7 +13,6 @@ import useAuthStore from './stores/auth.store';
 import DahsboardCahnnelLayout from './layout/DahsboardCahnnelLayout';
 import EmptyLayout from './layout/EmptyLayout';
 import Main from './layout/Main';
-import { axios } from './lib/axios';
 import Settings from './pages/Dashboard/Settings';
 import SocialMedia from './pages/Dashboard/SocialMedia';
 import ReportPage from './pages/Dashboard/Youtube/ReportPage';
@@ -21,6 +20,7 @@ import VideoDetails from './pages/Dashboard/Youtube/VideoDetails';
 import VideosPage from './pages/Dashboard/Youtube/VideosPage';
 import Home from './pages/Home';
 import Loading from './pages/Loading';
+import { cleanupCall } from './utils/utils';
 
 const Signup = lazy(() => import('./pages/auth/Signup'));
 const Video = lazy(() => import('./pages/Video/Video'));
@@ -32,10 +32,8 @@ const DashboardMain = lazy(() => import('./pages/Dashboard/DashboardMain'));
 export default function App() {
   const { user } = useAuthStore();
   useEffect(() => {
-    window.addEventListener("beforeunload",() => {
-      axios.delete("/videos")
-    })
-  },[])
+    window.addEventListener('beforeunload', cleanupCall);
+  }, []);
   return (
     <>
       <ToastContainer

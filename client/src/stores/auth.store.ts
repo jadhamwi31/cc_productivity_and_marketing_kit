@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import { create } from 'zustand';
 import { axios } from '../lib/axios';
+import { cleanupCall } from '../utils/utils';
 
 interface AuthState {
   user: User | null;
@@ -106,6 +107,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => {
     logout: async () => {
       localStorage.removeItem(cookieKey);
       await axios.post('/auth/logout');
+      cleanupCall();
       set({ user: null, token: null, loading: false, error: null });
     },
   };

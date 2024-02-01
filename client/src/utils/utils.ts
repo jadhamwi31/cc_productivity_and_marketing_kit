@@ -7,3 +7,7 @@ export const timestampToDuration = (timestamp: string) => {
   const [minutes, seconds] = timestamp.split(':').map((num) => Number(num));
   return minutes * 60 + seconds;
 };
+
+export const cleanupCall = () => {
+  fetch('/videos', { method: 'DELETE', keepalive: true });
+};
