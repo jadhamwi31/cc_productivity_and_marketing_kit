@@ -1,8 +1,12 @@
 import React, { useRef } from 'react';
 import { BsBodyText } from 'react-icons/bs';
 import { FiSave } from 'react-icons/fi';
-import { HiOutlineUpload } from 'react-icons/hi';
+import { HiOutlineUpload, HiOutlineDownload } from 'react-icons/hi';
 import { TbCut } from 'react-icons/tb';
+import { RiEnglishInput } from 'react-icons/ri';
+
+import { MdOutlineSimCardDownload } from 'react-icons/md';
+
 import { useCurrentTab } from '../../../hooks/useCurrentTab';
 import { EnLanguage, useVideosStore } from '../../../stores/videos.store';
 import { S } from './Tools.styled';
@@ -55,7 +59,7 @@ const Tools = (props: Props) => {
           }}
           title='Upload'
         >
-          <HiOutlineUpload size={25} />
+          <MdOutlineSimCardDownload size={25} />
         </button>
 
         <button
@@ -90,28 +94,28 @@ const Tools = (props: Props) => {
           <BsBodyText size='25' />
         </button>
         <button
-          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] disabled:bg-transparent disabled:text-gray-600'
           onClick={setEnglishLanguage}
           disabled={tab.language === EnLanguage.ENGLISH}
           title='English Language'
         >
-          E
+          <RiEnglishInput size={25} />
         </button>
         <button
-          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] g disabled:bg-transparent disabled:text-gray-600 text-xl'
           disabled={tab.language === EnLanguage.ARABIC}
           onClick={setArabicLanguage}
           title='Arabic Language'
         >
-          A
+          Ar
         </button>
         <button
-          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
+          className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f]  disabled:bg-transparent disabled:text-gray-600'
           disabled={tab.language === EnLanguage.ARABIC}
           onClick={saveTab}
           title='Save'
         >
-          Save
+          <HiOutlineUpload size={25} />
         </button>
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
@@ -122,7 +126,7 @@ const Tools = (props: Props) => {
           }}
           title='Save'
         >
-          Import
+          <HiOutlineDownload size='25' />
         </button>
         <S.UploadHidden type='file' accept='text/json' ref={importRef} onChange={importHandler} />
       </div>

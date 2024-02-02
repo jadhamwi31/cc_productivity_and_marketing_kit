@@ -38,7 +38,7 @@ const Partitions = ({ wrapperWidth, containerHeight }: Props) => {
                   >
                     {!partition.fromTranscript && (
                       <button
-                        className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600 z-30'
+                        className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-lg rounded-lg disabled:bg-transparent disabled:text-gray-600 z-30'
                         title='Delete'
                         onClick={() => {
                           updateTab({

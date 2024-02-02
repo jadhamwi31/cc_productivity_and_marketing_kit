@@ -55,7 +55,7 @@ export default function App() {
                 <Route path='signup' element={!user ? <Signup /> : <Navigate to='/dashboard' />} />
               </Route>
 
-              <Route path='/dashboard' element={<Dashboard />}>
+              <Route path='/dashboard' element={true ? <Dashboard /> : <Login />}>
                 <Route index={false} element={<DahsboardCahnnelLayout />}>
                   <Route index element={<DashboardMain />} />
                   <Route path='report/:id' element={<ReportPage />} />
