@@ -22,12 +22,12 @@ import Home from './pages/Home';
 import Loading from './pages/Loading';
 import { cleanupCall } from './utils/utils';
 
-const Signup = lazy(() => import('./pages/auth/Signup'));
-const Video = lazy(() => import('./pages/Video/Video'));
-const Login = lazy(() => import('./pages/auth/Login'));
-const Dashboard = lazy(() => import('./layout/Dashboard'));
-const GraphicEditor = lazy(() => import('./pages/Dashboard/GraphicEditor'));
-const DashboardMain = lazy(() => import('./pages/Dashboard/DashboardMain'));
+import Signup from './pages/auth/Signup';
+import Video from './pages/Video/Video';
+import Login from './pages/auth/Login';
+import Dashboard from './layout/Dashboard';
+import GraphicEditor from './pages/Dashboard/GraphicEditor';
+import DashboardMain from './pages/Dashboard/DashboardMain';
 
 export default function App() {
   const { user } = useAuthStore();
@@ -51,83 +51,26 @@ export default function App() {
             <>
               <Route path='/' element={<Main />}>
                 <Route index element={<Home />} />
-                <Route
-                  path='login'
-                  element={
-                    !user ? (
-                      <Suspense fallback={<Loading />}>
-                        <Login />
-                      </Suspense>
-                    ) : (
-                      <Navigate to='/dashboard' />
-                    )
-                  }
-                />
-                <Route
-                  path='signup'
-                  element={
-                    !user ? (
-                      <Suspense fallback={<Loading />}>
-                        <Signup />
-                      </Suspense>
-                    ) : (
-                      <Navigate to='/dashboard' />
-                    )
-                  }
-                />
+                <Route path='login' element={!user ? <Login /> : <Navigate to='/dashboard' />} />
+                <Route path='signup' element={!user ? <Signup /> : <Navigate to='/dashboard' />} />
               </Route>
 
-              <Route
-                path='/dashboard'
-                element={
-                  <Suspense fallback={<Loading />}>
-                    <Dashboard />
-                  </Suspense>
-                }
-              >
+              <Route path='/dashboard' element={<Dashboard />}>
                 <Route index={false} element={<DahsboardCahnnelLayout />}>
                   <Route index element={<DashboardMain />} />
                   <Route path='report/:id' element={<ReportPage />} />
                 </Route>
 
-                <Route
-                  path='graphic'
-                  element={
-                    <Suspense fallback={<Loading />}>
-                      <GraphicEditor />
-                    </Suspense>
-                  }
-                />
+                <Route path='graphic' element={<GraphicEditor />} />
                 <Route path='socialmedia' element={<EmptyLayout />}>
                   <Route index element={<SocialMedia />} />
                   <Route path=':id' element={<VideosPage />} />
                 </Route>
 
-                <Route
-                  path='video'
-                  element={
-                    <Suspense fallback={<Loading />}>
-                      <Video />
-                    </Suspense>
-                  }
-                />
+                <Route path='video' element={<Video />} />
 
-                <Route
-                  path='settings'
-                  element={
-                    <Suspense fallback={<Loading />}>
-                      <Settings />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path='VideoDetails/:id'
-                  element={
-                    <Suspense fallback={<Loading />}>
-                      <VideoDetails />
-                    </Suspense>
-                  }
-                />
+                <Route path='settings' element={<Settings />} />
+                <Route path='VideoDetails/:id' element={<VideoDetails />} />
               </Route>
             </>,
           ),
