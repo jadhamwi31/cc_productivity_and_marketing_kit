@@ -9,5 +9,5 @@ export const timestampToDuration = (timestamp: string) => {
 };
 
 export const cleanupCall = () => {
-  fetch('/videos', { method: 'DELETE', keepalive: true });
+  return fetch('/videos', { method: 'DELETE', keepalive: true });
 };
