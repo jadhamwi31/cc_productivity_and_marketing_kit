@@ -30,7 +30,7 @@ executor = ThreadPoolExecutor()
 async def transcript(file: UploadFile):
     try:
         fileObject = await file.read()
-        result = await run_in_threadpool(arabicTranscriptPipeline, fileObject)
+        result = await run_in_threadpool(arabicTranscriptPipeline, fileObject, return_timestamps=True,batch_size=8)
         print(result)
         return JSONResponse(content=result, status_code=200)
     except Exception as e:
@@ -41,7 +41,7 @@ async def transcript(file: UploadFile):
 async def transcript(file: UploadFile):
     try:
         fileObject = await file.read()
-        result = await run_in_threadpool(englishTranscriptPipeline, fileObject)
+        result = await run_in_threadpool(englishTranscriptPipeline, fileObject, return_timestamps=True,batch_size=8)
         print(result)
         return JSONResponse(content=result, status_code=200)
     except Exception as e:
