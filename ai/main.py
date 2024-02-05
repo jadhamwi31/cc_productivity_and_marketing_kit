@@ -1,54 +1,59 @@
-
 import random
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 from pydantic import BaseModel
 from transformers import pipeline
-from fastapi import FastAPI,File, UploadFile
+from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from typing import List
 
 englishTranscriptPipeline = pipeline(
     "automatic-speech-recognition",
-    model="Subcold/whisper-small-preprocessed-en",chunk_length_s=30
+    model="Subcold/whisper-small-preprocessed-en", chunk_length_s=30
 )
 arabicTranscriptPipeline = pipeline(
     "automatic-speech-recognition",
-    model="Foxasdf/whisper-base-ar",chunk_length_s=30
+    model="Foxasdf/whisper-base-ar", chunk_length_s=30
 )
 
 reactionsPipeline = pipeline(
-    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
+    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
     return_all_scores=True
 )
-  
+
 app = FastAPI()
+
+executor = ThreadPoolExecutor()
 
 
 @app.post("/transcript/arabic")
 async def transcript(file: UploadFile):
     try:
         fileObject = await file.read()
-        result = arabicTranscriptPipeline(fileObject,batch_size=8,return_timestamps=True)
+        result = await run_in_threadpool(arabicTranscriptPipeline, fileObject)
         print(result)
         return JSONResponse(content=result, status_code=200)
-    except Exception as e: 
+    except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+
 
 @app.post("/transcript/english")
 async def transcript(file: UploadFile):
     try:
         fileObject = await file.read()
-        result = englishTranscriptPipeline(fileObject,batch_size=8,return_timestamps=True)
+        result = await run_in_threadpool(englishTranscriptPipeline, fileObject)
         print(result)
         return JSONResponse(content=result, status_code=200)
-    except Exception as e: 
+    except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
-    
-    
+
+
 class Comments(BaseModel):
-    comments:List[str]
+    comments: List[str]
+
 
 def get_reactions_for_comment(comment: str):
-    [[positive,neutral,negative]] = reactionsPipeline(comment)
+    [[positive, neutral, negative]] = reactionsPipeline(comment)
     return {
         "positive": positive["score"],
         "neutral": neutral["score"],
@@ -78,12 +83,18 @@ def calculateReactionsAverage(comments: List[str]):
         "negative": average_negative
     }
 
+
 @app.post("/reactions")
 async def reactions(body: Comments):
     try:
         comments = body.comments
-        average = calculateReactionsAverage(comments)
-    
+        average = await run_in_threadpool(calculateReactionsAverage, comments)
+
         return JSONResponse(content=average, status_code=200)
-    except Exception as e: 
+    except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+async def run_in_threadpool(func, *args, **kwargs):
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(executor, lambda: func(*args, **kwargs))
