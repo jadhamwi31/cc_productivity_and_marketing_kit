@@ -106,9 +106,9 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => {
 
     logout: async () => {
       localStorage.removeItem(cookieKey);
-
       set({ user: null, token: null, loading: false, error: null });
-      await axios.post('/auth/logout').then(cleanupCall);
+      cleanupCall();
+      await axios.post('/auth/logout');
     },
   };
 });
