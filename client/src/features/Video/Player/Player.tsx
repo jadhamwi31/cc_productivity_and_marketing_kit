@@ -67,6 +67,7 @@ const Player = (props: Props) => {
 
   return (
     <S.Container>
+      <S.Video className='blur-2xl rounded-lg ' src={tab.videoUrl ?? ''} ref={blurVideoRef} />
       <S.Video
         className='absolute'
         id='video-player'
