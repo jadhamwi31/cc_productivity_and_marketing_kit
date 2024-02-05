@@ -88,7 +88,6 @@ def calculateReactionsAverage(comments: List[str]):
 async def reactions(body: Comments):
     try:
         comments = body.comments
-        average = await run_in_threadpool(calculateReactionsAverage, comments)
 
         return JSONResponse(content=average, status_code=200)
     except Exception as e:
