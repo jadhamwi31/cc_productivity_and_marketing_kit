@@ -9,7 +9,7 @@ const Container = styled.div`
 `;
 
 const Video = styled.video`
-  height: 500px;
+  height: 450px;
   width: 100%;
 `;
 

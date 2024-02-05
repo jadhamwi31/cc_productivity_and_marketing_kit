@@ -134,7 +134,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
 
     const newTabs = { ...get().tabs };
 
-    const uploadToastId = toast('Uploading Progress : 0%', { progress: 0 });
+    const uploadToastId = toast('Uploading Progress : 0%', { progress: 0, autoClose: false });
     axios
       .post<void, AxiosResponse<string>>('/videos', formData, {
         onUploadProgress(progressEvent) {
@@ -144,9 +144,6 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
             toast.update(uploadToastId, {
               render: `Video Uploaded`,
             });
-            setTimeout(() => {
-              toast.dismiss(uploadToastId);
-            }, 2000);
           } else {
             toast.update(uploadToastId, {
               render: `Uploading Progress : ${newProgress}%`,

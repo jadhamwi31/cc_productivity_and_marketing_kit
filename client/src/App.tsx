@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -19,15 +19,14 @@ import ReportPage from './pages/Dashboard/Youtube/ReportPage';
 import VideoDetails from './pages/Dashboard/Youtube/VideoDetails';
 import VideosPage from './pages/Dashboard/Youtube/VideosPage';
 import Home from './pages/Home';
-import Loading from './pages/Loading';
 import { cleanupCall } from './utils/utils';
 
-import Signup from './pages/auth/Signup';
-import Video from './pages/Video/Video';
-import Login from './pages/auth/Login';
 import Dashboard from './layout/Dashboard';
-import GraphicEditor from './pages/Dashboard/GraphicEditor';
+import Login from './pages/auth/Login';
+import Signup from './pages/auth/Signup';
 import DashboardMain from './pages/Dashboard/DashboardMain';
+import GraphicEditor from './pages/Dashboard/GraphicEditor';
+import Video from './pages/Video/Video';
 
 export default function App() {
   const { user } = useAuthStore();
@@ -55,7 +54,7 @@ export default function App() {
                 <Route path='signup' element={!user ? <Signup /> : <Navigate to='/dashboard' />} />
               </Route>
 
-              <Route path='/dashboard' element={true ? <Dashboard /> : <Login />}>
+              <Route path='/dashboard' element={user ? <Dashboard /> : <Login />}>
                 <Route index={false} element={<DahsboardCahnnelLayout />}>
                   <Route index element={<DashboardMain />} />
                   <Route path='report/:id' element={<ReportPage />} />

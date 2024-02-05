@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { BsBodyText } from 'react-icons/bs';
 import { FiSave } from 'react-icons/fi';
-import { HiOutlineUpload, HiOutlineDownload } from 'react-icons/hi';
-import { TbCut } from 'react-icons/tb';
+import { HiOutlineDownload, HiOutlineUpload } from 'react-icons/hi';
 import { RiEnglishInput } from 'react-icons/ri';
+import { TbCut } from 'react-icons/tb';
 
 import { MdOutlineSimCardDownload } from 'react-icons/md';
 
@@ -111,20 +111,20 @@ const Tools = (props: Props) => {
         </button>
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f]  disabled:bg-transparent disabled:text-gray-600'
-          disabled={tab.language === EnLanguage.ARABIC}
           onClick={saveTab}
-          title='Save'
+          disabled={Boolean(!tab.videoId)}
+          title='Export'
         >
           <HiOutlineUpload size={25} />
         </button>
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
-          disabled={tab.language === EnLanguage.ARABIC}
+          disabled={Boolean(!tab.videoId)}
           onClick={() => {
             if (importRef.current?.value) importRef.current.value = '';
             importRef.current?.click();
           }}
-          title='Save'
+          title='Import'
         >
           <HiOutlineDownload size='25' />
         </button>

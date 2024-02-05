@@ -1,12 +1,12 @@
+import React from 'react';
 import { FaPlus } from 'react-icons/fa6';
 import Button from '../../../components/Button/Button';
 import { useVideosStore } from '../../../stores/videos.store';
 import { S } from './Tabs.styled';
-import React from 'react';
 type Props = {};
 
 const Tabs = (props: Props) => {
-  const { tabs, setSelectedTab, selectedTab, addTab, deleteTab } = useVideosStore();
+  const { tabs, setSelectedTab, selectedTab, addTab } = useVideosStore();
   const tabsToRender = Object.keys(tabs);
   return (
     <S.Container>
@@ -23,7 +23,6 @@ const Tabs = (props: Props) => {
         >
           <S.TabContent>
             <div>Tab {i + 1}</div>
-            {i !== 0 && <button onClick={() => deleteTab(tabId, tabsToRender[0])}>x</button>}
           </S.TabContent>
         </button>
       ))}
