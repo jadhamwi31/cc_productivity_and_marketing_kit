@@ -18,8 +18,8 @@ const channelInfo = async (req: Request<{}, {}, { url: string }>, res: Response)
   const { url } = req.body;
   try {
     const browser = await puppeteer.launch({
-      headless: false,
-      executablePath: '/usr/bin/google-chrome',
+      headless: 'new',
+      executablePath: '/usr/bin/chromium',
       args: [
         '--disable-gpu',
         '--disable-dev-shm-usage',
@@ -89,7 +89,7 @@ const channelVideos = async (req: Request<{}, {}, { url: string }>, res: Respons
   const { url } = req.body;
   const browser = await puppeteer.launch({
     headless: 'new',
-    executablePath: '/usr/bin/google-chrome',
+    executablePath: '/usr/bin/chromium',
     args: ['--disable-gpu', '--disable-dev-shm-usage', '--disable-setuid-sandbox', '--no-sandbox'],
   });
   const page = await browser.newPage();
@@ -171,7 +171,7 @@ const videoComments = async (req: Request<{}, {}, { url: string }>, res: Respons
   try {
     browser = await puppeteer.launch({
       headless: false,
-      executablePath: '/usr/bin/google-chrome',
+      executablePath: '/usr/bin/chromium',
       args: [
         '--disable-gpu',
         '--disable-dev-shm-usage',

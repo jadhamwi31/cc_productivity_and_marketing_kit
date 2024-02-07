@@ -4,7 +4,7 @@ const Trends = async (geo: string, cat: string): Promise<any> => {
   try {
     const browser = await puppeteer.launch({
       headless: 'new',
-      executablePath: '/usr/bin/google-chrome',
+      executablePath: '/usr/bin/chromium',
       args: [
         '--disable-gpu',
         '--disable-dev-shm-usage',

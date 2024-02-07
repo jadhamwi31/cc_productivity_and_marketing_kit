@@ -72,7 +72,6 @@ const Tools = (props: Props) => {
         </button>
         <S.UploadHidden
           type='file'
-          accept='video/mp4'
           ref={videoUploadRef}
           onChange={videoUploadHandler}
         />

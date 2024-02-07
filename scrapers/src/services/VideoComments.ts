@@ -5,7 +5,7 @@ const VideoComments = async (url: string): Promise<any> => {
   try {
     browser = await puppeteer.launch({
       headless: 'new',
-      executablePath: '/usr/bin/google-chrome',
+      executablePath: '/usr/bin/chromium',
       args: [
         '--disable-gpu',
         '--disable-dev-shm-usage',

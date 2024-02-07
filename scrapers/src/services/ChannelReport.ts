@@ -23,7 +23,7 @@ const channelInfo = async (channelId: string): Promise<ChannelInfoData | string>
     const browser = await puppeteer.launch({
       defaultViewport: null,
       headless: 'new',
-      executablePath: '/usr/bin/google-chrome',
+      executablePath: '/usr/bin/chromium',
       args: [
         '--disable-gpu',
         '--disable-dev-shm-usage',

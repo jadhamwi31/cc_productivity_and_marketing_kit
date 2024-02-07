@@ -12,8 +12,8 @@ export interface ChannelInfoData {
 const channelInfo = async (url: string): Promise<ChannelInfoData | string> => {
   try {
     const browser = await puppeteer.launch({
-      headless: 'new',
-      executablePath: '/usr/bin/google-chrome',
+      headless: true,
+      executablePath: '/usr/bin/chromium',
       args: [
         '--disable-gpu',
         '--disable-dev-shm-usage',
@@ -23,8 +23,9 @@ const channelInfo = async (url: string): Promise<ChannelInfoData | string> => {
     });
     const page = await browser.newPage();
     await page.goto(url, { timeout: 0 });
-
+    console.log('ahmad');
     const data = await page.evaluate(() => {
+      console.log(document.querySelector('body')?.innerHTML);
       const avatarElement = document.querySelector('#img') as HTMLImageElement;
       const channelNameElement = document.title;
       const channelHandleElement = document.querySelector('#channel-handle') as HTMLElement;
