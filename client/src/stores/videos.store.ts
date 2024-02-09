@@ -146,7 +146,7 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
             });
           } else {
             toast.update(uploadToastId, {
-              render: `Uploading Progress : ${newProgress}%`,
+              render: `Uploading Progress : ${newProgress.toFixed(0)}%`,
             });
           }
           newTabs[currentTab].uploadProgress = newProgress;

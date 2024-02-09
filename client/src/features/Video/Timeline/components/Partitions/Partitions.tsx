@@ -12,7 +12,7 @@ const Partitions = ({ wrapperWidth, containerHeight }: Props) => {
 
   return (
     <S.Container>
-      {wrapperWidth && containerHeight
+      {wrapperWidth && containerHeight && tab && tab.partitions
         ? tab.partitions.map((partition) => {
             const { start } = partition;
             const startPos = (start / tab.duration) * wrapperWidth;

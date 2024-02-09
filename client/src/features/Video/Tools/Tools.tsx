@@ -70,11 +70,7 @@ const Tools = (props: Props) => {
         >
           <FiSave size='25' />
         </button>
-        <S.UploadHidden
-          type='file'
-          ref={videoUploadRef}
-          onChange={videoUploadHandler}
-        />
+        <S.UploadHidden type='file' ref={videoUploadRef} onChange={videoUploadHandler} />
 
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
@@ -118,7 +114,6 @@ const Tools = (props: Props) => {
         </button>
         <button
           className='px-2 py-2 bg-[#2a2438] hover:bg-[#4f245f] hover:rounded-b-lg rounded-b-lg disabled:bg-transparent disabled:text-gray-600'
-          disabled={Boolean(!tab.videoId)}
           onClick={() => {
             if (importRef.current?.value) importRef.current.value = '';
             importRef.current?.click();
