@@ -19,6 +19,8 @@ interface ChannelInfoData {
 }
 
 export default function ReportPage() {
+  let [isOpen, setIsOpen] = useState(true);
+
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<ChannelInfoData | null>(null);
@@ -172,10 +174,7 @@ export default function ReportPage() {
               <p className='text-center text-zinc-700 text-md uppercase'>Position</p>
             </div>
           </div>
-          <div className='flex-col mt-6'>
-            <p className='text-center text-green-500 text-2xl'>{data?.earnings}</p>
-            <p className='text-center text-zinc-700 text-md uppercase'>ESTIMATED YEARLY EARNINGS</p>
-          </div>
+
           <div
             className='flex items-center justify-center mt-6'
             dangerouslySetInnerHTML={
