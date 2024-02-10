@@ -22,15 +22,19 @@ const uploadVideoHandler = async (
 			generateStorageInstance(req.user ? req.user.username : "unknown").single(
 				"video"
 			)(req, res, function (err) {
-				if (err) throw reject(err);
+				if (err) reject(err);
 				// Convert to Audio
-				execSync(
-					`bash ${path.join(
-						__dirname,
-						"./scripts/convert_to_audio.sh"
-					)} ${path.join(getStoragePath(), name, req.file?.filename!)}`
-				);
-				resolve();
+				try {
+					execSync(
+						`bash ${path.join(
+							__dirname,
+							"./scripts/convert_to_audio.sh"
+						)} ${path.join(getStoragePath(), name, req.file?.filename!)}`
+					);
+					resolve();
+				} catch (e) {
+					reject(e);
+				}
 			});
 		});
 
@@ -67,22 +71,26 @@ const exportVideoHandler = async (
 			.join(" ");
 		const newId = uuid();
 		const inputFileName = uuid();
-		await new Promise((resolve, reject) =>
-			exec(
-				`bash ${path.join(
-					__dirname,
-					"./scripts/export.sh"
-				)} ${userStoragePath} ${videoId} ${newId} ${inputFileName} ${partitionsAsArgs}`,
-				(err, stdout, stderr) => {
-					if (err) {
-						reject(err);
-						return;
-					}
+		await new Promise((resolve, reject) => {
+			try {
+				exec(
+					`bash ${path.join(
+						__dirname,
+						"./scripts/export.sh"
+					)} ${userStoragePath} ${videoId} ${newId} ${inputFileName} ${partitionsAsArgs}`,
+					(err, stdout, stderr) => {
+						if (err || stderr) {
+							reject(err || stderr);
+							return;
+						}
 
-					resolve(stdout);
-				}
-			)
-		);
+						resolve(stdout);
+					}
+				);
+			} catch (e) {
+				reject(e);
+			}
+		});
 
 		const videoStream = fs.createReadStream(
 			path.join(userStoragePath, `./${newId}.mp4`)

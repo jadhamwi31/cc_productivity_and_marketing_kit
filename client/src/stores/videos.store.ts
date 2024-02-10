@@ -164,6 +164,8 @@ export const useVideosStore = create<IVideosStore>((set, get) => ({
         if (err instanceof AxiosError) {
           if (err.status === 413) {
             toast.error('File too Large', { toastId: uploadToastId });
+          } else {
+            toast.error('An error has occured', { toastId: uploadToastId });
           }
         }
       });
